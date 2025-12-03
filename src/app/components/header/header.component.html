@@ -1,0 +1,35 @@
+<header class="bg-white py-5 px-8">
+  <div class="max-w-7xl mx-auto flex items-center justify-between">
+    <!-- Logo -->
+    <a routerLink="/" class="flex items-center gap-3 cursor-pointer">
+      <img src="/images/logo-senteranga.png" alt="SenTeranga Logo" class="h-16 w-auto">
+      <span class="text-senteranga-green text-3xl font-bold">Portail SenTeranga</span>
+    </a>
+    
+    <!-- Navigation -->
+    <nav class="hidden md:flex items-center gap-8">
+      <a routerLink="/" class="text-black text-xl hover:text-senteranga-green transition-colors">Accueil</a>
+      <a routerLink="/marche-agricole" class="text-black text-xl hover:text-senteranga-green transition-colors">Marchés</a>
+      <a href="#" class="text-black text-xl hover:text-senteranga-green transition-colors">A propos</a>
+      <a href="#" class="text-black text-xl hover:text-senteranga-green transition-colors">Forum</a>
+    </nav>
+    
+    <!-- Action Buttons -->
+    <div class="flex items-center gap-4">
+      <!-- Cart Icon with Badge -->
+      <div class="relative cursor-pointer">
+        <svg class="w-8 h-8 text-senteranga-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+        </svg>
+        <span class="absolute -top-2 -right-2 bg-senteranga-green text-white text-xs font-medium rounded-full w-5 h-5 flex items-center justify-center">4</span>
+      </div>
+      
+      <button class="px-6 py-2 text-senteranga-green text-sm font-medium hover:bg-gray-50 rounded transition-colors">
+        Connexion
+      </button>
+      <button class="px-6 py-2 bg-senteranga-green text-white text-sm font-medium rounded hover:bg-senteranga-green-dark transition-colors">
+        S'inscrire
+      </button>
+    </div>
+  </div>
+</header>

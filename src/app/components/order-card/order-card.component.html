@@ -1,0 +1,32 @@
+<div class="border border-gray-200 rounded-lg p-4 space-y-3">
+  <!-- Order Header -->
+  <div class="flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <span class="text-base font-bold text-gray-900">{{ order.orderNumber }}</span>
+      <span class="text-sm text-gray-600">{{ order.date }}</span>
+    </div>
+    <span class="text-xs font-medium px-3 py-1 rounded" [ngClass]="getStatusClass()">
+      {{ order.status }}
+    </span>
+  </div>
+  
+  <!-- Order Details -->
+  <div class="space-y-2">
+    <div class="flex items-center gap-2">
+      <img src="/icons/box.svg" alt="Items" class="w-3 h-3 bg-gray-600">
+      <span class="text-sm text-gray-600">{{ order.items }}</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <img src="/icons/user.svg" alt="Producer" class="w-2 h-3 bg-gray-600">
+      <span class="text-sm text-gray-600">Producteur: {{ order.producer }}</span>
+    </div>
+  </div>
+  
+  <!-- Order Footer -->
+  <div class="flex items-center justify-between pt-2">
+    <span class="text-base font-bold text-gray-900">₣{{ order.total.toLocaleString() }}</span>
+    <button class="text-sm font-medium text-senteranga-green hover:underline">
+      Voir Détails
+    </button>
+  </div>
+</div>

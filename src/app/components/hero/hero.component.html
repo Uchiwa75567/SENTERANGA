@@ -1,0 +1,64 @@
+<section class="relative min-h-[700px] flex flex-col justify-center items-center text-white px-8 py-20"
+  style="background: linear-gradient(180deg, rgba(102,102,102,0.08) 0%, rgba(0,0,0,0.7) 43.75%, rgba(0,0,0,0.7) 100%), url('https://images.unsplash.com/photo-1542838132-92c53300491e?w=1920&q=80') center/cover no-repeat;">
+  
+  <div class="max-w-6xl mx-auto text-center z-10">
+    <h1 class="text-6xl font-bold leading-tight mb-6">
+      Révolutionnez le Marché<br>
+      Sénégalais avec SENTERANGA
+    </h1>
+    
+    <p class="text-4xl font-bold text-gray-200 leading-tight mb-8">
+      La plateforme numérique qui connecte agriculteurs, éleveurs, pêcheurs, l'État et les<br>
+      industriels pour transformer le marché du Sénégal
+    </p>
+    
+    <button class="bg-senteranga-green text-white px-12 py-4 text-2xl font-semibold rounded hover:bg-senteranga-green-dark transition-colors">
+      Devenir Producteur
+    </button>
+  </div>
+  
+  <!-- Statistics Cards -->
+  <div class="absolute bottom-20 left-0 right-0 z-10">
+    <div class="max-w-7xl mx-auto px-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Producers Card -->
+        <div class="bg-black/36 backdrop-blur-sm rounded-xl p-8 text-center">
+          <div class="text-6xl font-bold text-senteranga-green leading-tight mb-2">
+            {{ stats.producers }} +
+          </div>
+          <div class="text-2xl font-bold">
+            Producteurs connectés
+          </div>
+        </div>
+        
+        <!-- Tonnage Card -->
+        <div class="bg-black/36 backdrop-blur-sm rounded-xl p-8 text-center">
+          <div class="text-6xl font-bold text-senteranga-green leading-tight mb-2">
+            {{ stats.tonnage }} +
+          </div>
+          <div class="text-2xl font-bold">
+            Tonnes de produits vendus
+          </div>
+        </div>
+        
+        <!-- Regions Card -->
+        <div class="bg-black/36 backdrop-blur-sm rounded-xl p-8 text-center">
+          <div class="text-6xl font-bold text-senteranga-green leading-tight mb-2">
+            {{ stats.regions }}
+          </div>
+          <div class="text-2xl font-bold">
+            Régions Converties
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Jokko AI Mascot -->
+  <div class="absolute bottom-24 right-8">
+    <div class="text-center">
+      <div class="text-senteranga-green text-4xl font-extrabold mb-2">JOKKO AI</div>
+      <img src="/images/jokko-ai-mascot.png" alt="Jokko AI" class="w-48 h-48 object-contain">
+    </div>
+  </div>
+</section>

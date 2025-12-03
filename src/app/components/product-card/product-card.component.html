@@ -1,0 +1,52 @@
+<div class="bg-green-50/20 rounded-2xl overflow-hidden hover:shadow-lg transition-shadow">
+  <!-- Product Image -->
+  <div class="relative h-52 rounded-2xl overflow-hidden" 
+    [style.backgroundImage]="'url(' + product.image + ')'"
+    [style.backgroundSize]="'cover'"
+    [style.backgroundPosition]="'center'">
+    <div class="absolute top-4 left-4 bg-white/90 px-3 py-1 rounded">
+      <span class="text-lg font-bold text-gray-900">{{ product.name }}</span>
+    </div>
+    <button class="absolute top-4 right-4 w-6 h-6">
+      <img src="/icons/heart-filled.svg" alt="Favoris" class="w-full h-full">
+    </button>
+  </div>
+  
+  <!-- Product Info -->
+  <div class="p-4 space-y-2">
+    <p class="text-xs font-bold text-gray-500 leading-tight">
+      Producteur: {{ product.producer }}<br>
+      {{ product.location }}
+    </p>
+    
+    <p class="text-xs font-normal" 
+      [ngClass]="product.stockStatus === 'limité' ? 'text-orange-800' : 'text-green-800'">
+      Stock {{ product.stockStatus }}
+    </p>
+    
+    <div class="bg-green-900 rounded px-2 py-1 inline-block">
+      <p class="text-[10px] font-bold text-green-700">
+        Expédition dans {{ product.shippingDays }}jours
+      </p>
+    </div>
+    
+    <div class="flex items-center justify-between">
+      <p class="text-[11px] font-bold text-green-900">
+        Quantité min : {{ product.minQuantity }}{{ product.unit }}
+      </p>
+      <p class="text-[10px] font-bold text-green-900">
+        {{ product.price }}Fcfa/{{ product.unit.charAt(0).toUpperCase() + product.unit.slice(1) }}
+      </p>
+    </div>
+    
+    <!-- Action Buttons -->
+    <div class="flex gap-2 pt-2">
+      <button class="flex-1 bg-senteranga-green text-white text-[13px] font-medium py-2 rounded hover:bg-senteranga-green-dark transition-colors">
+        Ajouter au Panier
+      </button>
+      <button class="flex-1 text-senteranga-green text-[13px] font-medium py-2 border border-senteranga-green rounded hover:bg-green-50 transition-colors">
+        Discuter en ligne
+      </button>
+    </div>
+  </div>
+</div>

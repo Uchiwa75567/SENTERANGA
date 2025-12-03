@@ -1,0 +1,12 @@
+<div class="relative rounded-2xl overflow-hidden h-64 cursor-pointer hover:shadow-xl transition-shadow">
+  <img [src]="category.image" [alt]="category.name" class="w-full h-full object-cover">
+  <div class="absolute inset-0 bg-gradient-to-t from-green-900/80 to-transparent flex items-end p-6">
+    <div class="text-center w-full">
+      <h3 class="text-white text-3xl font-bold mb-3">{{ category.name }}</h3>
+      <button class="bg-senteranga-green text-white px-6 py-2 rounded font-medium hover:bg-senteranga-green-dark transition-colors inline-flex items-center gap-2">
+        Découvrir
+        <span>►</span>
+      </button>
+    </div>
+  </div>
+</div>

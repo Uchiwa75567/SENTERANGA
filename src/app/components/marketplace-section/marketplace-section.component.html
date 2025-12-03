@@ -1,0 +1,22 @@
+<section class="py-20 px-8 bg-white">
+  <div class="max-w-7xl mx-auto">
+    <h2 class="text-6xl font-bold text-center text-gray-900 leading-tight mb-4">
+      Marchés <span class="text-senteranga-green">Digital</span>
+    </h2>
+    
+    <p class="text-2xl text-center text-black mb-12">
+      Découvrez les produits sénégalais de qualité 100% local, directement des producteurs vers votre table
+    </p>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div *ngFor="let category of categories" class="rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow">
+        <img [src]="category.imageUrl" [alt]="category.name" class="w-full h-64 object-cover">
+        <div class="p-6 bg-white">
+          <a routerLink="/marche-agricole" class="block w-full bg-senteranga-green text-white text-2xl font-semibold py-3 rounded hover:bg-senteranga-green-dark transition-colors text-center">
+            {{ category.name }}
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

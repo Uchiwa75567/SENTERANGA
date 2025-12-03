@@ -1,0 +1,137 @@
+<app-header></app-header>
+
+<!-- Hero Section -->
+<section class="relative min-h-96 flex flex-col justify-center items-start text-white px-8 py-20"
+  style="background: linear-gradient(180deg, rgba(0,0,0,0) 13.11%, rgba(0,0,0,0.72) 43.73%), url('/images/hero-farmer.png') 50% / cover no-repeat;">
+  
+  <div class="max-w-7xl mx-auto w-full">
+    <h1 class="text-6xl font-bold leading-tight mb-6">
+      SENTERANGA, au cœur de<br>
+      la nouvelle ère agricole du<br>
+      Sénégal.
+    </h1>
+    
+    <p class="text-3xl font-normal tracking-wider leading-relaxed mb-8 max-w-4xl">
+      SENTERANGA réunit l'ensemble des acteurs de la chaîne de valeur agricole — producteurs, institutions publiques, entreprises, GIE, grossistes et transformateurs — pour bâtir une agriculture moderne et durable.
+    </p>
+    
+    <div class="flex gap-4">
+      <button class="bg-senteranga-green text-white px-8 py-3 text-2xl font-semibold rounded hover:bg-senteranga-green-dark transition-colors">
+        Devenir Producteur
+      </button>
+      <button class="bg-white text-senteranga-green px-8 py-3 text-2xl font-semibold rounded hover:bg-gray-100 transition-colors">
+        Rechercher un fournisseur
+      </button>
+    </div>
+  </div>
+  
+  <!-- Jokko AI Mascot -->
+  <div class="absolute bottom-8 right-8">
+    <div class="text-center">
+      <div class="text-senteranga-green text-4xl font-extrabold mb-2">JOKKO AI</div>
+      <img src="/images/jokko-ai-mascot.png" alt="Jokko AI" class="w-48 h-48 object-contain">
+    </div>
+  </div>
+</section>
+
+<!-- Marketplace Title -->
+<section class="py-12 px-8 bg-white">
+  <div class="max-w-7xl mx-auto">
+    <h2 class="text-6xl font-bold text-center text-black leading-tight mb-8">
+      Marché <span class="text-senteranga-green">Agricole</span>
+    </h2>
+    
+    <!-- Search and Filter Bar -->
+    <div class="bg-white border border-gray-200 rounded-xl shadow-lg p-6 mb-12">
+      <div class="flex flex-col md:flex-row gap-4 items-center">
+        <!-- Search Input -->
+        <div class="flex-1 border border-gray-400 rounded-lg px-4 py-3 flex items-center gap-3">
+          <input 
+            type="text" 
+            placeholder="Recherche de produits..." 
+            [(ngModel)]="searchQuery"
+            class="flex-1 text-xl font-medium text-gray-400 outline-none">
+          <img src="/icons/search.svg" alt="Search" class="w-5 h-5 bg-gray-400">
+        </div>
+        
+        <!-- Filter Dropdown -->
+        <div class="flex items-center gap-4">
+          <span class="text-2xl font-medium text-gray-700">Filtrer par:</span>
+          <select [(ngModel)]="selectedFilter" 
+            class="bg-gray-100 border border-gray-300 rounded-md px-4 py-2 text-sm">
+            <option>Tous les types</option>
+            <option>Légumes</option>
+            <option>Fruits</option>
+            <option>Céréales</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Main Content -->
+<section class="py-8 px-8 bg-gray-50">
+  <div class="max-w-7xl mx-auto">
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <!-- Sidebar - Categories -->
+      <div class="lg:col-span-1">
+        <h3 class="text-4xl font-medium text-senteranga-green mb-6">Catégories</h3>
+        <div class="space-y-6">
+          <app-category-card 
+            *ngFor="let category of categoryCards" 
+            [category]="category">
+          </app-category-card>
+        </div>
+      </div>
+      
+      <!-- Products Grid -->
+      <div class="lg:col-span-3">
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-6xl font-bold text-black">Nouveau Arrivage</h3>
+          <div class="flex gap-2">
+            <button class="w-12 h-12 rounded-full bg-green-200 flex items-center justify-center hover:bg-green-300 transition-colors">
+              <img src="/icons/chevron-left.svg" alt="Previous" class="w-6 h-6">
+            </button>
+            <button class="w-12 h-12 rounded-full bg-green-200 flex items-center justify-center hover:bg-green-300 transition-colors">
+              <img src="/icons/chevron-right.svg" alt="Next" class="w-6 h-6">
+            </button>
+          </div>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          <app-product-card 
+            *ngFor="let product of products" 
+            [product]="product">
+          </app-product-card>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Recent Orders Section -->
+<section class="py-16 px-8 bg-white">
+  <div class="max-w-7xl mx-auto">
+    <div class="bg-white border border-gray-200 rounded-xl shadow-lg p-8">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="text-5xl font-bold text-black">Mes Dernieres Commandes</h3>
+        <div class="flex items-center gap-4">
+          <h4 class="text-xl font-bold text-gray-900">Mes Commandes Récentes</h4>
+          <button class="text-sm font-medium text-senteranga-green hover:underline">
+            Voir Toutes
+          </button>
+        </div>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <app-order-card 
+          *ngFor="let order of recentOrders" 
+          [order]="order">
+        </app-order-card>
+      </div>
+    </div>
+  </div>
+</section>
+
+<app-footer></app-footer>

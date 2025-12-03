@@ -1,0 +1,82 @@
+<section class="py-20 px-8 bg-white">
+  <div class="max-w-7xl mx-auto">
+    <h2 class="text-6xl font-extrabold text-center text-black leading-tight mb-12">
+      <span class="text-senteranga-green">Forum de discussion</span> SenTeranga
+    </h2>
+    
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <!-- Sidebar -->
+      <div class="lg:col-span-1 bg-white border border-gray-300 rounded-2xl shadow-md p-6">
+        <h3 class="text-4xl font-bold text-black mb-4 tracking-wide">Sujet et Categorie</h3>
+        <div class="w-full h-px bg-green-400 mb-6"></div>
+        
+        <div class="space-y-6">
+          <div *ngFor="let category of categories">
+            <h4 class="text-4xl font-bold text-senteranga-green-dark mb-3 tracking-wide">
+              {{ category.name }}
+            </h4>
+            <div class="space-y-2 ml-4">
+              <div *ngFor="let sub of category.subcategories" class="flex items-center gap-3">
+                <input type="checkbox" class="w-5 h-5 border border-black rounded">
+                <span class="text-xl font-medium text-black tracking-wide">{{ sub }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Posts -->
+      <div class="lg:col-span-3 space-y-6">
+        <div *ngFor="let post of posts" class="bg-white border border-gray-200 rounded shadow-md p-6">
+          <!-- Post Header -->
+          <div class="flex items-start justify-between mb-4">
+            <div class="flex items-center gap-3">
+              <img [src]="post.author.avatarUrl" [alt]="post.author.name" 
+                class="w-10 h-10 rounded-full object-cover">
+              <div>
+                <div class="text-sm font-normal text-black tracking-wider">{{ post.author.name }}</div>
+                <div class="text-xs text-gray-500 tracking-wider">
+                  {{ post.author.role }}<span *ngIf="post.author.location">, {{ post.author.location }}</span>
+                </div>
+              </div>
+            </div>
+            <img src="/icons/more-vertical.svg" alt="More" class="w-6 h-6 cursor-pointer">
+          </div>
+          
+          <!-- Post Content -->
+          <p *ngIf="post.content" class="text-sm font-light text-black leading-relaxed tracking-wide mb-4">
+            {{ post.content }}
+          </p>
+          
+          <!-- Post Stats -->
+          <div class="flex items-center gap-6 text-sm text-gray-500 tracking-wide">
+            <span class="text-gray-600">{{ getRelativeTime(post.timestamp) }}</span>
+            
+            <div class="flex items-center gap-2">
+              <img src="/icons/eye.svg" alt="Views" class="w-4 h-4">
+              <span>{{ post.stats.views }}</span>
+            </div>
+            
+            <div class="flex items-center gap-2">
+              <img src="/icons/comment.svg" alt="Comments" class="w-3 h-3 border border-gray-500 rounded-sm">
+              <span>{{ post.stats.comments }}</span>
+            </div>
+            
+            <div class="flex items-center gap-2">
+              <img src="/icons/arrow-up.svg" alt="Upvotes" class="w-4 h-4">
+              <span>{{ post.stats.upvotes }}</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Message Input -->
+        <div class="bg-white border-2 border-gray-200 rounded p-6 flex items-center gap-4">
+          <input type="text" placeholder="Entrez un message" 
+            class="flex-1 text-xl font-light text-gray-500 tracking-wide outline-none">
+          <img src="/icons/attachment.svg" alt="Attach" class="w-5 h-7 bg-gray-500 cursor-pointer">
+          <img src="/icons/send.svg" alt="Send" class="w-7 h-7 bg-senteranga-green cursor-pointer rounded">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
