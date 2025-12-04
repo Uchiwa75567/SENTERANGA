@@ -34,19 +34,19 @@ export const categoryCards: CategoryCard[] = [
     id: '1',
     name: 'Légumes',
     image: '/images/category-legumes.svg',
-    link: '#'
+    link: '/marche-agricole/legumes'
   },
   {
     id: '2',
     name: 'Fruits',
     image: '/images/category-fruits.png',
-    link: '#'
+    link: '/marche-agricole/fruits'
   },
   {
     id: '3',
     name: 'Céréales',
     image: '/images/category-cereales.svg',
-    link: '#'
+    link: '/marche-agricole/cereales'
   }
 ];
 

@@ -8,5 +8,17 @@ export const routes: Routes = [
   {
     path: 'marche-agricole',
     loadComponent: () => import('./pages/marketplace/marketplace.component').then(m => m.MarketplaceComponent)
+  },
+  {
+    path: 'marche-agricole/legumes',
+    loadComponent: () => import('./pages/category-vegetables/category-vegetables.component').then(m => m.CategoryVegetablesComponent)
+  },
+  {
+    path: 'marche-agricole/fruits',
+    loadComponent: () => import('./pages/category-fruits/category-fruits.component').then(m => m.CategoryFruitsComponent)
+  },
+  {
+    path: 'marche-agricole/cereales',
+    loadComponent: () => import('./pages/category-cereals/category-cereals.component').then(m => m.CategoryCerealsComponent)
   }
 ];

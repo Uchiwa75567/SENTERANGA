@@ -1,0 +1,59 @@
+<app-header></app-header>
+
+<!-- Jokko AI Mascot -->
+<div class="fixed bottom-8 right-8 z-50">
+  <div class="text-center">
+    <div class="text-senteranga-green text-4xl font-extrabold mb-2">JOKKO AI</div>
+    <img src="/images/jokko-ai-mascot.png" alt="Jokko AI" class="w-48 h-48 object-contain">
+  </div>
+</div>
+
+<!-- Title Section -->
+<section class="py-12 px-8 bg-white">
+  <div class="max-w-7xl mx-auto">
+    <h1 class="text-6xl font-bold text-center text-black leading-tight mb-8">
+      Marché <span class="text-senteranga-green">Agricole Céréales</span>
+    </h1>
+    
+    <!-- Search and Filter Bar -->
+    <div class="bg-white border border-gray-200 rounded-xl shadow-lg p-6 mb-12">
+      <div class="flex flex-col md:flex-row gap-4 items-center">
+        <!-- Search Input -->
+        <div class="flex-1 border border-gray-400 rounded-lg px-4 py-3 flex items-center gap-3">
+          <input 
+            type="text" 
+            placeholder="Recherche de produits..." 
+            [(ngModel)]="searchQuery"
+            class="flex-1 text-xl font-medium text-gray-400 outline-none">
+          <img src="/icons/search.svg" alt="Search" class="w-5 h-5 bg-gray-400">
+        </div>
+        
+        <!-- Filter Dropdown -->
+        <div class="flex items-center gap-4">
+          <span class="text-2xl font-medium text-gray-700">Filtrer par:</span>
+          <select [(ngModel)]="selectedFilter" 
+            class="bg-gray-100 border border-gray-300 rounded-md px-4 py-2 text-sm">
+            <option>Tous les types</option>
+            <option>Blé et dérivés</option>
+            <option>Maïs</option>
+            <option>Mil et sorgho</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Products Grid -->
+<section class="py-8 px-8 bg-gray-50">
+  <div class="max-w-7xl mx-auto">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <app-product-card 
+        *ngFor="let product of products" 
+        [product]="product">
+      </app-product-card>
+    </div>
+  </div>
+</section>
+
+<app-footer></app-footer>
