@@ -12,6 +12,7 @@ export interface MarketplaceCategory {
   name: string;
   type: ProductType;
   imageUrl: string;
+  link?: string;
 }
 
 export interface ActorCard {

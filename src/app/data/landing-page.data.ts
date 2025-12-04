@@ -11,19 +11,22 @@ export const marketplaceCategories: MarketplaceCategory[] = [
     id: '1',
     name: 'Marché Agricol',
     type: 'agricol',
-    imageUrl: '/images/marche-agricol.png'
+    imageUrl: '/images/marche-agricol.png',
+    link: '/marche-agricole'
   },
   {
     id: '2',
     name: 'Marché Élevage',
     type: 'elevage',
-    imageUrl: '/images/marche-elevage.png'
+    imageUrl: '/images/marche-elevage.png',
+    link: '/marche-elevage'
   },
   {
     id: '3',
     name: 'Marché Pêche',
     type: 'peche',
-    imageUrl: '/images/marche-peche.png'
+    imageUrl: '/images/marche-peche.png',
+    link: '/marche-peche'
   }
 ];
 

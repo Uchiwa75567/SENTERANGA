@@ -1,0 +1,51 @@
+<div class="chat-container">
+  <!-- Header -->
+  <div class="chat-header">
+    <img src="/images/jokko-ai-mascot.png" alt="Jokko AI" class="header-avatar">
+    <h2 class="header-title">JOKKO AI</h2>
+    <button (click)="onClose()" class="close-button">
+      <img src="/icons/minus-circle.svg" alt="Close" class="w-7 h-7">
+    </button>
+  </div>
+
+  <!-- Messages Area -->
+  <div class="messages-area">
+    <div *ngFor="let message of messages" 
+         [ngClass]="message.sender === 'jokko' ? 'message-jokko' : 'message-user'">
+      
+      <!-- Jokko Message -->
+      <div *ngIf="message.sender === 'jokko'" class="flex items-start gap-2 mb-4">
+        <img src="/images/jokko-ai-mascot.png" alt="Jokko" class="w-9 h-9 rounded-full flex-shrink-0">
+        <div class="flex flex-col">
+          <div class="jokko-bubble">
+            {{ message.text }}
+          </div>
+          <div class="message-time">{{ formatTime(message.timestamp) }}</div>
+        </div>
+      </div>
+
+      <!-- User Message -->
+      <div *ngIf="message.sender === 'user'" class="flex justify-end mb-4">
+        <div class="flex flex-col items-end">
+          <div class="user-bubble">
+            {{ message.text }}
+          </div>
+          <div class="message-time">{{ formatTime(message.timestamp) }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Input Area -->
+  <div class="input-area">
+    <input 
+      type="text" 
+      [(ngModel)]="messageText"
+      (keyup.enter)="sendMessage()"
+      placeholder="Type your message here..."
+      class="message-input">
+    <button (click)="sendMessage()" class="send-button">
+      <img src="/icons/send-message.svg" alt="Send" class="w-5 h-5">
+    </button>
+  </div>
+</div>

@@ -25,40 +25,33 @@
     </div>
   </div>
   
-  <!-- Jokko AI Mascot -->
-  <div class="fixed bottom-8 right-8 z-50">
-    <div class="text-center">
-      <div class="text-senteranga-green text-4xl font-extrabold mb-2">JOKKO AI</div>
-      <img src="/images/jokko-ai-mascot.png" alt="Jokko AI" class="w-48 h-48 object-contain">
-    </div>
-  </div>
 </section>
 
-<!-- Marketplace Title -->
-<section class="py-12 px-8 bg-white">
+<!-- Marketplace Title and Search -->
+<section class="pt-12 pb-8 px-8 bg-white">
   <div class="max-w-7xl mx-auto">
-    <h2 class="text-6xl font-bold text-center text-black leading-tight mb-8">
+    <h2 class="text-6xl font-bold text-center text-black leading-[40px] mb-12">
       Marché <span class="text-senteranga-green">Agricole</span>
     </h2>
     
     <!-- Search and Filter Bar -->
-    <div class="bg-white border border-gray-200 rounded-xl shadow-lg p-6 mb-12">
+    <div class="bg-white border border-gray-200 rounded-xl shadow-lg p-6">
       <div class="flex flex-col md:flex-row gap-4 items-center">
         <!-- Search Input -->
-        <div class="flex-1 border border-gray-400 rounded-lg px-4 py-3 flex items-center gap-3">
+        <div class="flex-1 border border-[#b3afaf] rounded-[10px] px-4 py-3 flex items-center gap-3">
           <input 
             type="text" 
             placeholder="Recherche de produits..." 
             [(ngModel)]="searchQuery"
-            class="flex-1 text-xl font-medium text-gray-400 outline-none">
-          <img src="/icons/search.svg" alt="Search" class="w-5 h-5 bg-gray-400">
+            class="flex-1 text-xl font-medium text-[#8d8282] outline-none bg-transparent">
+          <img src="/icons/search.svg" alt="Search" class="w-5 h-5 opacity-60">
         </div>
         
         <!-- Filter Dropdown -->
         <div class="flex items-center gap-4">
-          <span class="text-2xl font-medium text-gray-700">Filtrer par:</span>
+          <span class="text-2xl font-medium text-[#374151] leading-5">Filtrer par:</span>
           <select [(ngModel)]="selectedFilter" 
-            class="bg-gray-100 border border-gray-300 rounded-md px-4 py-2 text-sm">
+            class="bg-[#efefef] border border-[#d1d5db] rounded-md px-4 py-2 text-sm leading-4">
             <option>Tous les types</option>
             <option>Légumes</option>
             <option>Fruits</option>
@@ -73,38 +66,146 @@
 <!-- Main Content -->
 <section class="py-8 px-8 bg-gray-50">
   <div class="max-w-7xl mx-auto">
-    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-8">
+      <h3 class="text-[40px] font-medium text-senteranga-green">Catégories</h3>
+      <h2 class="text-5xl font-bold text-black">Nouveau Arrivage</h2>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-[367px_1fr] gap-8">
       <!-- Sidebar - Categories -->
-      <div class="lg:col-span-1">
-        <h3 class="text-4xl font-medium text-senteranga-green mb-6">Catégories</h3>
-        <div class="space-y-6">
-          <app-category-card 
-            *ngFor="let category of categoryCards" 
-            [category]="category">
-          </app-category-card>
-        </div>
+      <div class="space-y-6">
+        <!-- Légumes Category -->
+        <app-category-card [category]="categoryCards[0]"></app-category-card>
       </div>
       
-      <!-- Products Grid -->
-      <div class="lg:col-span-3">
-        <div class="flex items-center justify-between mb-6">
-          <h3 class="text-6xl font-bold text-black">Nouveau Arrivage</h3>
-          <div class="flex gap-2">
-            <button class="w-12 h-12 rounded-full bg-green-200 flex items-center justify-center hover:bg-green-300 transition-colors">
-              <img src="/icons/chevron-left.svg" alt="Previous" class="w-6 h-6">
-            </button>
-            <button class="w-12 h-12 rounded-full bg-green-200 flex items-center justify-center hover:bg-green-300 transition-colors">
-              <img src="/icons/chevron-right.svg" alt="Next" class="w-6 h-6">
-            </button>
+      <!-- Products Grid - Légumes with Navigation Buttons -->
+      <div class="flex items-center gap-4">
+        <!-- Left Arrow Button -->
+        <button 
+          (click)="previousVegetables()"
+          [disabled]="!canGoPreviousVegetables()"
+          [class.opacity-50]="!canGoPreviousVegetables()"
+          [class.cursor-not-allowed]="!canGoPreviousVegetables()"
+          class="w-16 h-16 rounded-full bg-green-200 flex items-center justify-center hover:bg-green-300 transition-colors flex-shrink-0 disabled:hover:bg-green-200">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15 18L9 12L15 6" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+
+        <!-- Products Carousel Container -->
+        <div class="flex-1 overflow-hidden">
+          <div class="flex gap-6 transition-transform duration-500 ease-in-out"
+               [style.transform]="'translateX(-' + (vegetablesIndex * (100 / itemsPerPage)) + '%)'">
+            <div *ngFor="let product of vegetablesProducts" 
+                 class="flex-shrink-0"
+                 [style.width]="'calc((100% - ' + ((itemsPerPage - 1) * 24) + 'px) / ' + itemsPerPage + ')'">
+              <app-product-card [product]="product"></app-product-card>
+            </div>
           </div>
         </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-          <app-product-card 
-            *ngFor="let product of products" 
-            [product]="product">
-          </app-product-card>
+
+        <!-- Right Arrow Button -->
+        <button 
+          (click)="nextVegetables()"
+          [disabled]="!canGoNextVegetables()"
+          [class.opacity-50]="!canGoNextVegetables()"
+          [class.cursor-not-allowed]="!canGoNextVegetables()"
+          class="w-16 h-16 rounded-full bg-green-200 flex items-center justify-center hover:bg-green-300 transition-colors flex-shrink-0 disabled:hover:bg-green-200">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9 18L15 12L9 6" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Fruits Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-[367px_1fr] gap-8 mt-6">
+      <div class="space-y-6">
+        <app-category-card [category]="categoryCards[1]"></app-category-card>
+      </div>
+      
+      <div class="flex items-center gap-4">
+        <!-- Left Arrow Button -->
+        <button 
+          (click)="previousFruits()"
+          [disabled]="!canGoPreviousFruits()"
+          [class.opacity-50]="!canGoPreviousFruits()"
+          [class.cursor-not-allowed]="!canGoPreviousFruits()"
+          class="w-16 h-16 rounded-full bg-green-200 flex items-center justify-center hover:bg-green-300 transition-colors flex-shrink-0 disabled:hover:bg-green-200">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15 18L9 12L15 6" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+
+        <!-- Products Carousel Container -->
+        <div class="flex-1 overflow-hidden">
+          <div class="flex gap-6 transition-transform duration-500 ease-in-out"
+               [style.transform]="'translateX(-' + (fruitsIndex * (100 / itemsPerPage)) + '%)'">
+            <div *ngFor="let product of fruitsProducts" 
+                 class="flex-shrink-0"
+                 [style.width]="'calc((100% - ' + ((itemsPerPage - 1) * 24) + 'px) / ' + itemsPerPage + ')'">
+              <app-product-card [product]="product"></app-product-card>
+            </div>
+          </div>
         </div>
+
+        <!-- Right Arrow Button -->
+        <button 
+          (click)="nextFruits()"
+          [disabled]="!canGoNextFruits()"
+          [class.opacity-50]="!canGoNextFruits()"
+          [class.cursor-not-allowed]="!canGoNextFruits()"
+          class="w-16 h-16 rounded-full bg-green-200 flex items-center justify-center hover:bg-green-300 transition-colors flex-shrink-0 disabled:hover:bg-green-200">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9 18L15 12L9 6" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Céréales Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-[367px_1fr] gap-8 mt-6">
+      <div class="space-y-6">
+        <app-category-card [category]="categoryCards[2]"></app-category-card>
+      </div>
+      
+      <div class="flex items-center gap-4">
+        <!-- Left Arrow Button -->
+        <button 
+          (click)="previousCereals()"
+          [disabled]="!canGoPreviousCereals()"
+          [class.opacity-50]="!canGoPreviousCereals()"
+          [class.cursor-not-allowed]="!canGoPreviousCereals()"
+          class="w-16 h-16 rounded-full bg-green-200 flex items-center justify-center hover:bg-green-300 transition-colors flex-shrink-0 disabled:hover:bg-green-200">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15 18L9 12L15 6" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+
+        <!-- Products Carousel Container -->
+        <div class="flex-1 overflow-hidden">
+          <div class="flex gap-6 transition-transform duration-500 ease-in-out"
+               [style.transform]="'translateX(-' + (cerealsIndex * (100 / itemsPerPage)) + '%)'">
+            <div *ngFor="let product of cerealsProducts" 
+                 class="flex-shrink-0"
+                 [style.width]="'calc((100% - ' + ((itemsPerPage - 1) * 24) + 'px) / ' + itemsPerPage + ')'">
+              <app-product-card [product]="product"></app-product-card>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Arrow Button -->
+        <button 
+          (click)="nextCereals()"
+          [disabled]="!canGoNextCereals()"
+          [class.opacity-50]="!canGoNextCereals()"
+          [class.cursor-not-allowed]="!canGoNextCereals()"
+          class="w-16 h-16 rounded-full bg-green-200 flex items-center justify-center hover:bg-green-300 transition-colors flex-shrink-0 disabled:hover:bg-green-200">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9 18L15 12L9 6" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
       </div>
     </div>
   </div>

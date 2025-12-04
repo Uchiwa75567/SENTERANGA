@@ -10,6 +10,14 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/marketplace/marketplace.component').then(m => m.MarketplaceComponent)
   },
   {
+    path: 'marche-elevage',
+    loadComponent: () => import('./pages/marketplace-livestock/marketplace-livestock.component').then(m => m.MarketplaceLivestockComponent)
+  },
+  {
+    path: 'marche-peche',
+    loadComponent: () => import('./pages/marketplace-fishing/marketplace-fishing.component').then(m => m.MarketplaceFishingComponent)
+  },
+  {
     path: 'marche-agricole/legumes',
     loadComponent: () => import('./pages/category-vegetables/category-vegetables.component').then(m => m.CategoryVegetablesComponent)
   },
