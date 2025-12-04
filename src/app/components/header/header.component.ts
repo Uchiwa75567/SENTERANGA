@@ -13,6 +13,7 @@ import { mockCartItems } from '../../data/cart.data';
 })
 export class HeaderComponent {
   isCartOpen = false;
+  isMobileMenuOpen = false;
   cartItems: CartItem[] = mockCartItems;
 
   get cartItemCount(): number {
@@ -25,6 +26,14 @@ export class HeaderComponent {
 
   closeCart(): void {
     this.isCartOpen = false;
+  }
+
+  toggleMobileMenu(): void {
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
+  }
+
+  closeMobileMenu(): void {
+    this.isMobileMenuOpen = false;
   }
 
   onContinueShopping(): void {

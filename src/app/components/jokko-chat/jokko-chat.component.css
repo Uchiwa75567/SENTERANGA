@@ -159,14 +159,49 @@
 /* Responsive */
 @media (max-width: 768px) {
   .chat-container {
-    width: calc(100vw - 32px);
-    height: calc(100vh - 200px);
+    width: 280px;
+    height: 400px;
     right: 16px;
-    bottom: 100px;
+    bottom: 16px;
+  }
+
+  .header-avatar {
+    width: 32px;
+    height: 32px;
+  }
+
+  .header-title {
+    font-size: 24px;
   }
 
   .jokko-bubble,
   .user-bubble {
-    max-width: 280px;
+    max-width: 200px;
+    padding: 12px 16px;
+    font-size: 13px;
+  }
+
+  /* Réduire la taille du mascot dans les messages */
+  .messages-area img.w-9 {
+    width: 24px !important;
+    height: 24px !important;
+  }
+
+  .messages-area {
+    padding: 16px;
+  }
+
+  .input-area {
+    padding: 16px 20px;
+  }
+
+  .message-input {
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+
+  .send-button {
+    width: 36px;
+    height: 36px;
   }
 }

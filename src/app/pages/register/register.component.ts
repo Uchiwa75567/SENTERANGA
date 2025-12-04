@@ -23,7 +23,7 @@ export class RegisterComponent {
   registrationForm!: FormGroup;
   isLoading = false;
 
-  // Image previews
+  // File previews
   idCardRectoPreview: string | null = null;
   idCardVersoPreview: string | null = null;
 

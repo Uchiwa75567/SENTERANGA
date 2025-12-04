@@ -12,7 +12,7 @@
 <section class="relative min-h-screen flex flex-col justify-center items-center px-8 py-20 pt-20"
   style="background: linear-gradient(180deg, rgba(102,102,102,0.08) 0%, rgba(0,0,0,0.7) 43.75%, rgba(0,0,0,0.7) 100%), url('https://images.unsplash.com/photo-1542838132-92c53300491e?w=1920&q=80') center/cover no-repeat;">
 
-  <div class="max-w-2xl w-full z-10">
+  <div class="max-w-6xl w-full z-10">
     <!-- Registration Card -->
     <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8">
       <div class="text-center mb-8">
@@ -20,13 +20,19 @@
         <p class="text-gray-600">Rejoignez la communauté SENTERANGA</p>
       </div>
 
+      <!-- Two Column Layout Header -->
+      <div *ngIf="selectedUserType" class="mb-8 text-center">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-2">Finalisez votre inscription</h2>
+        <p class="text-gray-600">Remplissez toutes les informations requises</p>
+      </div>
+
       <!-- User Type Selection -->
       <div *ngIf="!selectedUserType" class="mb-8">
         <h2 class="text-2xl font-semibold text-gray-800 mb-6">Choisissez votre profil</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div *ngFor="let userType of userTypes"
-               (click)="selectUserType(userType.value)"
-               class="cursor-pointer border-2 border-gray-200 rounded-xl p-6 hover:border-senteranga-green hover:bg-green-50 transition-all duration-200">
+                (click)="selectUserType(userType.value)"
+                class="cursor-pointer border-2 border-gray-200 rounded-xl p-6 hover:border-senteranga-green hover:bg-green-50 transition-all duration-200">
             <div class="text-center">
               <div class="text-4xl mb-3">{{ userType.icon }}</div>
               <h3 class="text-lg font-semibold text-gray-800 mb-2">{{ userType.label }}</h3>
@@ -37,401 +43,427 @@
       </div>
 
       <!-- Registration Form -->
-      <form *ngIf="selectedUserType" [formGroup]="registrationForm" (ngSubmit)="onSubmit()" class="space-y-6">
+      <form *ngIf="selectedUserType" [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
         <!-- Back Button -->
-        <button type="button" (click)="goBack()" class="flex items-center text-senteranga-green hover:text-senteranga-green-dark mb-4">
+        <button type="button" (click)="goBack()" class="flex items-center text-senteranga-green hover:text-senteranga-green-dark mb-6">
           <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
           </svg>
           Retour au choix du profil
         </button>
 
-        <!-- Common Fields -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label for="prenom" class="block text-sm font-medium text-gray-700 mb-2">
-              Prénom *
-            </label>
-            <input
-              type="text"
-              id="prenom"
-              formControlName="prenom"
-              placeholder="Votre prénom"
-              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-senteranga-green focus:border-transparent outline-none transition-colors"
-              [class.border-red-500]="prenom?.invalid && prenom?.touched">
-            <div *ngIf="prenom?.invalid && prenom?.touched" class="mt-1 text-sm text-red-600">
-              <div *ngIf="prenom?.errors?.['required']">Le prénom est requis</div>
-              <div *ngIf="prenom?.errors?.['minlength']">Minimum 2 caractères</div>
+        <!-- Two Column Layout -->
+        <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+          <!-- Left Column - Personal Information -->
+          <div class="space-y-6">
+            <h3 class="text-xl font-semibold text-gray-800 border-b border-gray-200 pb-2">Informations personnelles</h3>
+
+            <!-- Common Fields -->
+            <div class="space-y-4">
+              <div>
+                <label for="prenom" class="block text-sm font-medium text-gray-700 mb-2">
+                  Prénom *
+                </label>
+                <input
+                  type="text"
+                  id="prenom"
+                  formControlName="prenom"
+                  placeholder="Votre prénom"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-senteranga-green focus:border-transparent outline-none transition-colors"
+                  [class.border-red-500]="prenom?.invalid && prenom?.touched">
+                <div *ngIf="prenom?.invalid && prenom?.touched" class="mt-1 text-sm text-red-600">
+                  <div *ngIf="prenom?.errors?.['required']">Le prénom est requis</div>
+                  <div *ngIf="prenom?.errors?.['minlength']">Minimum 2 caractères</div>
+                </div>
+              </div>
+
+              <div>
+                <label for="nom" class="block text-sm font-medium text-gray-700 mb-2">
+                  Nom *
+                </label>
+                <input
+                  type="text"
+                  id="nom"
+                  formControlName="nom"
+                  placeholder="Votre nom"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-senteranga-green focus:border-transparent outline-none transition-colors"
+                  [class.border-red-500]="nom?.invalid && nom?.touched">
+                <div *ngIf="nom?.invalid && nom?.touched" class="mt-1 text-sm text-red-600">
+                  <div *ngIf="nom?.errors?.['required']">Le nom est requis</div>
+                  <div *ngIf="nom?.errors?.['minlength']">Minimum 2 caractères</div>
+                </div>
+              </div>
+
+              <div>
+                <label for="telephone" class="block text-sm font-medium text-gray-700 mb-2">
+                  Numéro de téléphone *
+                </label>
+                <input
+                  type="tel"
+                  id="telephone"
+                  formControlName="telephone"
+                  placeholder="+221 XX XXX XX XX"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-senteranga-green focus:border-transparent outline-none transition-colors"
+                  [class.border-red-500]="telephone?.invalid && telephone?.touched">
+                <div *ngIf="telephone?.invalid && telephone?.touched" class="mt-1 text-sm text-red-600">
+                  <div *ngIf="telephone?.errors?.['required']">Le numéro de téléphone est requis</div>
+                  <div *ngIf="telephone?.errors?.['pattern']">Format invalide (ex: +221771234567)</div>
+                </div>
+              </div>
             </div>
-          </div>
 
-          <div>
-            <label for="nom" class="block text-sm font-medium text-gray-700 mb-2">
-              Nom *
-            </label>
-            <input
-              type="text"
-              id="nom"
-              formControlName="nom"
-              placeholder="Votre nom"
-              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-senteranga-green focus:border-transparent outline-none transition-colors"
-              [class.border-red-500]="nom?.invalid && nom?.touched">
-            <div *ngIf="nom?.invalid && nom?.touched" class="mt-1 text-sm text-red-600">
-              <div *ngIf="nom?.errors?.['required']">Le nom est requis</div>
-              <div *ngIf="nom?.errors?.['minlength']">Minimum 2 caractères</div>
-            </div>
-          </div>
-        </div>
+            <!-- User Type Specific Fields -->
+            <div class="space-y-4">
+              <h4 class="text-lg font-medium text-gray-700">Informations spécifiques</h4>
 
-        <div>
-          <label for="telephone" class="block text-sm font-medium text-gray-700 mb-2">
-            Numéro de téléphone *
-          </label>
-          <input
-            type="tel"
-            id="telephone"
-            formControlName="telephone"
-            placeholder="+221 XX XXX XX XX"
-            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-senteranga-green focus:border-transparent outline-none transition-colors"
-            [class.border-red-500]="telephone?.invalid && telephone?.touched">
-          <div *ngIf="telephone?.invalid && telephone?.touched" class="mt-1 text-sm text-red-600">
-            <div *ngIf="telephone?.errors?.['required']">Le numéro de téléphone est requis</div>
-            <div *ngIf="telephone?.errors?.['pattern']">Format invalide (ex: +221771234567)</div>
-          </div>
-        </div>
+              <!-- Agriculteur Fields -->
+              <div *ngIf="selectedUserType === 'agriculteur'" class="space-y-4">
+                <div class="space-y-4">
+                  <div>
+                    <label for="region" class="block text-sm font-medium text-gray-700 mb-2">
+                      Région *
+                    </label>
+                    <select
+                      id="region"
+                      formControlName="region"
+                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-senteranga-green focus:border-transparent outline-none transition-colors"
+                      [class.border-red-500]="region?.invalid && region?.touched">
+                      <option value="">Sélectionnez une région</option>
+                      <option *ngFor="let region of regions" [value]="region">{{ region }}</option>
+                    </select>
+                    <div *ngIf="region?.invalid && region?.touched" class="mt-1 text-sm text-red-600">
+                      La région est requise
+                    </div>
+                  </div>
 
-        <!-- ID Card Upload (Required for agriculteur, client, agronome) -->
-        <div *ngIf="selectedUserType === 'agriculteur' || selectedUserType === 'client' || selectedUserType === 'agronome'" class="space-y-4">
-          <h3 class="text-lg font-semibold text-gray-800 mb-4">Pièce d'identité (obligatoire)</h3>
-          <p class="text-sm text-gray-600 mb-4">Veuillez télécharger les deux faces de votre carte d'identité nationale</p>
+                  <div>
+                    <label for="departement" class="block text-sm font-medium text-gray-700 mb-2">
+                      Département *
+                    </label>
+                    <input
+                      type="text"
+                      id="departement"
+                      formControlName="departement"
+                      placeholder="Votre département"
+                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-senteranga-green focus:border-transparent outline-none transition-colors"
+                      [class.border-red-500]="departement?.invalid && departement?.touched">
+                    <div *ngIf="departement?.invalid && departement?.touched" class="mt-1 text-sm text-red-600">
+                      Le département est requis
+                    </div>
+                  </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <!-- Recto -->
-            <div>
-              <label for="idCardRecto" class="block text-sm font-medium text-gray-700 mb-2">
-                Recto de la carte d'identité *
-              </label>
-              <div class="relative">
-                <!-- Preview Mode -->
-                <div *ngIf="idCardRectoPreview" class="relative">
-                  <img [src]="idCardRectoPreview" alt="Recto de la carte d'identité" class="w-full h-32 object-cover rounded-lg border-2 border-gray-300">
-                  <button
-                    type="button"
-                    (click)="removeFile('idCardRecto')"
-                    class="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                  </button>
-                  <div class="absolute bottom-2 left-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded">
-                    Recto
+                  <div>
+                    <label for="village" class="block text-sm font-medium text-gray-700 mb-2">
+                      Village ou village le plus proche *
+                    </label>
+                    <input
+                      type="text"
+                      id="village"
+                      formControlName="village"
+                      placeholder="Votre village"
+                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-senteranga-green focus:border-transparent outline-none transition-colors"
+                      [class.border-red-500]="village?.invalid && village?.touched">
+                    <div *ngIf="village?.invalid && village?.touched" class="mt-1 text-sm text-red-600">
+                      Le village est requis
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Client Fields -->
+              <div *ngIf="selectedUserType === 'client'" class="space-y-4">
+                <label class="block text-sm font-medium text-gray-700 mb-4">
+                  Vous achetez pour : *
+                </label>
+                <div class="space-y-3">
+                  <div *ngFor="let type of clientTypes" class="flex items-center">
+                    <input
+                      type="radio"
+                      [id]="type.value"
+                      formControlName="clientType"
+                      [value]="type.value"
+                      class="h-4 w-4 text-senteranga-green focus:ring-senteranga-green border-gray-300">
+                    <label [for]="type.value" class="ml-3 block text-sm font-medium text-gray-700">
+                      {{ type.label }}
+                    </label>
+                  </div>
+                </div>
+                <div *ngIf="clientType?.invalid && clientType?.touched" class="mt-2 text-sm text-red-600">
+                  Veuillez sélectionner un type d'achat
+                </div>
+              </div>
+
+              <!-- Investisseur Fields -->
+              <div *ngIf="selectedUserType === 'investisseur'" class="space-y-4">
+                <div>
+                  <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                    Adresse email *
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    formControlName="email"
+                    placeholder="votre@email.com"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-senteranga-green focus:border-transparent outline-none transition-colors"
+                    [class.border-red-500]="email?.invalid && email?.touched">
+                  <div *ngIf="email?.invalid && email?.touched" class="mt-1 text-sm text-red-600">
+                    <div *ngIf="email?.errors?.['required']">L'adresse email est requise</div>
+                    <div *ngIf="email?.errors?.['email']">Format d'email invalide</div>
                   </div>
                 </div>
 
-                <!-- Upload Mode -->
-                <div *ngIf="!idCardRectoPreview">
-                  <input
-                    type="file"
-                    id="idCardRecto"
-                    (change)="onFileChange($event, 'idCardRecto')"
-                    accept="image/*"
-                    class="hidden">
-                  <label
-                    for="idCardRecto"
-                    class="flex items-center justify-center w-full px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-senteranga-green hover:bg-green-50 transition-colors"
-                    [class.border-red-500]="idCardRecto?.invalid && idCardRecto?.touched">
-                    <div class="text-center">
-                      <svg class="mx-auto h-8 w-8 text-gray-400 mb-2" stroke="currentColor" fill="none" viewBox="0 0 48 48">
-                        <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                      </svg>
-                      <p class="text-sm text-gray-600">Cliquez pour sélectionner</p>
-                      <p class="text-xs text-gray-500">PNG, JPG, GIF (max 5MB)</p>
-                    </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-4">
+                    Vous êtes : *
                   </label>
-                </div>
-              </div>
-              <div *ngIf="idCardRecto?.invalid && idCardRecto?.touched" class="mt-1 text-sm text-red-600">
-                Le recto de la carte d'identité est requis
-              </div>
-            </div>
-
-            <!-- Verso -->
-            <div>
-              <label for="idCardVerso" class="block text-sm font-medium text-gray-700 mb-2">
-                Verso de la carte d'identité *
-              </label>
-              <div class="relative">
-                <!-- Preview Mode -->
-                <div *ngIf="idCardVersoPreview" class="relative">
-                  <img [src]="idCardVersoPreview" alt="Verso de la carte d'identité" class="w-full h-32 object-cover rounded-lg border-2 border-gray-300">
-                  <button
-                    type="button"
-                    (click)="removeFile('idCardVerso')"
-                    class="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                  </button>
-                  <div class="absolute bottom-2 left-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded">
-                    Verso
+                  <div class="space-y-3">
+                    <div *ngFor="let type of investorTypes" class="flex items-center">
+                      <input
+                        type="radio"
+                        [id]="type.value"
+                        formControlName="investorType"
+                        [value]="type.value"
+                        class="h-4 w-4 text-senteranga-green focus:ring-senteranga-green border-gray-300">
+                      <label [for]="type.value" class="ml-3 block text-sm font-medium text-gray-700">
+                        {{ type.label }}
+                      </label>
+                    </div>
+                  </div>
+                  <div *ngIf="investorType?.invalid && investorType?.touched" class="mt-2 text-sm text-red-600">
+                    Veuillez sélectionner un type d'investisseur
                   </div>
                 </div>
 
-                <!-- Upload Mode -->
-                <div *ngIf="!idCardVersoPreview">
-                  <input
-                    type="file"
-                    id="idCardVerso"
-                    (change)="onFileChange($event, 'idCardVerso')"
-                    accept="image/*"
-                    class="hidden">
-                  <label
-                    for="idCardVerso"
-                    class="flex items-center justify-center w-full px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-senteranga-green hover:bg-green-50 transition-colors"
-                    [class.border-red-500]="idCardVerso?.invalid && idCardVerso?.touched">
-                    <div class="text-center">
-                      <svg class="mx-auto h-8 w-8 text-gray-400 mb-2" stroke="currentColor" fill="none" viewBox="0 0 48 48">
-                        <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                      </svg>
-                      <p class="text-sm text-gray-600">Cliquez pour sélectionner</p>
-                      <p class="text-xs text-gray-500">PNG, JPG, GIF (max 5MB)</p>
-                    </div>
+                <div>
+                  <label for="montantInvestissement" class="block text-sm font-medium text-gray-700 mb-2">
+                    Montant moyen que vous souhaitez investir (FCFA) *
                   </label>
+                  <input
+                    type="number"
+                    id="montantInvestissement"
+                    formControlName="montantInvestissement"
+                    placeholder="100000"
+                    min="100000"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-senteranga-green focus:border-transparent outline-none transition-colors"
+                    [class.border-red-500]="montantInvestissement?.invalid && montantInvestissement?.touched">
+                  <div *ngIf="montantInvestissement?.invalid && montantInvestissement?.touched" class="mt-1 text-sm text-red-600">
+                    <div *ngIf="montantInvestissement?.errors?.['required']">Le montant est requis</div>
+                    <div *ngIf="montantInvestissement?.errors?.['min']">Minimum 100 000 FCFA</div>
+                  </div>
                 </div>
               </div>
-              <div *ngIf="idCardVerso?.invalid && idCardVerso?.touched" class="mt-1 text-sm text-red-600">
-                Le verso de la carte d'identité est requis
-              </div>
-            </div>
-          </div>
-        </div>
 
-        <!-- Agriculteur Fields -->
-        <div *ngIf="selectedUserType === 'agriculteur'" class="space-y-4">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label for="region" class="block text-sm font-medium text-gray-700 mb-2">
-                Région *
-              </label>
-              <select
-                id="region"
-                formControlName="region"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-senteranga-green focus:border-transparent outline-none transition-colors"
-                [class.border-red-500]="region?.invalid && region?.touched">
-                <option value="">Sélectionnez une région</option>
-                <option *ngFor="let region of regions" [value]="region">{{ region }}</option>
-              </select>
-              <div *ngIf="region?.invalid && region?.touched" class="mt-1 text-sm text-red-600">
-                La région est requise
-              </div>
-            </div>
+              <!-- Agronome Fields -->
+              <div *ngIf="selectedUserType === 'agronome'" class="space-y-4">
+                <div class="space-y-4">
+                  <div>
+                    <label for="emailPro" class="block text-sm font-medium text-gray-700 mb-2">
+                      Email professionnel
+                    </label>
+                    <input
+                      type="email"
+                      id="emailPro"
+                      formControlName="emailPro"
+                      placeholder="professionnel@email.com"
+                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-senteranga-green focus:border-transparent outline-none transition-colors"
+                      [class.border-red-500]="emailPro?.invalid && emailPro?.touched">
+                    <div *ngIf="emailPro?.invalid && emailPro?.touched" class="mt-1 text-sm text-red-600">
+                      Format d'email invalide
+                    </div>
+                  </div>
 
-            <div>
-              <label for="departement" class="block text-sm font-medium text-gray-700 mb-2">
-                Département *
-              </label>
-              <input
-                type="text"
-                id="departement"
-                formControlName="departement"
-                placeholder="Votre département"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-senteranga-green focus:border-transparent outline-none transition-colors"
-                [class.border-red-500]="departement?.invalid && departement?.touched">
-              <div *ngIf="departement?.invalid && departement?.touched" class="mt-1 text-sm text-red-600">
-                Le département est requis
-              </div>
-            </div>
-          </div>
+                  <div>
+                    <label for="telephonePro" class="block text-sm font-medium text-gray-700 mb-2">
+                      Téléphone professionnel
+                    </label>
+                    <input
+                      type="tel"
+                      id="telephonePro"
+                      formControlName="telephonePro"
+                      placeholder="+221 XX XXX XX XX"
+                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-senteranga-green focus:border-transparent outline-none transition-colors"
+                      [class.border-red-500]="telephonePro?.invalid && telephonePro?.touched">
+                    <div *ngIf="telephonePro?.invalid && telephonePro?.touched" class="mt-1 text-sm text-red-600">
+                      Format invalide (ex: +221771234567)
+                    </div>
+                  </div>
 
-          <div>
-            <label for="village" class="block text-sm font-medium text-gray-700 mb-2">
-              Village ou village le plus proche *
-            </label>
-            <input
-              type="text"
-              id="village"
-              formControlName="village"
-              placeholder="Votre village"
-              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-senteranga-green focus:border-transparent outline-none transition-colors"
-              [class.border-red-500]="village?.invalid && village?.touched">
-            <div *ngIf="village?.invalid && village?.touched" class="mt-1 text-sm text-red-600">
-              Le village est requis
-            </div>
-          </div>
-        </div>
+                  <div>
+                    <label for="structure" class="block text-sm font-medium text-gray-700 mb-2">
+                      Structure / Employeur *
+                    </label>
+                    <input
+                      type="text"
+                      id="structure"
+                      formControlName="structure"
+                      placeholder="Ex: ANCAR, SAED, ONG, projet..."
+                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-senteranga-green focus:border-transparent outline-none transition-colors"
+                      [class.border-red-500]="structure?.invalid && structure?.touched">
+                    <div *ngIf="structure?.invalid && structure?.touched" class="mt-1 text-sm text-red-600">
+                      La structure est requise
+                    </div>
+                  </div>
 
-        <!-- Client Fields -->
-        <div *ngIf="selectedUserType === 'client'">
-          <label class="block text-sm font-medium text-gray-700 mb-4">
-            Vous achetez pour : *
-          </label>
-          <div class="space-y-3">
-            <div *ngFor="let type of clientTypes" class="flex items-center">
-              <input
-                type="radio"
-                [id]="type.value"
-                formControlName="clientType"
-                [value]="type.value"
-                class="h-4 w-4 text-senteranga-green focus:ring-senteranga-green border-gray-300">
-              <label [for]="type.value" class="ml-3 block text-sm font-medium text-gray-700">
-                {{ type.label }}
-              </label>
-            </div>
-          </div>
-          <div *ngIf="clientType?.invalid && clientType?.touched" class="mt-2 text-sm text-red-600">
-            Veuillez sélectionner un type d'achat
-          </div>
-        </div>
-
-        <!-- Investisseur Fields -->
-        <div *ngIf="selectedUserType === 'investisseur'" class="space-y-4">
-          <div>
-            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
-              Adresse email *
-            </label>
-            <input
-              type="email"
-              id="email"
-              formControlName="email"
-              placeholder="votre@email.com"
-              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-senteranga-green focus:border-transparent outline-none transition-colors"
-              [class.border-red-500]="email?.invalid && email?.touched">
-            <div *ngIf="email?.invalid && email?.touched" class="mt-1 text-sm text-red-600">
-              <div *ngIf="email?.errors?.['required']">L'adresse email est requise</div>
-              <div *ngIf="email?.errors?.['email']">Format d'email invalide</div>
-            </div>
-          </div>
-
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-4">
-              Vous êtes : *
-            </label>
-            <div class="space-y-3">
-              <div *ngFor="let type of investorTypes" class="flex items-center">
-                <input
-                  type="radio"
-                  [id]="type.value"
-                  formControlName="investorType"
-                  [value]="type.value"
-                  class="h-4 w-4 text-senteranga-green focus:ring-senteranga-green border-gray-300">
-                <label [for]="type.value" class="ml-3 block text-sm font-medium text-gray-700">
-                  {{ type.label }}
-                </label>
-              </div>
-            </div>
-            <div *ngIf="investorType?.invalid && investorType?.touched" class="mt-2 text-sm text-red-600">
-              Veuillez sélectionner un type d'investisseur
-            </div>
-          </div>
-
-          <div>
-            <label for="montantInvestissement" class="block text-sm font-medium text-gray-700 mb-2">
-              Montant moyen que vous souhaitez investir (FCFA) *
-            </label>
-            <input
-              type="number"
-              id="montantInvestissement"
-              formControlName="montantInvestissement"
-              placeholder="100000"
-              min="100000"
-              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-senteranga-green focus:border-transparent outline-none transition-colors"
-              [class.border-red-500]="montantInvestissement?.invalid && montantInvestissement?.touched">
-            <div *ngIf="montantInvestissement?.invalid && montantInvestissement?.touched" class="mt-1 text-sm text-red-600">
-              <div *ngIf="montantInvestissement?.errors?.['required']">Le montant est requis</div>
-              <div *ngIf="montantInvestissement?.errors?.['min']">Minimum 100 000 FCFA</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Agronome Fields -->
-        <div *ngIf="selectedUserType === 'agronome'" class="space-y-4">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label for="emailPro" class="block text-sm font-medium text-gray-700 mb-2">
-                Email professionnel
-              </label>
-              <input
-                type="email"
-                id="emailPro"
-                formControlName="emailPro"
-                placeholder="professionnel@email.com"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-senteranga-green focus:border-transparent outline-none transition-colors"
-                [class.border-red-500]="emailPro?.invalid && emailPro?.touched">
-              <div *ngIf="emailPro?.invalid && emailPro?.touched" class="mt-1 text-sm text-red-600">
-                Format d'email invalide
-              </div>
-            </div>
-
-            <div>
-              <label for="telephonePro" class="block text-sm font-medium text-gray-700 mb-2">
-                Téléphone professionnel
-              </label>
-              <input
-                type="tel"
-                id="telephonePro"
-                formControlName="telephonePro"
-                placeholder="+221 XX XXX XX XX"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-senteranga-green focus:border-transparent outline-none transition-colors"
-                [class.border-red-500]="telephonePro?.invalid && telephonePro?.touched">
-              <div *ngIf="telephonePro?.invalid && telephonePro?.touched" class="mt-1 text-sm text-red-600">
-                Format invalide (ex: +221771234567)
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-4">
+                      Régions où vous intervenez : *
+                    </label>
+                    <div class="grid grid-cols-2 gap-3">
+                      <div *ngFor="let region of regions" class="flex items-center">
+                        <input
+                          type="checkbox"
+                          [id]="'region-' + region"
+                          [checked]="isRegionSelected(region)"
+                          (change)="onRegionChange(region, $event)"
+                          class="h-4 w-4 text-senteranga-green focus:ring-senteranga-green border-gray-300 rounded">
+                        <label [for]="'region-' + region" class="ml-2 block text-sm text-gray-700">
+                          {{ region }}
+                        </label>
+                      </div>
+                    </div>
+                    <div *ngIf="regionsIntervention?.invalid && regionsIntervention?.touched" class="mt-2 text-sm text-red-600">
+                      Veuillez sélectionner au moins une région
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
-          <div>
-            <label for="structure" class="block text-sm font-medium text-gray-700 mb-2">
-              Structure / Employeur *
-            </label>
-            <input
-              type="text"
-              id="structure"
-              formControlName="structure"
-              placeholder="Ex: ANCAR, SAED, ONG, projet..."
-              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-senteranga-green focus:border-transparent outline-none transition-colors"
-              [class.border-red-500]="structure?.invalid && structure?.touched">
-            <div *ngIf="structure?.invalid && structure?.touched" class="mt-1 text-sm text-red-600">
-              La structure est requise
-            </div>
-          </div>
+          <!-- Right Column - Documents -->
+          <div class="space-y-6">
+            <h3 class="text-xl font-semibold text-gray-800 border-b border-gray-200 pb-2">Documents et validation</h3>
 
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-4">
-              Régions où vous intervenez : *
-            </label>
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-              <div *ngFor="let region of regions" class="flex items-center">
-                <input
-                  type="checkbox"
-                  [id]="'region-' + region"
-                  [checked]="isRegionSelected(region)"
-                  (change)="onRegionChange(region, $event)"
-                  class="h-4 w-4 text-senteranga-green focus:ring-senteranga-green border-gray-300 rounded">
-                <label [for]="'region-' + region" class="ml-2 block text-sm text-gray-700">
-                  {{ region }}
-                </label>
+            <!-- ID Card Upload (Required for agriculteur, client, agronome) -->
+            <div *ngIf="selectedUserType === 'agriculteur' || selectedUserType === 'client' || selectedUserType === 'agronome'" class="space-y-4">
+              <h4 class="text-lg font-medium text-gray-700">Pièce d'identité (obligatoire)</h4>
+              <p class="text-sm text-gray-600">Veuillez télécharger les deux faces de votre carte d'identité nationale</p>
+
+              <div class="space-y-4">
+                <!-- Recto -->
+                <div>
+                  <label for="idCardRecto" class="block text-sm font-medium text-gray-700 mb-2">
+                    Recto de la carte d'identité *
+                  </label>
+                  <div class="relative">
+                    <!-- Preview Mode -->
+                    <div *ngIf="idCardRectoPreview" class="relative">
+                      <img [src]="idCardRectoPreview" alt="Recto de la carte d'identité" class="w-full h-32 object-cover rounded-lg border-2 border-gray-300">
+                      <button
+                        type="button"
+                        (click)="removeFile('idCardRecto')"
+                        class="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                      </button>
+                      <div class="absolute bottom-2 left-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded">
+                        Recto
+                      </div>
+                    </div>
+
+                    <!-- Upload Mode -->
+                    <div *ngIf="!idCardRectoPreview">
+                      <input
+                        type="file"
+                        id="idCardRecto"
+                        (change)="onFileChange($event, 'idCardRecto')"
+                        accept="image/*"
+                        class="hidden">
+                      <label
+                        for="idCardRecto"
+                        class="flex items-center justify-center w-full px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-senteranga-green hover:bg-green-50 transition-colors"
+                        [class.border-red-500]="idCardRecto?.invalid && idCardRecto?.touched">
+                        <div class="text-center">
+                          <svg class="mx-auto h-8 w-8 text-gray-400 mb-2" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                            <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                          </svg>
+                          <p class="text-sm text-gray-600">Cliquez pour sélectionner</p>
+                          <p class="text-xs text-gray-500">PNG, JPG, GIF (max 5MB)</p>
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+                  <div *ngIf="idCardRecto?.invalid && idCardRecto?.touched" class="mt-1 text-sm text-red-600">
+                    Le recto de la carte d'identité est requis
+                  </div>
+                </div>
+
+                <!-- Verso -->
+                <div>
+                  <label for="idCardVerso" class="block text-sm font-medium text-gray-700 mb-2">
+                    Verso de la carte d'identité *
+                  </label>
+                  <div class="relative">
+                    <!-- Preview Mode -->
+                    <div *ngIf="idCardVersoPreview" class="relative">
+                      <img [src]="idCardVersoPreview" alt="Verso de la carte d'identité" class="w-full h-32 object-cover rounded-lg border-2 border-gray-300">
+                      <button
+                        type="button"
+                        (click)="removeFile('idCardVerso')"
+                        class="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                      </button>
+                      <div class="absolute bottom-2 left-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded">
+                        Verso
+                      </div>
+                    </div>
+
+                    <!-- Upload Mode -->
+                    <div *ngIf="!idCardVersoPreview">
+                      <input
+                        type="file"
+                        id="idCardVerso"
+                        (change)="onFileChange($event, 'idCardVerso')"
+                        accept="image/*"
+                        class="hidden">
+                      <label
+                        for="idCardVerso"
+                        class="flex items-center justify-center w-full px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-senteranga-green hover:bg-green-50 transition-colors"
+                        [class.border-red-500]="idCardVerso?.invalid && idCardVerso?.touched">
+                        <div class="text-center">
+                          <svg class="mx-auto h-8 w-8 text-gray-400 mb-2" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                            <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                          </svg>
+                          <p class="text-sm text-gray-600">Cliquez pour sélectionner</p>
+                          <p class="text-xs text-gray-500">PNG, JPG, GIF (max 5MB)</p>
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+                  <div *ngIf="idCardVerso?.invalid && idCardVerso?.touched" class="mt-1 text-sm text-red-600">
+                    Le verso de la carte d'identité est requis
+                  </div>
+                </div>
               </div>
             </div>
-            <div *ngIf="regionsIntervention?.invalid && regionsIntervention?.touched" class="mt-2 text-sm text-red-600">
-              Veuillez sélectionner au moins une région
+
+            <!-- Summary for users who don't need ID card -->
+            <div *ngIf="selectedUserType === 'investisseur'" class="bg-green-50 border border-green-200 rounded-lg p-4">
+              <h4 class="text-lg font-medium text-green-800 mb-2">Validation des informations</h4>
+              <p class="text-sm text-green-700">Vos informations ont été vérifiées. Vous pouvez maintenant finaliser votre inscription.</p>
             </div>
           </div>
         </div>
 
         <!-- Submit Button -->
-        <button
-          type="submit"
-          [disabled]="isLoading"
-          class="w-full bg-senteranga-green text-white py-3 px-4 rounded-lg hover:bg-senteranga-green-dark focus:ring-2 focus:ring-offset-2 focus:ring-senteranga-green transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-8">
-          <span *ngIf="isLoading" class="inline-flex items-center">
-            <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            Inscription en cours...
-          </span>
-          <span *ngIf="!isLoading">S'inscrire</span>
-        </button>
+        <div class="mt-8 flex justify-center">
+          <button
+            type="submit"
+            [disabled]="isLoading"
+            class="bg-senteranga-green text-white py-4 px-12 text-xl font-semibold rounded-lg hover:bg-senteranga-green-dark focus:ring-2 focus:ring-offset-2 focus:ring-senteranga-green transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+            <span *ngIf="isLoading" class="inline-flex items-center">
+              <svg class="animate-spin -ml-1 mr-3 h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Inscription en cours...
+            </span>
+            <span *ngIf="!isLoading">S'inscrire</span>
+          </button>
+        </div>
       </form>
     </div>
 

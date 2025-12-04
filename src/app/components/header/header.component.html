@@ -1,21 +1,21 @@
-<header class="fixed top-0 left-0 right-0 bg-white py-3 px-8 shadow-sm z-50">
+<header class="fixed top-0 left-0 right-0 bg-white py-3 px-4 md:px-8 shadow-sm z-50">
   <div class="max-w-7xl mx-auto flex items-center justify-between">
-    <!-- Logo - Left Side -->
+    <!-- Logo - Left Side (Always visible) -->
     <a routerLink="/" class="flex items-center gap-2 cursor-pointer">
-      <img src="/images/logo-senteranga.png" alt="SenTeranga Logo" class="h-12 w-auto">
-      <span class="text-senteranga-green text-2xl font-bold">Portail SenTeranga</span>
+      <img src="/images/logo-senteranga.png" alt="SenTeranga Logo" class="h-8 md:h-12 w-auto">
+      <span class="text-senteranga-green text-lg md:text-2xl font-bold hidden sm:block">Portail SenTeranga</span>
     </a>
-    
-    <!-- Navigation - Center -->
+
+    <!-- Desktop Navigation - Center (Hidden on mobile) -->
     <nav class="hidden lg:flex items-center gap-8">
       <a routerLink="/" class="text-black text-base hover:text-senteranga-green transition-colors">Accueil</a>
       <a routerLink="/marche-agricole" class="text-black text-base hover:text-senteranga-green transition-colors">Marchés</a>
       <a href="#" class="text-black text-base hover:text-senteranga-green transition-colors">A propos</a>
       <a href="#" class="text-black text-base hover:text-senteranga-green transition-colors">Forum</a>
     </nav>
-    
-    <!-- Action Buttons - Right Side -->
-    <div class="flex items-center gap-3">
+
+    <!-- Desktop Action Buttons - Right Side (Hidden on mobile) -->
+    <div class="hidden lg:flex items-center gap-3">
       <!-- Cart Icon with Badge -->
       <div class="relative cursor-pointer" (click)="toggleCart()">
         <svg class="w-6 h-6 text-senteranga-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -23,13 +23,71 @@
         </svg>
         <span class="absolute -top-1 -right-1 bg-senteranga-green text-white text-xs font-medium rounded-full w-4 h-4 flex items-center justify-center">{{ cartItemCount }}</span>
       </div>
-      
-      <a routerLink="/connexion" class="px-5 py-2 text-senteranga-green text-sm font-medium hover:bg-gray-50 rounded transition-colors inline-block text-center">
+
+      <a routerLink="/connexion" class="px-4 py-2 text-senteranga-green text-sm font-medium hover:bg-gray-50 rounded transition-colors inline-block text-center">
         Connexion
       </a>
-      <a routerLink="/inscription" class="px-5 py-2 bg-senteranga-green text-white text-sm font-medium rounded hover:bg-senteranga-green-dark transition-colors inline-block text-center">
+      <a routerLink="/inscription" class="px-4 py-2 bg-senteranga-green text-white text-sm font-medium rounded hover:bg-senteranga-green-dark transition-colors inline-block text-center">
         S'inscrire
       </a>
+    </div>
+
+    <!-- Mobile Menu Button - Right Side (Visible only on mobile) -->
+    <button
+      (click)="toggleMobileMenu()"
+      class="lg:hidden p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-senteranga-green">
+      <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path *ngIf="!isMobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        <path *ngIf="isMobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Mobile Menu Overlay -->
+  <div *ngIf="isMobileMenuOpen" class="lg:hidden fixed inset-0 top-16 bg-black bg-opacity-50 z-40" (click)="closeMobileMenu()"></div>
+
+  <!-- Mobile Menu Panel -->
+  <div *ngIf="isMobileMenuOpen"
+       class="lg:hidden absolute top-full left-0 right-0 bg-white shadow-lg border-t border-gray-200 z-50 transform transition-all duration-300 ease-in-out">
+    <div class="px-4 py-6 space-y-4">
+      <!-- Mobile Navigation Links -->
+      <nav class="space-y-2">
+        <a routerLink="/" (click)="closeMobileMenu()" class="block px-3 py-2 text-base font-medium text-gray-900 hover:text-senteranga-green hover:bg-gray-50 rounded-md transition-colors">
+          Accueil
+        </a>
+        <a routerLink="/marche-agricole" (click)="closeMobileMenu()" class="block px-3 py-2 text-base font-medium text-gray-900 hover:text-senteranga-green hover:bg-gray-50 rounded-md transition-colors">
+          Marchés
+        </a>
+        <a href="#" (click)="closeMobileMenu()" class="block px-3 py-2 text-base font-medium text-gray-900 hover:text-senteranga-green hover:bg-gray-50 rounded-md transition-colors">
+          A propos
+        </a>
+        <a href="#" (click)="closeMobileMenu()" class="block px-3 py-2 text-base font-medium text-gray-900 hover:text-senteranga-green hover:bg-gray-50 rounded-md transition-colors">
+          Forum
+        </a>
+      </nav>
+
+      <!-- Mobile Cart -->
+      <div class="border-t border-gray-200 pt-4">
+        <div class="flex items-center justify-between px-3 py-2">
+          <span class="text-base font-medium text-gray-900">Panier</span>
+          <div class="relative cursor-pointer" (click)="toggleCart()">
+            <svg class="w-6 h-6 text-senteranga-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+            </svg>
+            <span class="absolute -top-1 -right-1 bg-senteranga-green text-white text-xs font-medium rounded-full w-4 h-4 flex items-center justify-center">{{ cartItemCount }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile Auth Buttons -->
+      <div class="border-t border-gray-200 pt-4 space-y-3">
+        <a routerLink="/connexion" (click)="closeMobileMenu()" class="block w-full px-4 py-3 text-center text-senteranga-green text-base font-medium border border-senteranga-green rounded-md hover:bg-senteranga-green hover:text-white transition-colors">
+          Connexion
+        </a>
+        <a routerLink="/inscription" (click)="closeMobileMenu()" class="block w-full px-4 py-3 text-center bg-senteranga-green text-white text-base font-medium rounded-md hover:bg-senteranga-green-dark transition-colors">
+          S'inscrire
+        </a>
+      </div>
     </div>
   </div>
 </header>
