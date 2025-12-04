@@ -28,5 +28,13 @@ export const routes: Routes = [
   {
     path: 'marche-agricole/cereales',
     loadComponent: () => import('./pages/category-cereals/category-cereals.component').then(m => m.CategoryCerealsComponent)
+  },
+  {
+    path: 'connexion',
+    loadComponent: () => import('./pages/login/login.component').then(m => m.LoginComponent)
+  },
+  {
+    path: 'inscription',
+    loadComponent: () => import('./pages/register/register.component').then(m => m.RegisterComponent)
   }
 ];
