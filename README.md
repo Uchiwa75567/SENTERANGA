@@ -24,7 +24,7 @@ Faciliter le commerce agricole au Sénégal en digitalisant les échanges entre 
 - `rxjs`: Programmation réactive
 - `tailwindcss`: Framework CSS utilitaire
 - `autoprefixer` & `postcss`: Traitement CSS
-
+https://www.figma.com/design/g9r72KrkX4ZbobeypcYO45/Untitled?node-id=1-1823&t=jp6O70jcHKRXCrLO-4
 ## 🏗️ Architecture du Projet
 
 ### Structure des Dossiers

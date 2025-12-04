@@ -36,5 +36,17 @@ export const routes: Routes = [
   {
     path: 'inscription',
     loadComponent: () => import('./pages/register/register.component').then(m => m.RegisterComponent)
+  },
+  {
+    path: 'dashboard-institutionnel',
+    loadComponent: () => import('./pages/dashboard-institutionnel/dashboard-institutionnel.component').then(m => m.DashboardInstitutionnelComponent)
+  },
+  {
+    path: 'rapports-gouvernementaux',
+    loadComponent: () => import('./pages/rapports-gouvernementaux/rapports-gouvernementaux.component').then(m => m.RapportsGouvernementauxComponent)
+  },
+  {
+    path: 'politiques-agricoles',
+    loadComponent: () => import('./pages/politiques-agricoles/politiques-agricoles.component').then(m => m.PolitiquesAgricolesComponent)
   }
 ];

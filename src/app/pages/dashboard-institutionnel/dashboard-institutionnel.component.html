@@ -1,0 +1,237 @@
+<!-- Header -->
+<header class="bg-white border-b border-gray-200 sticky top-0 z-40">
+  <div class="max-w-[1440px] mx-auto px-8 py-4">
+    <div class="flex items-center justify-between">
+      <!-- Logo and Title -->
+      <div class="flex items-center gap-6">
+        <img src="/images/logo-senteranga.png" alt="SENTERANGA Logo" class="h-10 w-auto">
+        <h1 class="text-2xl font-['Pacifico'] text-[#00843d]">SENTERANGA</h1>
+        <span class="text-gray-600">Dashboard Institutionnel</span>
+      </div>
+
+      <!-- User Menu -->
+      <div class="flex items-center gap-4">
+        <button class="relative">
+          <i class="ti ti-bell text-gray-600 text-xl"></i>
+          <span class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
+        </button>
+        <div class="flex items-center gap-3">
+          <img src="https://i.pravatar.cc/40?u=ministre" alt="User" class="w-8 h-8 rounded-full">
+          <span class="text-gray-700 font-medium">Ministre Abdou Karim</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Main Content -->
+<div class="bg-[#f9fafb] min-h-screen">
+  <div class="max-w-[1440px] mx-auto px-8 py-8">
+    
+    <!-- Page Title -->
+    <div class="mb-8">
+      <h2 class="text-3xl font-bold text-gray-900 mb-2">Tableau de Bord National</h2>
+      <p class="text-gray-600">Vue d'ensemble du système alimentaire national du Sénégal.</p>
+    </div>
+
+    <!-- Stat Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div *ngFor="let card of statCards" 
+           [class]="card.bgColor + ' rounded-xl p-6 shadow-lg'"
+           class="flex items-center justify-between">
+        <div>
+          <p [class]="card.textColor" class="text-sm opacity-80 mb-1">{{ card.title }}</p>
+          <h3 [class]="card.textColor" class="text-2xl font-bold mb-1">{{ card.value }}</h3>
+          <p [class]="card.textColor" class="text-xs opacity-90">{{ card.change }}</p>
+        </div>
+        <i [class]="'ti ' + card.icon + ' ' + card.textColor" class="text-3xl opacity-80"></i>
+      </div>
+    </div>
+
+    <!-- Main Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      
+      <!-- Left Column (2/3) -->
+      <div class="lg:col-span-2 space-y-8">
+        
+        <!-- Production Nationale -->
+        <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-6">
+          <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center gap-3">
+              <i class="ti ti-chart-bar text-[#00843d]"></i>
+              <h3 class="text-xl font-bold text-gray-900">Production Nationale par Culture</h3>
+            </div>
+            <div class="flex items-center gap-4">
+              <select class="px-4 py-2 border border-gray-300 rounded-md bg-[#efefef] text-sm">
+                <option>Ce mois</option>
+                <option>Ce trimestre</option>
+                <option>Cette année</option>
+              </select>
+              <button class="px-4 py-2 border-2 border-[#00843d] text-[#00843d] rounded-md text-sm font-medium hover:bg-[#00843d] hover:text-white transition-colors">
+                Exporter PDF
+              </button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div *ngFor="let crop of cropProductions" class="border border-gray-200 rounded-lg p-4">
+              <div class="flex items-center justify-between mb-2">
+                <h4 class="font-bold text-gray-900">{{ crop.name }}</h4>
+                <i [class]="'ti ti-trending-' + crop.trend" class="text-[#22c55e]"></i>
+              </div>
+              <p class="text-2xl font-bold text-[#00843d] mb-2">{{ crop.production }}</p>
+              <div class="flex items-center justify-between text-sm">
+                <span class="text-[#16a34a]">{{ crop.change }}</span>
+                <span class="text-gray-600">{{ crop.regions }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Performance Régionale -->
+        <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-6">
+          <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center gap-3">
+              <i class="ti ti-map text-[#3b82f6]"></i>
+              <h3 class="text-xl font-bold text-gray-900">Performance Régionale</h3>
+            </div>
+            <select class="px-4 py-2 border border-gray-300 rounded-md bg-[#efefef] text-sm">
+              <option>Toutes les régions</option>
+            </select>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead>
+                <tr class="border-b border-gray-200">
+                  <th class="text-left py-3 px-2 text-sm font-medium text-gray-600">Région</th>
+                  <th class="text-left py-3 px-2 text-sm font-medium text-gray-600">Exploitations</th>
+                  <th class="text-left py-3 px-2 text-sm font-medium text-gray-600">Production</th>
+                  <th class="text-left py-3 px-2 text-sm font-medium text-gray-600">Revenus</th>
+                  <th class="text-left py-3 px-2 text-sm font-medium text-gray-600">Croissance</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let region of regionalPerformances" class="border-b border-gray-100">
+                  <td class="py-4 px-2 font-medium text-gray-900">{{ region.region }}</td>
+                  <td class="py-4 px-2 text-gray-600">{{ region.exploitations }}</td>
+                  <td class="py-4 px-2 text-gray-600">{{ region.production }}</td>
+                  <td class="py-4 px-2 text-[#00843d] font-medium">{{ region.revenus }}</td>
+                  <td class="py-4 px-2 text-[#16a34a] font-medium">{{ region.croissance }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Balance Commerciale -->
+        <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-6">
+          <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center gap-3">
+              <i class="ti ti-trending-up text-[#e31b23]"></i>
+              <h3 class="text-xl font-bold text-gray-900">Balance Commerciale Agricole</h3>
+            </div>
+            <button class="px-4 py-2 border-2 border-[#00843d] text-[#00843d] rounded-md text-sm font-medium hover:bg-[#00843d] hover:text-white transition-colors">
+              Rapport Détaillé
+            </button>
+          </div>
+
+          <div class="space-y-4">
+            <div *ngFor="let balance of commercialBalances" class="bg-[#f9fafb] rounded-lg p-4">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h4 class="font-bold text-gray-900 mb-2">{{ balance.crop }}</h4>
+                  <div class="flex items-center gap-4 text-sm">
+                    <span class="flex items-center gap-1">
+                      <i class="ti ti-arrow-up text-[#16a34a]"></i>
+                      <span class="text-[#16a34a]">Exports: {{ balance.exports }}</span>
+                    </span>
+                    <span class="flex items-center gap-1">
+                      <i class="ti ti-arrow-down text-[#dc2626]"></i>
+                      <span class="text-[#dc2626]">Imports: {{ balance.imports }}</span>
+                    </span>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <p class="text-sm text-gray-600 mb-1">Balance</p>
+                  <p [class]="balance.balanceColor" class="text-lg font-bold">{{ balance.balance }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column (1/3) -->
+      <div class="space-y-6">
+        
+        <!-- Actions Rapides -->
+        <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-6">
+          <h3 class="text-lg font-bold text-gray-900 mb-4">Actions Rapides</h3>
+          <div class="grid grid-cols-2 gap-3">
+            <button *ngFor="let action of quickActions"
+                    [routerLink]="action.route"
+                    [class]="action.bgColor"
+                    class="rounded-lg p-4 text-white flex flex-col items-center justify-center gap-2 hover:opacity-90 transition-opacity">
+              <i [class]="'ti ' + action.icon" class="text-2xl"></i>
+              <span class="text-sm font-medium">{{ action.label }}</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Alertes Système -->
+        <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-6">
+          <h3 class="text-lg font-bold text-gray-900 mb-4">Alertes Système</h3>
+          <div class="space-y-4">
+            <div *ngFor="let alert of systemAlerts" class="bg-[#f9fafb] rounded-lg p-4">
+              <div class="flex items-start gap-3">
+                <i [class]="'ti ' + alert.icon" class="text-lg mt-0.5" 
+                   [ngClass]="{'text-[#eab308]': alert.level === 'Haute', 'text-[#3b82f6]': alert.level === 'Moyenne', 'text-[#22c55e]': alert.level === 'Basse'}"></i>
+                <div class="flex-1">
+                  <span [class]="alert.levelColor" class="text-xs font-medium">{{ alert.level }}</span>
+                  <p class="text-sm text-gray-900 mt-1 line-clamp-2">{{ alert.message }}</p>
+                  <p class="text-xs text-gray-600 mt-1">{{ alert.time }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Objectifs Nationaux -->
+        <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-6">
+          <h3 class="text-lg font-bold text-gray-900 mb-4">Objectifs Nationaux 2024</h3>
+          <div class="space-y-4">
+            <div *ngFor="let objective of nationalObjectives">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-sm text-gray-600">{{ objective.label }}</span>
+                <span class="text-sm font-medium">{{ objective.current }}/{{ objective.target }}</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2">
+                <div [class]="objective.barColor" 
+                     [style.width.%]="objective.percentage"
+                     class="h-2 rounded-full transition-all duration-500"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Indicateurs Clés -->
+        <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-6">
+          <h3 class="text-lg font-bold text-gray-900 mb-4">Indicateurs Clés</h3>
+          <div class="space-y-3">
+            <div *ngFor="let indicator of keyIndicators" class="flex items-center justify-between">
+              <span class="text-gray-600">{{ indicator.label }}</span>
+              <span [class]="indicator.valueColor" class="font-bold">{{ indicator.value }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Chat Button -->
+<button class="fixed bottom-8 right-8 bg-[#00843d] text-white px-6 py-3 rounded-full shadow-lg flex items-center gap-2 hover:bg-[#006b32] transition-colors">
+  <i class="ti ti-message-circle text-xl"></i>
+  <span class="font-medium">Talk with Us</span>
+</button>

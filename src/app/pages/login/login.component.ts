@@ -2,13 +2,11 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { HeaderComponent } from '../../components/header/header.component';
-import { FooterComponent } from '../../components/footer/footer.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, HeaderComponent, FooterComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './login.component.html'
 })
 export class LoginComponent {
@@ -20,7 +18,7 @@ export class LoginComponent {
     private router: Router
   ) {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      phone: ['', [Validators.required, Validators.pattern(/^[0-9]{9}$/)]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       rememberMe: [false]
     });
@@ -31,11 +29,17 @@ export class LoginComponent {
       this.isLoading = true;
       const formValue = this.loginForm.value;
 
-      // Simulate login API call
+      // Check if institutional user
       setTimeout(() => {
         console.log('Login attempt:', formValue);
-        // For demo purposes, just navigate back to home
-        this.router.navigate(['/']);
+        
+        if (formValue.phone === '336237675' && formValue.password === 'admin123') {
+          // Navigate to institutional dashboard
+          this.router.navigate(['/dashboard-institutionnel']);
+        } else {
+          // Navigate to regular home page
+          this.router.navigate(['/']);
+        }
         this.isLoading = false;
       }, 1000);
     } else {
@@ -44,8 +48,8 @@ export class LoginComponent {
     }
   }
 
-  get email() {
-    return this.loginForm.get('email');
+  get phone() {
+    return this.loginForm.get('phone');
   }
 
   get password() {
