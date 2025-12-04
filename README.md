@@ -371,3 +371,5 @@ Ce projet est sous licence ISC.
 ---
 
 *Plateforme développée avec ❤️ pour la communauté agricole sénégalaise*
+
+voici un bref résumé
