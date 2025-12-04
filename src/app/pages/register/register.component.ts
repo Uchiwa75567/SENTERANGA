@@ -25,6 +25,10 @@ export class RegisterComponent {
   registrationForm!: FormGroup;
   isLoading = false;
 
+  // Image previews
+  idCardRectoPreview: string | null = null;
+  idCardVersoPreview: string | null = null;
+
   userTypes: UserTypeOption[] = [
     {
       value: 'agriculteur',
@@ -86,6 +90,12 @@ export class RegisterComponent {
     // Clear all validators first
     this.clearValidators();
 
+    // ID Card is required for agriculteur, client, and agronome
+    if (userType === 'agriculteur' || userType === 'client' || userType === 'agronome') {
+      this.registrationForm.get('idCardRecto')?.setValidators(Validators.required);
+      this.registrationForm.get('idCardVerso')?.setValidators(Validators.required);
+    }
+
     // Set validators based on user type
     if (userType === 'agriculteur') {
       this.registrationForm.get('region')?.setValidators(Validators.required);
@@ -109,7 +119,7 @@ export class RegisterComponent {
   }
 
   private clearValidators() {
-    ['region', 'departement', 'village', 'clientType', 'email', 'investorType', 'montantInvestissement', 'emailPro', 'telephonePro', 'structure', 'regionsIntervention'].forEach(field => {
+    ['idCardRecto', 'idCardVerso', 'region', 'departement', 'village', 'clientType', 'email', 'investorType', 'montantInvestissement', 'emailPro', 'telephonePro', 'structure', 'regionsIntervention'].forEach(field => {
       this.registrationForm.get(field)?.clearValidators();
       this.registrationForm.get(field)?.updateValueAndValidity();
     });
@@ -121,6 +131,9 @@ export class RegisterComponent {
       prenom: ['', [Validators.required, Validators.minLength(2)]],
       nom: ['', [Validators.required, Validators.minLength(2)]],
       telephone: ['', [Validators.required, Validators.pattern(/^(\+221|221)?[76|77|78|33|70|76|77|78][0-9]{7}$/)]],
+      // ID Card fields (required for agriculteur, client, agronome)
+      idCardRecto: [null],
+      idCardVerso: [null],
       // Agriculteur fields
       region: [''],
       departement: [''],
@@ -183,10 +196,65 @@ export class RegisterComponent {
     return selectedRegions.includes(region);
   }
 
+  // File handling methods
+  onFileChange(event: Event, fieldName: string) {
+    const target = event.target as HTMLInputElement;
+    const file = target.files?.[0];
+
+    if (file) {
+      // Validate file type (images only)
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+      if (!allowedTypes.includes(file.type)) {
+        alert('Veuillez sélectionner un fichier image valide (JPEG, PNG, GIF)');
+        target.value = '';
+        return;
+      }
+
+      // Validate file size (max 5MB)
+      const maxSize = 5 * 1024 * 1024; // 5MB
+      if (file.size > maxSize) {
+        alert('La taille du fichier ne doit pas dépasser 5MB');
+        target.value = '';
+        return;
+      }
+
+      // Set file in form
+      this.registrationForm.get(fieldName)?.setValue(file);
+
+      // Generate preview URL
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        if (fieldName === 'idCardRecto') {
+          this.idCardRectoPreview = e.target?.result as string;
+        } else if (fieldName === 'idCardVerso') {
+          this.idCardVersoPreview = e.target?.result as string;
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  // Remove file and preview
+  removeFile(fieldName: string) {
+    this.registrationForm.get(fieldName)?.setValue(null);
+
+    if (fieldName === 'idCardRecto') {
+      this.idCardRectoPreview = null;
+      const input = document.getElementById('idCardRecto') as HTMLInputElement;
+      if (input) input.value = '';
+    } else if (fieldName === 'idCardVerso') {
+      this.idCardVersoPreview = null;
+      const input = document.getElementById('idCardVerso') as HTMLInputElement;
+      if (input) input.value = '';
+    }
+  }
+
   // Getters for form controls
   get prenom() { return this.registrationForm.get('prenom'); }
   get nom() { return this.registrationForm.get('nom'); }
   get telephone() { return this.registrationForm.get('telephone'); }
+  get idCardRecto() { return this.registrationForm.get('idCardRecto'); }
+  get idCardVerso() { return this.registrationForm.get('idCardVerso'); }
   get email() { return this.registrationForm.get('email'); }
   get region() { return this.registrationForm.get('region'); }
   get departement() { return this.registrationForm.get('departement'); }

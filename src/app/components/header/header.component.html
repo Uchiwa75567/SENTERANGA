@@ -17,11 +17,11 @@
     <!-- Action Buttons - Right Side -->
     <div class="flex items-center gap-3">
       <!-- Cart Icon with Badge -->
-      <div class="relative cursor-pointer">
+      <div class="relative cursor-pointer" (click)="toggleCart()">
         <svg class="w-6 h-6 text-senteranga-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
         </svg>
-        <span class="absolute -top-1 -right-1 bg-senteranga-green text-white text-xs font-medium rounded-full w-4 h-4 flex items-center justify-center">4</span>
+        <span class="absolute -top-1 -right-1 bg-senteranga-green text-white text-xs font-medium rounded-full w-4 h-4 flex items-center justify-center">{{ cartItemCount }}</span>
       </div>
       
       <a routerLink="/connexion" class="px-5 py-2 text-senteranga-green text-sm font-medium hover:bg-gray-50 rounded transition-colors inline-block text-center">
@@ -33,3 +33,14 @@
     </div>
   </div>
 </header>
+
+<!-- Cart Popup -->
+<app-cart-popup 
+  [isOpen]="isCartOpen"
+  [items]="cartItems"
+  (close)="closeCart()"
+  (continueShopping)="onContinueShopping()"
+  (checkout)="onCheckout()"
+  (updateQuantity)="onUpdateQuantity($event)"
+  (removeItem)="onRemoveItem($event)">
+</app-cart-popup>
