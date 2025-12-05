@@ -34,15 +34,8 @@ export class MarketplaceComponent {
   fruitsIndex = 0;
   cerealsIndex = 0;
 
-  // Items per page - responsive
-  get itemsPerPage(): number {
-    return typeof window !== 'undefined' && window.innerWidth < 768 ? 1 : 3;
-  }
-
-  // Gap size based on screen width
-  get gapSize(): number {
-    return typeof window !== 'undefined' && window.innerWidth < 768 ? 12 : 24;
-  }
+  // Items per page
+  itemsPerPage = 3;
 
   // Get products by category
   get vegetablesProducts() {

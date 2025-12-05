@@ -20,8 +20,8 @@ export class LoginComponent {
     private dataService: DataService
   ) {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      telephone: ['', [Validators.required, Validators.pattern(/^(\+221|221)?(77|76|78|75|70)[0-9]{7}$/)]],
+      password: ['', [Validators.required, Validators.pattern(/^[0-9]{6}$/)]],
       rememberMe: [false]
     });
   }
@@ -29,9 +29,9 @@ export class LoginComponent {
   onSubmit() {
     if (this.loginForm.valid) {
       this.isLoading = true;
-      const { email, password } = this.loginForm.value;
+      const { telephone, password } = this.loginForm.value;
 
-      this.dataService.authenticateUser(email, password).subscribe(user => {
+      this.dataService.authenticateUser(telephone, password).subscribe(user => {
         if (user) {
           console.log('Login successful:', user);
 
@@ -50,7 +50,7 @@ export class LoginComponent {
           this.router.navigate([route]);
         } else {
           console.log('Login failed: Invalid credentials');
-          alert('Email ou mot de passe incorrect');
+          alert('Numéro de téléphone ou mot de passe incorrect');
         }
         this.isLoading = false;
       });
@@ -60,8 +60,8 @@ export class LoginComponent {
     }
   }
 
-  get email() {
-    return this.loginForm.get('email');
+  get telephone() {
+    return this.loginForm.get('telephone');
   }
 
   get password() {

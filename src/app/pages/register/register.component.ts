@@ -13,6 +13,8 @@ export class RegisterComponent implements OnInit {
   selectedUserType: UserType | null = null;
   registrationForm!: FormGroup;
   isLoading = false;
+  currentStep = 1;
+  totalSteps = 3;
 
   // File previews
   idCardRectoPreview: string | null = null;
@@ -77,6 +79,68 @@ export class RegisterComponent implements OnInit {
     this.selectedUserType = userType;
     this.registrationForm = this.createForm();
     this.setValidatorsForUserType(userType.id);
+    this.currentStep = 1;
+    
+    // Determine total steps based on user type
+    const needsIdCard = ['agriculteur', 'client', 'agronome', 'agent-terrain'].includes(userType.id);
+    this.totalSteps = needsIdCard ? 3 : 2;
+  }
+
+  nextStep() {
+    if (this.currentStep === 1) {
+      // Validate basic info
+      const basicFields = ['prenom', 'nom', 'telephone', 'password'];
+      let isValid = true;
+      basicFields.forEach(field => {
+        const control = this.registrationForm.get(field);
+        control?.markAsTouched();
+        if (control?.invalid) {
+          isValid = false;
+        }
+      });
+      if (!isValid) return;
+    } else if (this.currentStep === 2) {
+      // Validate specific fields based on user type
+      if (!this.validateCurrentStepFields()) return;
+    }
+    
+    if (this.currentStep < this.totalSteps) {
+      this.currentStep++;
+    }
+  }
+
+  previousStep() {
+    if (this.currentStep > 1) {
+      this.currentStep--;
+    }
+  }
+
+  validateCurrentStepFields(): boolean {
+    const userTypeId = this.selectedUserType?.id;
+    let fieldsToValidate: string[] = [];
+
+    if (userTypeId === 'agriculteur') {
+      fieldsToValidate = ['region', 'departement', 'village'];
+    } else if (userTypeId === 'client') {
+      fieldsToValidate = ['clientType'];
+    } else if (userTypeId === 'investisseur') {
+      fieldsToValidate = ['email', 'investorType', 'montantInvestissement'];
+    } else if (userTypeId === 'agronome') {
+      fieldsToValidate = ['structure', 'regionsIntervention'];
+    } else if (userTypeId === 'agent-terrain') {
+      fieldsToValidate = ['agentCode', 'region', 'department'];
+    }
+
+    let isValid = true;
+    fieldsToValidate.forEach(field => {
+      const control = this.registrationForm.get(field);
+      control?.markAsTouched();
+      if (control?.invalid) {
+        isValid = false;
+      }
+    });
+
+    return isValid;
   }
 
   onRegionChange(regionId: string) {
@@ -134,7 +198,7 @@ export class RegisterComponent implements OnInit {
       this.registrationForm.get('montantInvestissement')?.setValidators([Validators.required, Validators.min(100000)]);
     } else if (userTypeId === 'agronome') {
       this.registrationForm.get('emailPro')?.setValidators(Validators.email);
-      this.registrationForm.get('telephonePro')?.setValidators(Validators.pattern(/^(\+221|221)?[76|77|78|33|70|76|77|78][0-9]{7}$/));
+      this.registrationForm.get('telephonePro')?.setValidators(Validators.pattern(/^(\+221|221)?(77|76|78|75|70)[0-9]{7}$/));
       this.registrationForm.get('structure')?.setValidators(Validators.required);
       this.registrationForm.get('regionsIntervention')?.setValidators(Validators.required);
     } else if (userTypeId === 'agent-terrain') {
@@ -163,7 +227,8 @@ export class RegisterComponent implements OnInit {
       userType: [this.selectedUserType],
       prenom: ['', [Validators.required, Validators.minLength(2)]],
       nom: ['', [Validators.required, Validators.minLength(2)]],
-      telephone: ['', [Validators.required, Validators.pattern(/^(\+221|221)?[76|77|78|33|70|76|77|78][0-9]{7}$/)]],
+      telephone: ['', [Validators.required, Validators.pattern(/^(\+221|221)?(77|76|78|75|70)[0-9]{7}$/)]],
+      password: ['', [Validators.required, Validators.pattern(/^[0-9]{6}$/)]],
       // ID Card fields (required for agriculteur, client, agronome, agent-terrain)
       idCardRecto: [null],
       idCardVerso: [null],
@@ -182,7 +247,7 @@ export class RegisterComponent implements OnInit {
       montantInvestissement: [''],
       // Agronome fields
       emailPro: [''],
-      telephonePro: [''],
+      telephonePro: ['', Validators.pattern(/^(\+221|221)?(77|76|78|75|70)[0-9]{7}$/)],
       structure: [''],
       regionsIntervention: [[]],
       // Agent Terrain fields
@@ -194,6 +259,18 @@ export class RegisterComponent implements OnInit {
   }
 
   onSubmit() {
+    // Validate ID card fields if required
+    const needsIdCard = ['agriculteur', 'client', 'agronome', 'agent-terrain'].includes(this.selectedUserType?.id || '');
+    if (needsIdCard) {
+      const idCardRecto = this.registrationForm.get('idCardRecto');
+      const idCardVerso = this.registrationForm.get('idCardVerso');
+      idCardRecto?.markAsTouched();
+      idCardVerso?.markAsTouched();
+      if (idCardRecto?.invalid || idCardVerso?.invalid) {
+        return;
+      }
+    }
+
     if (this.registrationForm.valid) {
       this.isLoading = true;
       const formValue = this.registrationForm.value;
@@ -214,6 +291,7 @@ export class RegisterComponent implements OnInit {
   goBack() {
     this.selectedUserType = null;
     this.registrationForm = this.createForm();
+    this.currentStep = 1;
   }
 
 
@@ -274,6 +352,7 @@ export class RegisterComponent implements OnInit {
   get prenom() { return this.registrationForm.get('prenom'); }
   get nom() { return this.registrationForm.get('nom'); }
   get telephone() { return this.registrationForm.get('telephone'); }
+  get password() { return this.registrationForm.get('password'); }
   get idCardRecto() { return this.registrationForm.get('idCardRecto'); }
   get idCardVerso() { return this.registrationForm.get('idCardVerso'); }
   get email() { return this.registrationForm.get('email'); }

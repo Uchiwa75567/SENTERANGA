@@ -126,10 +126,15 @@ export class DataService {
     );
   }
 
-  authenticateUser(email: string, password: string): Observable<TestUser | null> {
+  authenticateUser(telephone: string, password: string): Observable<TestUser | null> {
     return this.getTestUsers().pipe(
       map(users => {
-        const user = users.find(u => u.email === email && u.password === password);
+        // Normalize phone number (remove +221 or 221 prefix if present)
+        const normalizedPhone = telephone.replace(/^(\+221|221)/, '');
+        const user = users.find(u => {
+          const userPhone = u.phone.replace(/^(\+221|221)/, '');
+          return userPhone === normalizedPhone && u.password === password;
+        });
         return user || null;
       })
     );
