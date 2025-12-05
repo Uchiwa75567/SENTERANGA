@@ -1,24 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-
-type UserType = 'agriculteur' | 'client' | 'investisseur' | 'agronome';
-
-interface UserTypeOption {
-  value: UserType;
-  label: string;
-  description: string;
-  icon: string;
-}
-
+import { DataService, UserType, Region, ClientType, InvestorType, Ministry } from '../../services/data.service';
 @Component({
   selector: 'app-register',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './register.component.html'
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnInit {
   selectedUserType: UserType | null = null;
   registrationForm!: FormGroup;
   isLoading = false;
@@ -27,89 +18,133 @@ export class RegisterComponent {
   idCardRectoPreview: string | null = null;
   idCardVersoPreview: string | null = null;
 
-  userTypes: UserTypeOption[] = [
-    {
-      value: 'agriculteur',
-      label: 'Agriculteur/Producteur',
-      description: 'Producteurs agricoles, éleveurs, pêcheurs',
-      icon: '🌾'
-    },
-    {
-      value: 'client',
-      label: 'Client Acheteur',
-      description: 'Particuliers, commerçants, grossistes',
-      icon: '🛒'
-    },
-    {
-      value: 'investisseur',
-      label: 'Investisseur Agricole',
-      description: 'Investisseurs particuliers ou entreprises',
-      icon: '💰'
-    },
-    {
-      value: 'agronome',
-      label: 'Agronome/Conseiller',
-      description: 'Conseillers agricoles, techniciens, ONG',
-      icon: '👨‍🔬'
-    }
-  ];
+  // Data from service
+  userTypes: UserType[] = [];
+  regions: Region[] = [];
+  clientTypes: ClientType[] = [];
+  investorTypes: InvestorType[] = [];
+  ministries: Ministry[] = [];
+  structures: string[] = [];
 
-  regions = [
-    'Dakar', 'Thiès', 'Saint-Louis', 'Kaolack', 'Ziguinchor',
-    'Louga', 'Matam', 'Kolda', 'Tambacounda', 'Fatick',
-    'Kaffrine', 'Kédougou', 'Sédhiou', 'Diourbel'
-  ];
-
-  clientTypes = [
-    { value: 'famille', label: 'Moi / ma famille' },
-    { value: 'boutique', label: 'Ma boutique / restaurant' },
-    { value: 'commerce', label: 'Mon commerce en gros' }
-  ];
-
-  investorTypes = [
-    { value: 'particulier', label: 'Particulier' },
-    { value: 'entreprise', label: 'Entreprise / Fonds' }
-  ];
+  // Selected region for departements
+  selectedRegionDepartements: string[] = [];
 
   constructor(
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private dataService: DataService
   ) {
     this.registrationForm = this.createForm();
+  }
+
+  ngOnInit() {
+    this.loadData();
+  }
+
+  private loadData() {
+    // Load user types
+    this.dataService.getUserTypes().subscribe(types => {
+      this.userTypes = types;
+    });
+
+    // Load regions
+    this.dataService.getRegions().subscribe(regions => {
+      this.regions = regions;
+    });
+
+    // Load client types
+    this.dataService.getClientTypes().subscribe(types => {
+      this.clientTypes = types;
+    });
+
+    // Load investor types
+    this.dataService.getInvestorTypes().subscribe(types => {
+      this.investorTypes = types;
+    });
+
+    // Load ministries
+    this.dataService.getMinistries().subscribe(ministries => {
+      this.ministries = ministries;
+    });
+
+    // Load structures
+    this.dataService.getStructures().subscribe(structures => {
+      this.structures = structures;
+    });
   }
 
   selectUserType(userType: UserType) {
     this.selectedUserType = userType;
     this.registrationForm = this.createForm();
-    this.setValidatorsForUserType(userType);
+    this.setValidatorsForUserType(userType.id);
   }
 
-  private setValidatorsForUserType(userType: UserType) {
+  onRegionChange(regionId: string) {
+    this.dataService.getDepartementsByRegion(regionId).subscribe(departements => {
+      this.selectedRegionDepartements = departements;
+      // Reset departement field when region changes
+      this.registrationForm.get('departement')?.setValue('');
+    });
+  }
+
+  onRegionInterventionChange(region: string, event: Event) {
+    const target = event.target as HTMLInputElement;
+    const checked = target.checked;
+
+    const currentRegions = this.registrationForm.get('regionsIntervention')?.value || [];
+    let updatedRegions: string[];
+
+    if (checked) {
+      updatedRegions = [...currentRegions, region];
+    } else {
+      updatedRegions = currentRegions.filter((r: string) => r !== region);
+    }
+
+    this.registrationForm.get('regionsIntervention')?.setValue(updatedRegions);
+  }
+
+  isRegionSelected(region: string): boolean {
+    const selectedRegions = this.registrationForm.get('regionsIntervention')?.value || [];
+    return selectedRegions.includes(region);
+  }
+
+  private setValidatorsForUserType(userTypeId: string) {
     // Clear all validators first
     this.clearValidators();
 
-    // ID Card is required for agriculteur, client, and agronome
-    if (userType === 'agriculteur' || userType === 'client' || userType === 'agronome') {
+    // ID Card is required for agriculteur, client, agronome, agent-terrain
+    if (userTypeId === 'agriculteur' || userTypeId === 'client' || userTypeId === 'agronome' || userTypeId === 'agent-terrain') {
       this.registrationForm.get('idCardRecto')?.setValidators(Validators.required);
       this.registrationForm.get('idCardVerso')?.setValidators(Validators.required);
     }
 
     // Set validators based on user type
-    if (userType === 'agriculteur') {
+    if (userTypeId === 'agriculteur') {
       this.registrationForm.get('region')?.setValidators(Validators.required);
       this.registrationForm.get('departement')?.setValidators(Validators.required);
       this.registrationForm.get('village')?.setValidators(Validators.required);
-    } else if (userType === 'client') {
+    } else if (userTypeId === 'client') {
       this.registrationForm.get('clientType')?.setValidators(Validators.required);
-    } else if (userType === 'investisseur') {
+    } else if (userTypeId === 'admin') {
+      this.registrationForm.get('adminCode')?.setValidators(Validators.required);
+      this.registrationForm.get('department')?.setValidators(Validators.required);
+    } else if (userTypeId === 'investisseur') {
       this.registrationForm.get('email')?.setValidators([Validators.required, Validators.email]);
       this.registrationForm.get('investorType')?.setValidators(Validators.required);
       this.registrationForm.get('montantInvestissement')?.setValidators([Validators.required, Validators.min(100000)]);
-    } else if (userType === 'agronome') {
+    } else if (userTypeId === 'agronome') {
       this.registrationForm.get('emailPro')?.setValidators(Validators.email);
       this.registrationForm.get('telephonePro')?.setValidators(Validators.pattern(/^(\+221|221)?[76|77|78|33|70|76|77|78][0-9]{7}$/));
       this.registrationForm.get('structure')?.setValidators(Validators.required);
       this.registrationForm.get('regionsIntervention')?.setValidators(Validators.required);
+    } else if (userTypeId === 'agent-terrain') {
+      this.registrationForm.get('agentCode')?.setValidators(Validators.required);
+      this.registrationForm.get('region')?.setValidators(Validators.required);
+      this.registrationForm.get('department')?.setValidators(Validators.required);
+    } else if (userTypeId === 'etat') {
+      this.registrationForm.get('governmentId')?.setValidators(Validators.required);
+      this.registrationForm.get('ministry')?.setValidators(Validators.required);
+      this.registrationForm.get('department')?.setValidators(Validators.required);
     }
 
     // Update validity
@@ -129,7 +164,7 @@ export class RegisterComponent {
       prenom: ['', [Validators.required, Validators.minLength(2)]],
       nom: ['', [Validators.required, Validators.minLength(2)]],
       telephone: ['', [Validators.required, Validators.pattern(/^(\+221|221)?[76|77|78|33|70|76|77|78][0-9]{7}$/)]],
-      // ID Card fields (required for agriculteur, client, agronome)
+      // ID Card fields (required for agriculteur, client, agronome, agent-terrain)
       idCardRecto: [null],
       idCardVerso: [null],
       // Agriculteur fields
@@ -138,6 +173,9 @@ export class RegisterComponent {
       village: [''],
       // Client fields
       clientType: [''],
+      // Admin fields
+      adminCode: [''],
+      department: [''],
       // Investisseur fields
       email: [''],
       investorType: [''],
@@ -146,7 +184,12 @@ export class RegisterComponent {
       emailPro: [''],
       telephonePro: [''],
       structure: [''],
-      regionsIntervention: [[]]
+      regionsIntervention: [[]],
+      // Agent Terrain fields
+      agentCode: [''],
+      // État fields
+      governmentId: [''],
+      ministry: ['']
     });
   }
 
@@ -173,26 +216,6 @@ export class RegisterComponent {
     this.registrationForm = this.createForm();
   }
 
-  onRegionChange(region: string, event: Event) {
-    const target = event.target as HTMLInputElement;
-    const checked = target.checked;
-
-    const currentRegions = this.registrationForm.get('regionsIntervention')?.value || [];
-    let updatedRegions: string[];
-
-    if (checked) {
-      updatedRegions = [...currentRegions, region];
-    } else {
-      updatedRegions = currentRegions.filter((r: string) => r !== region);
-    }
-
-    this.registrationForm.get('regionsIntervention')?.setValue(updatedRegions);
-  }
-
-  isRegionSelected(region: string): boolean {
-    const selectedRegions = this.registrationForm.get('regionsIntervention')?.value || [];
-    return selectedRegions.includes(region);
-  }
 
   // File handling methods
   onFileChange(event: Event, fieldName: string) {

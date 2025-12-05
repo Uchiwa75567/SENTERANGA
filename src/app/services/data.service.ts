@@ -1,0 +1,204 @@
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+export interface Region {
+  id: string;
+  name: string;
+  departements: string[];
+}
+
+export interface UserType {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  requiredFields: string[];
+  dashboard: string;
+}
+
+export interface ClientType {
+  id: string;
+  name: string;
+  description: string;
+}
+
+export interface InvestorType {
+  id: string;
+  name: string;
+  description: string;
+}
+
+export interface Ministry {
+  id: string;
+  name: string;
+}
+
+export interface TestUser {
+  id: string;
+  email: string;
+  password: string;
+  userType: string;
+  firstName: string;
+  lastName: string;
+  phone: string;
+  region?: string;
+  department?: string;
+  village?: string;
+  clientType?: string;
+  investorType?: string;
+  investmentAmount?: number;
+  professionalEmail?: string;
+  structure?: string;
+  interventionRegions?: string[];
+  governmentId?: string;
+  ministry?: string;
+  agentCode?: string;
+  adminCode?: string;
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class DataService {
+  private data: any = null;
+
+  constructor(private http: HttpClient) {}
+
+  loadData(): Observable<any> {
+    if (this.data) {
+      return of(this.data);
+    }
+    return this.http.get('/assets/data/senteranga-data.json').pipe(
+      map(data => {
+        this.data = data;
+        return data;
+      })
+    );
+  }
+
+  getRegions(): Observable<Region[]> {
+    return this.loadData().pipe(
+      map(data => data.regions || [])
+    );
+  }
+
+  getUserTypes(): Observable<UserType[]> {
+    return this.loadData().pipe(
+      map(data => data.userTypes || [])
+    );
+  }
+
+  getClientTypes(): Observable<ClientType[]> {
+    return this.loadData().pipe(
+      map(data => data.clientTypes || [])
+    );
+  }
+
+  getInvestorTypes(): Observable<InvestorType[]> {
+    return this.loadData().pipe(
+      map(data => data.investorTypes || [])
+    );
+  }
+
+  getMinistries(): Observable<Ministry[]> {
+    return this.loadData().pipe(
+      map(data => data.ministries || [])
+    );
+  }
+
+  getStructures(): Observable<string[]> {
+    return this.loadData().pipe(
+      map(data => data.structures || [])
+    );
+  }
+
+  getCertifications(): Observable<any[]> {
+    return this.loadData().pipe(
+      map(data => data.certifications || [])
+    );
+  }
+
+  getTestUsers(): Observable<TestUser[]> {
+    return this.loadData().pipe(
+      map(data => data.testUsers || [])
+    );
+  }
+
+  authenticateUser(email: string, password: string): Observable<TestUser | null> {
+    return this.getTestUsers().pipe(
+      map(users => {
+        const user = users.find(u => u.email === email && u.password === password);
+        return user || null;
+      })
+    );
+  }
+
+  getDepartementsByRegion(regionId: string): Observable<string[]> {
+    return this.getRegions().pipe(
+      map(regions => {
+        const region = regions.find(r => r.id === regionId);
+        return region ? region.departements : [];
+      })
+    );
+  }
+
+  validateUserRegistration(userType: string, formData: any): Observable<{valid: boolean, errors: string[]}> {
+    return this.getUserTypes().pipe(
+      map(userTypes => {
+        const type = userTypes.find(t => t.id === userType);
+        if (!type) {
+          return { valid: false, errors: ['Type d\'utilisateur invalide'] };
+        }
+
+        const errors: string[] = [];
+
+        // Validation des champs requis
+        type.requiredFields.forEach(field => {
+          if (!formData[field]) {
+            errors.push(`Le champ ${field} est requis`);
+          }
+        });
+
+        // Validations spécifiques
+        if (userType === 'agriculteur') {
+          if (!formData.region) errors.push('La région est requise');
+          if (!formData.departement) errors.push('Le département est requis');
+          if (!formData.village) errors.push('Le village est requis');
+        }
+
+        if (userType === 'client') {
+          if (!formData.clientType) errors.push('Le type de client est requis');
+        }
+
+        if (userType === 'investisseur') {
+          if (!formData.email || !this.isValidEmail(formData.email)) {
+            errors.push('Email invalide');
+          }
+          if (!formData.investorType) errors.push('Le type d\'investisseur est requis');
+          if (!formData.montantInvestissement || formData.montantInvestissement < 100000) {
+            errors.push('Montant minimum: 100 000 FCFA');
+          }
+        }
+
+        if (userType === 'agronome') {
+          if (!formData.emailPro || !this.isValidEmail(formData.emailPro)) {
+            errors.push('Email professionnel invalide');
+          }
+          if (!formData.structure) errors.push('La structure est requise');
+          if (!formData.regionsIntervention || formData.regionsIntervention.length === 0) {
+            errors.push('Au moins une région d\'intervention requise');
+          }
+        }
+
+        return { valid: errors.length === 0, errors };
+      })
+    );
+  }
+
+  private isValidEmail(email: string): boolean {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+}
