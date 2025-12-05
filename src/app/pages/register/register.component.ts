@@ -374,4 +374,15 @@ export class RegisterComponent implements OnInit {
   get telephonePro() { return this.registrationForm.get('telephonePro'); }
   get structure() { return this.registrationForm.get('structure'); }
   get regionsIntervention() { return this.registrationForm.get('regionsIntervention'); }
+
+  getFormErrors(): any {
+    const errors: any = {};
+    Object.keys(this.registrationForm.controls).forEach(key => {
+      const control = this.registrationForm.get(key);
+      if (control && control.errors) {
+        errors[key] = control.errors;
+      }
+    });
+    return errors;
+  }
 }
