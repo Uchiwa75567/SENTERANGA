@@ -127,10 +127,23 @@ export class DataService {
   }
 
   authenticateUser(telephone: string, password: string): Observable<TestUser | null> {
+    // First check localStorage for registered users
+    const registeredUsers = this.getRegisteredUsersFromStorage();
+    const normalizedPhone = telephone.replace(/^(\+221|221)/, '');
+    
+    // Check in registered users first
+    const registeredUser = registeredUsers.find(u => {
+      const userPhone = u.phone.replace(/^(\+221|221)/, '');
+      return userPhone === normalizedPhone && u.password === password;
+    });
+    
+    if (registeredUser) {
+      return of(registeredUser);
+    }
+    
+    // If not found, check test users from JSON
     return this.getTestUsers().pipe(
       map(users => {
-        // Normalize phone number (remove +221 or 221 prefix if present)
-        const normalizedPhone = telephone.replace(/^(\+221|221)/, '');
         const user = users.find(u => {
           const userPhone = u.phone.replace(/^(\+221|221)/, '');
           return userPhone === normalizedPhone && u.password === password;
@@ -138,6 +151,61 @@ export class DataService {
         return user || null;
       })
     );
+  }
+
+  registerUser(userData: any): Observable<{ success: boolean, user?: TestUser, error?: string }> {
+    // Get existing registered users
+    const registeredUsers = this.getRegisteredUsersFromStorage();
+    
+    // Normalize phone number
+    const normalizedPhone = userData.telephone.replace(/^(\+221|221)/, '');
+    
+    // Check if user already exists
+    const existingUser = registeredUsers.find(u => {
+      const userPhone = u.phone.replace(/^(\+221|221)/, '');
+      return userPhone === normalizedPhone;
+    });
+    
+    if (existingUser) {
+      return of({ success: false, error: 'Un compte avec ce numéro de téléphone existe déjà' });
+    }
+    
+    // Create new user
+    const newUser: TestUser = {
+      id: `user-${Date.now()}`,
+      email: userData.email || '',
+      password: userData.password,
+      userType: userData.userType.id,
+      firstName: userData.prenom,
+      lastName: userData.nom,
+      phone: userData.telephone,
+      region: userData.region || undefined,
+      department: userData.departement || userData.department || undefined,
+      village: userData.village || undefined,
+      clientType: userData.clientType || undefined,
+      investorType: userData.investorType || undefined,
+      investmentAmount: userData.montantInvestissement || undefined,
+      professionalEmail: userData.emailPro || undefined,
+      structure: userData.structure || undefined,
+      interventionRegions: userData.regionsIntervention || undefined,
+      governmentId: userData.governmentId || undefined,
+      ministry: userData.ministry || undefined,
+      agentCode: userData.agentCode || undefined,
+      adminCode: userData.adminCode || undefined
+    };
+    
+    // Add to registered users
+    registeredUsers.push(newUser);
+    
+    // Save to localStorage
+    localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
+    
+    return of({ success: true, user: newUser });
+  }
+  
+  private getRegisteredUsersFromStorage(): TestUser[] {
+    const stored = localStorage.getItem('registeredUsers');
+    return stored ? JSON.parse(stored) : [];
   }
 
   getDepartementsByRegion(regionId: string): Observable<string[]> {

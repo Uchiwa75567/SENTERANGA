@@ -419,11 +419,11 @@
     {
       "id": "test-agriculteur-1",
       "email": "agriculteur@senteranga.sn",
-      "password": "test123",
+      "password": "123456",
       "userType": "agriculteur",
       "firstName": "Modou",
       "lastName": "Fall",
-      "phone": "+221771234567",
+      "phone": "771234567",
       "region": "Fatick",
       "department": "Fatick",
       "village": "Keur Massar"
@@ -431,43 +431,43 @@
     {
       "id": "test-client-1",
       "email": "client@senteranga.sn",
-      "password": "test123",
+      "password": "123456",
       "userType": "client",
       "firstName": "Aminata",
       "lastName": "Diop",
-      "phone": "+221781234567",
+      "phone": "781234567",
       "clientType": "boutique"
     },
     {
       "id": "test-admin-1",
       "email": "admin@senteranga.sn",
-      "password": "admin123",
+      "password": "111111",
       "userType": "admin",
       "firstName": "Mamadou",
       "lastName": "Sarr",
-      "phone": "+221701234567",
+      "phone": "701234567",
       "adminCode": "ADM001",
       "department": "Validation"
     },
     {
       "id": "test-investisseur-1",
       "email": "investisseur@senteranga.sn",
-      "password": "test123",
+      "password": "123456",
       "userType": "investisseur",
       "firstName": "Cheikh",
       "lastName": "Ndiaye",
-      "phone": "+221761234567",
+      "phone": "761234567",
       "investorType": "particulier",
       "investmentAmount": 5000000
     },
     {
       "id": "test-agronome-1",
       "email": "agronome@senteranga.sn",
-      "password": "test123",
+      "password": "123456",
       "userType": "agronome",
       "firstName": "Fatou",
       "lastName": "Sy",
-      "phone": "+221751234567",
+      "phone": "751234567",
       "professionalEmail": "fatou.sy@ancar.sn",
       "structure": "ANCAR (Agence Nationale de Conseil Agricole et Rural)",
       "interventionRegions": ["Dakar", "Thiès", "Fatick"]
@@ -475,11 +475,11 @@
     {
       "id": "test-agent-terrain-1",
       "email": "agent@senteranga.sn",
-      "password": "test123",
+      "password": "123456",
       "userType": "agent-terrain",
       "firstName": "Ibrahima",
       "lastName": "Ba",
-      "phone": "+221731234567",
+      "phone": "701234568",
       "agentCode": "AGT001",
       "region": "Kaolack",
       "department": "Kaolack"
@@ -487,11 +487,11 @@
     {
       "id": "test-etat-1",
       "email": "etat@senteranga.sn",
-      "password": "test123",
+      "password": "999999",
       "userType": "etat",
       "firstName": "Marie",
       "lastName": "Koulibaly",
-      "phone": "+221791234567",
+      "phone": "701234569",
       "governmentId": "GOV001",
       "ministry": "Ministère de l'Agriculture",
       "department": "Direction des Politiques Agricoles"

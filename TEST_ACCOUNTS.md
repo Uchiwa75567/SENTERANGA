@@ -1,94 +1,98 @@
-# Comptes de Test Senteranga
+# Comptes de Test - SENTERANGA
 
-Ce fichier contient les informations de connexion pour tester l'application Senteranga avec différents types d'utilisateurs.
+## Comment utiliser
 
-## 📋 Comptes Disponibles
+### Pour les nouveaux utilisateurs
+1. Allez sur la page d'inscription (`/inscription`)
+2. Choisissez votre profil
+3. Remplissez le formulaire en 2-3 étapes
+4. Vos informations seront sauvegardées dans le navigateur (localStorage)
+5. Connectez-vous avec votre numéro de téléphone et mot de passe
 
-### 🌾 **Agriculteur/Producteur**
-- **Email**: `agriculteur@senteranga.sn`
-- **Mot de passe**: `test123`
-- **Description**: Modou Fall, agriculteur de Fatick spécialisé en légumes et céréales
-
-### 🛒 **Client Acheteur**
-- **Email**: `client@senteranga.sn`
-- **Mot de passe**: `test123`
-- **Description**: Aminata Diop, propriétaire de boutique à Dakar
-
-### 👑 **Administrateur**
-- **Email**: `admin@senteranga.sn`
-- **Mot de passe**: `admin123`
-- **Description**: Mamadou Sarr, administrateur système avec code ADM001
-
-### 💰 **Investisseur Agricole**
-- **Email**: `investisseur@senteranga.sn`
-- **Mot de passe**: `test123`
-- **Description**: Cheikh Ndiaye, investisseur particulier avec 5 millions FCFA
-
-### 👨‍🔬 **Agronome/Conseiller**
-- **Email**: `agronome@senteranga.sn`
-- **Mot de passe**: `test123`
-- **Description**: Fatou Sy, agronome travaillant pour l'ANCAR
-
-### 🔍 **Agent Terrain**
-- **Email**: `agent@senteranga.sn`
-- **Mot de passe**: `test123`
-- **Description**: Ibrahima Ba, agent de terrain dans la région de Kaolack
-
-### 🏛️ **État (Gouvernement)**
-- **Email**: `etat@senteranga.sn`
-- **Mot de passe**: `test123`
-- **Description**: Marie Koulibaly, représentante du Ministère de l'Agriculture
-
-## 🚀 Comment Tester
-
-1. **Démarrer l'application**:
-   ```bash
-   npm start
-   ```
-
-2. **Accéder à la page de connexion**:
-   - Ouvrir `http://localhost:4200/connexion`
-
-3. **Utiliser les comptes de test**:
-   - Sélectionner un email et mot de passe dans la liste ci-dessus
-   - Cliquer sur "Se connecter"
-
-4. **Navigation automatique**:
-   - Chaque type d'utilisateur sera automatiquement redirigé vers son tableau de bord approprié
-
-## 📝 Notes Importantes
-
-- **Sécurité**: Ces comptes sont uniquement pour les tests de développement
-- **Données**: Les informations sont stockées dans `public/assets/data/senteranga-data.json`
-- **Authentification**: Utilise un système d'authentification simulé basé sur les données JSON
-- **Routes**: Chaque type d'utilisateur a sa propre route de tableau de bord
-
-## 🔧 Ajouter de Nouveaux Comptes
-
-Pour ajouter de nouveaux comptes de test, modifier le fichier `public/assets/data/senteranga-data.json` dans la section `testUsers`.
-
-Format requis:
-```json
-{
-  "id": "unique-id",
-  "email": "user@senteranga.sn",
-  "password": "password123",
-  "userType": "agriculteur|client|admin|investisseur|agronome|agent-terrain|etat",
-  "firstName": "Prénom",
-  "lastName": "Nom",
-  "phone": "+221XXXXXXXXX",
-  // Autres champs selon le type d'utilisateur...
-}
-```
-
-## 🐛 Signaler des Problèmes
-
-Si vous rencontrez des problèmes avec la connexion:
-1. Vérifier que l'application est démarrée (`npm start`)
-2. Vérifier que les données JSON sont correctement chargées
-3. Consulter la console du navigateur pour les erreurs
-4. Vérifier que l'email et le mot de passe correspondent exactement
+### Pour tester avec des comptes pré-configurés
+Utilisez les comptes ci-dessous sur la page de connexion (`/connexion`)
 
 ---
 
-*Document mis à jour le: 04 décembre 2024*
+## Comptes de Test Disponibles
+
+### 🌾 Agriculteur/Producteur
+- **Téléphone**: `771234567` ou `+221771234567`
+- **Mot de passe**: `123456`
+- **Nom**: Modou Fall
+- **Région**: Fatick
+
+### 🛒 Client Acheteur
+- **Téléphone**: `781234567` ou `+221781234567`
+- **Mot de passe**: `123456`
+- **Nom**: Aminata Diop
+- **Type**: Boutique
+
+### 👑 Administrateur
+- **Téléphone**: `701234567` ou `+221701234567`
+- **Mot de passe**: `111111`
+- **Nom**: Mamadou Sarr
+- **Code Admin**: ADM001
+
+### 💰 Investisseur Agricole
+- **Téléphone**: `761234567` ou `+221761234567`
+- **Mot de passe**: `123456`
+- **Nom**: Cheikh Ndiaye
+- **Type**: Particulier
+
+### 👨‍🔬 Agronome/Conseiller
+- **Téléphone**: `751234567` ou `+221751234567`
+- **Mot de passe**: `123456`
+- **Nom**: Fatou Sy
+- **Structure**: ANCAR
+
+### 🔍 Agent de Terrain
+- **Téléphone**: `701234568` ou `+221701234568`
+- **Mot de passe**: `123456`
+- **Nom**: Ibrahima Ba
+- **Code Agent**: AGT001
+
+### 🏛️ État (Gouvernement)
+- **Téléphone**: `701234569` ou `+221701234569`
+- **Mot de passe**: `999999`
+- **Nom**: Marie Koulibaly
+- **Ministère**: Agriculture
+
+---
+
+## Format des Identifiants
+
+### Numéro de téléphone
+- Commence par: `77`, `76`, `78`, `75`, ou `70`
+- Suivi de 7 chiffres
+- Formats acceptés:
+  - `771234567` (9 chiffres)
+  - `+221771234567` (avec indicatif)
+  - `221771234567` (avec indicatif sans +)
+
+### Mot de passe
+- Exactement **6 chiffres** (0-9)
+- Exemples: `123456`, `111111`, `999999`
+
+---
+
+## Notes Importantes
+
+1. **Stockage Local**: Les nouvelles inscriptions sont sauvegardées dans le localStorage du navigateur
+2. **Données de Test**: Les comptes ci-dessus sont pré-configurés dans le fichier JSON
+3. **Connexion**: Utilisez le numéro de téléphone (avec ou sans indicatif) et le mot de passe à 6 chiffres
+4. **Inscription**: Admin et État ne peuvent pas s'inscrire - ils ont des comptes pré-configurés
+
+---
+
+## Dépannage
+
+### "Numéro de téléphone ou mot de passe incorrect"
+- Vérifiez que le numéro commence par 77, 76, 78, 75 ou 70
+- Vérifiez que le mot de passe contient exactement 6 chiffres
+- Essayez avec ou sans l'indicatif +221
+
+### Après inscription, impossible de se connecter
+- Vérifiez que vous utilisez exactement le même numéro de téléphone
+- Le localStorage doit être activé dans votre navigateur
+- Essayez de vider le cache si nécessaire

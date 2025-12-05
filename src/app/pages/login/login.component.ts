@@ -34,19 +34,24 @@ export class LoginComponent {
       this.dataService.authenticateUser(telephone, password).subscribe(user => {
         if (user) {
           console.log('Login successful:', user);
+          
+          // Store user info in localStorage for session management
+          localStorage.setItem('currentUser', JSON.stringify(user));
 
           // Navigate based on user type
+          // Pour l'instant, tous les utilisateurs vont au dashboard institutionnel
+          // TODO: Créer des dashboards spécifiques pour chaque type d'utilisateur
           const userTypeRoutes: { [key: string]: string } = {
-            'agriculteur': '/dashboard-agriculteur',
-            'client': '/dashboard-client',
-            'admin': '/dashboard-admin',
-            'investisseur': '/dashboard-investisseur',
-            'agronome': '/dashboard-agronome',
-            'agent-terrain': '/dashboard-agent-terrain',
-            'etat': '/dashboard-etat'
+            'agriculteur': '/dashboard-institutionnel',
+            'client': '/dashboard-institutionnel',
+            'admin': '/dashboard-institutionnel',
+            'investisseur': '/dashboard-institutionnel',
+            'agronome': '/dashboard-institutionnel',
+            'agent-terrain': '/dashboard-institutionnel',
+            'etat': '/dashboard-institutionnel'
           };
 
-          const route = userTypeRoutes[user.userType] || '/';
+          const route = userTypeRoutes[user.userType] || '/dashboard-institutionnel';
           this.router.navigate([route]);
         } else {
           console.log('Login failed: Invalid credentials');

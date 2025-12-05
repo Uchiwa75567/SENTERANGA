@@ -1,52 +1,52 @@
-<section class="relative min-h-screen flex flex-col justify-center items-center text-white px-8 py-20"
+<section class="relative min-h-screen flex flex-col justify-center items-center text-white px-4 sm:px-6 md:px-8 py-12 sm:py-16 md:py-20"
   style="background: linear-gradient(180deg, rgba(102,102,102,0.08) 0%, rgba(0,0,0,0.7) 43.75%, rgba(0,0,0,0.7) 100%), url('https://images.unsplash.com/photo-1542838132-92c53300491e?w=1920&q=80') center/cover no-repeat;">
   
-  <div class="max-w-6xl mx-auto text-center z-10">
-    <h1 class="text-6xl font-bold leading-tight mb-6">
+  <div class="max-w-6xl mx-auto text-center z-10 mb-32 sm:mb-40 md:mb-0">
+    <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4 sm:mb-6 px-2">
       Révolutionnez le Marché<br>
       Sénégalais avec SENTERANGA
     </h1>
     
-    <p class="text-4xl font-bold text-gray-200 leading-tight mb-8">
-      La plateforme numérique qui connecte agriculteurs, éleveurs, pêcheurs, l'État et les<br>
+    <p class="text-base sm:text-lg md:text-2xl lg:text-4xl font-bold text-gray-200 leading-tight mb-6 sm:mb-8 px-2">
+      La plateforme numérique qui connecte agriculteurs, éleveurs, pêcheurs, l'État et les
       industriels pour transformer le marché du Sénégal
     </p>
     
-    <button class="bg-senteranga-green text-white px-12 py-4 text-2xl font-semibold rounded hover:bg-senteranga-green-dark transition-colors">
+    <button class="bg-senteranga-green text-white px-6 sm:px-8 md:px-12 py-3 sm:py-4 text-base sm:text-lg md:text-xl lg:text-2xl font-semibold rounded hover:bg-senteranga-green-dark transition-colors">
       Devenir Producteur
     </button>
   </div>
   
   <!-- Statistics Cards -->
-  <div class="absolute bottom-20 left-0 right-0 z-10">
-    <div class="max-w-7xl mx-auto px-8">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+  <div class="absolute bottom-4 sm:bottom-8 md:bottom-12 lg:bottom-20 left-0 right-0 z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 md:gap-6 lg:gap-8">
         <!-- Producers Card -->
-        <div class="bg-black/36 backdrop-blur-sm rounded-xl p-8 text-center">
-          <div class="text-6xl font-bold text-senteranga-green leading-tight mb-2">
+        <div class="bg-black/36 backdrop-blur-sm rounded-lg sm:rounded-xl p-4 sm:p-6 md:p-8 text-center">
+          <div class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-senteranga-green leading-tight mb-1 sm:mb-2">
             {{ stats.producers }} +
           </div>
-          <div class="text-2xl font-bold">
+          <div class="text-sm sm:text-base md:text-xl lg:text-2xl font-bold">
             Producteurs connectés
           </div>
         </div>
         
         <!-- Tonnage Card -->
-        <div class="bg-black/36 backdrop-blur-sm rounded-xl p-8 text-center">
-          <div class="text-6xl font-bold text-senteranga-green leading-tight mb-2">
+        <div class="bg-black/36 backdrop-blur-sm rounded-lg sm:rounded-xl p-4 sm:p-6 md:p-8 text-center">
+          <div class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-senteranga-green leading-tight mb-1 sm:mb-2">
             {{ stats.tonnage }} +
           </div>
-          <div class="text-2xl font-bold">
+          <div class="text-sm sm:text-base md:text-xl lg:text-2xl font-bold">
             Tonnes de produits vendus
           </div>
         </div>
         
         <!-- Regions Card -->
-        <div class="bg-black/36 backdrop-blur-sm rounded-xl p-8 text-center">
-          <div class="text-6xl font-bold text-senteranga-green leading-tight mb-2">
+        <div class="bg-black/36 backdrop-blur-sm rounded-lg sm:rounded-xl p-4 sm:p-6 md:p-8 text-center">
+          <div class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-senteranga-green leading-tight mb-1 sm:mb-2">
             {{ stats.regions }}
           </div>
-          <div class="text-2xl font-bold">
+          <div class="text-sm sm:text-base md:text-xl lg:text-2xl font-bold">
             Régions Converties
           </div>
         </div>

@@ -273,15 +273,23 @@ export class RegisterComponent implements OnInit {
 
     if (this.registrationForm.valid) {
       this.isLoading = true;
-      const formValue = this.registrationForm.value;
+      const formValue = {
+        ...this.registrationForm.value,
+        userType: this.selectedUserType
+      };
 
-      // Simulate registration API call
-      setTimeout(() => {
-        console.log('Registration attempt:', formValue);
-        // For demo purposes, just navigate to login
-        this.router.navigate(['/connexion']);
+      // Register user
+      this.dataService.registerUser(formValue).subscribe(result => {
+        if (result.success) {
+          console.log('Registration successful:', result.user);
+          alert('Inscription réussie ! Vous pouvez maintenant vous connecter.');
+          this.router.navigate(['/connexion']);
+        } else {
+          console.log('Registration failed:', result.error);
+          alert(result.error || 'Erreur lors de l\'inscription');
+        }
         this.isLoading = false;
-      }, 2000);
+      });
     } else {
       // Mark all fields as touched to show validation errors
       this.registrationForm.markAllAsTouched();
