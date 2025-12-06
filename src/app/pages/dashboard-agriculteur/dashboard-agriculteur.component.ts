@@ -153,76 +153,74 @@ export class DashboardAgriculteurComponent {
     }
 
     // Upload images directly to Cloudinary (unsigned upload)
-    this.convertImagesToBase64(this.selectedImages).then(async (base64Images) => {
-      try {
-        let uploadedUrls: string[] = [];
-        if (base64Images.length) {
-          // Upload directly to Cloudinary without preset (unsigned)
-          const cloudName = 'djha1kqvu';
-          const uploadUrls = await Promise.all(
-            base64Images.map(async (base64Image, index) => {
-              const formData = new FormData();
-              formData.append('file', base64Image);
-              formData.append('folder', 'senteranga_products');
-              // Remove upload_preset for unsigned uploads
-              // formData.append('upload_preset', 'senteranga_products');
+    try {
+      let uploadedUrls: string[] = [];
+      if (this.selectedImages.length) {
+        // Upload directly to Cloudinary without preset (unsigned)
+        const cloudName = 'djha1kqvu';
+        const uploadUrls = await Promise.all(
+          this.selectedImages.map(async (file, index) => {
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('folder', 'senteranga_products');
+            // Remove upload_preset for unsigned uploads
+            // formData.append('upload_preset', 'senteranga_products');
 
-              const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
-                method: 'POST',
-                body: formData
-              });
+            const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+              method: 'POST',
+              body: formData
+            });
 
-              if (!response.ok) {
-                throw new Error(`Cloudinary upload failed: ${response.statusText}`);
-              }
+            if (!response.ok) {
+              throw new Error(`Cloudinary upload failed: ${response.statusText}`);
+            }
 
-              const result = await response.json();
-              return result.secure_url;
-            })
-          );
-          uploadedUrls = uploadUrls;
-        }
-
-        // compute total price from quantity and price per unit
-        const q = parseFloat(this.productForm.value.quantite) || 0;
-        const ppu = parseFloat(this.productForm.value.prixParUnite) || 0;
-        const totalPrice = q * ppu;
-
-        const product: Product = {
-          id: `prod-${Date.now()}`,
-          agriculteurId: this.currentUser!.id,
-          titre: this.productForm.value.titre,
-          description: this.productForm.value.description,
-          categorie: this.productForm.value.categorie,
-          quantite: q,
-          quantiteMinimale: parseFloat(this.productForm.value.quantiteMinimale),
-          prix: totalPrice,
-          prixParUnite: ppu,
-          unite: this.productForm.value.unite,
-          localisation: this.productForm.value.localisation,
-          images: uploadedUrls,
-          statutValidation: 'en_attente',
-          statutDisponibilite: 'disponible',
-          datePublication: new Date().toISOString(),
-          dateMaj: new Date().toISOString()
-        };
-
-        this.dataService.createProduct(product).subscribe({
-          next: (created) => {
-            this.products.unshift(created);
-            alert('Produit publié — en attente de validation');
-            this.resetProductForm();
-          },
-          error: (err) => {
-            console.error('Error publishing product', err);
-            alert('Erreur lors de la publication du produit');
-          }
-        });
-      } catch (err) {
-        console.error('Image upload failed', err);
-        alert('Échec lors de l\'upload des images');
+            const result = await response.json();
+            return result.secure_url;
+          })
+        );
+        uploadedUrls = uploadUrls;
       }
-    });
+
+      // compute total price from quantity and price per unit
+      const q = parseFloat(this.productForm.value.quantite) || 0;
+      const ppu = parseFloat(this.productForm.value.prixParUnite) || 0;
+      const totalPrice = q * ppu;
+
+      const product: Product = {
+        id: `prod-${Date.now()}`,
+        agriculteurId: this.currentUser!.id,
+        titre: this.productForm.value.titre,
+        description: this.productForm.value.description,
+        categorie: this.productForm.value.categorie,
+        quantite: q,
+        quantiteMinimale: parseFloat(this.productForm.value.quantiteMinimale),
+        prix: totalPrice,
+        prixParUnite: ppu,
+        unite: this.productForm.value.unite,
+        localisation: this.productForm.value.localisation,
+        images: uploadedUrls,
+        statutValidation: 'en_attente',
+        statutDisponibilite: 'disponible',
+        datePublication: new Date().toISOString(),
+        dateMaj: new Date().toISOString()
+      };
+
+      this.dataService.createProduct(product).subscribe({
+        next: (created) => {
+          this.products.unshift(created);
+          alert('Produit publié — en attente de validation');
+          this.resetProductForm();
+        },
+        error: (err) => {
+          console.error('Error publishing product', err);
+          alert('Erreur lors de la publication du produit');
+        }
+      });
+    } catch (err) {
+      console.error('Image upload failed', err);
+      alert('Échec lors de l\'upload des images');
+    }
   }
 
   // Reset product form and image selection
