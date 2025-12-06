@@ -1,0 +1,1 @@
+{"ast":null,"code":"// Development environment settings\nexport const environment = {\n  production: false,\n  // backend JSON Server base URL (using production backend for both dev and prod)\n  apiUrl: 'https://json-server-senteranga.onrender.com'\n};","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}
