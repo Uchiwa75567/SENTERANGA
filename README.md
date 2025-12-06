@@ -276,8 +276,14 @@ cd projet3d
 # Installer les dépendances
 npm install
 
-# Démarrer le serveur de développement
+# Démarrer JSON Server (backend)
+npm run json-server
+
+# Démarrer l'application Angular (dans un autre terminal)
 npm start
+
+# OU démarrer les deux serveurs simultanément
+npm run dev
 ```
 
 ### Build pour la production
@@ -291,10 +297,13 @@ npm run build
 ### Scripts Disponibles
 ```json
 {
-  "start": "ng serve",                    // Serveur de développement
+  "start": "ng serve",                    // Serveur de développement Angular
   "build": "ng build",                    // Build de production
   "watch": "ng build --watch --configuration development", // Build en mode watch
-  "test": "ng test"                       // Tests unitaires
+  "test": "ng test",                      // Tests unitaires
+  "json-server": "json-server --watch db.json --port 3001", // Serveur JSON
+  "server": "json-server --watch db.json --port 3001 --host 0.0.0.0", // Serveur JSON accessible
+  "dev": "concurrently \"npm run json-server\" \"npm start\"" // Les deux serveurs
 }
 ```
 
@@ -316,7 +325,49 @@ npm run build
 - Formulaires avec validation en temps réel
 - Animations fluides
 
-## 📈 Données Statiques
+## 🗄️ Architecture des Données - JSON Server
+
+Le projet utilise **JSON Server** comme backend de données pour le développement. Toutes les données sont stockées dans un fichier `db.json` structuré et accessibles via des endpoints RESTful.
+
+### Configuration JSON Server
+
+#### Démarrage
+```bash
+# Terminal 1: Backend JSON Server
+npm run json-server
+
+# Terminal 2: Application Angular
+npm start
+
+# OU en une commande
+npm run dev
+```
+
+#### Endpoints disponibles
+- `http://localhost:3001/regions` - Régions du Sénégal
+- `http://localhost:3001/userTypes` - Types d'utilisateurs
+- `http://localhost:3001/users` - Utilisateurs enregistrés
+- `http://localhost:3001/products` - Catalogue produits
+- `http://localhost:3001/orders` - Commandes
+- `http://localhost:3001/notifications` - Notifications
+
+#### Structure des données
+Le fichier `db.json` contient toutes les données organisées en collections :
+- **users**: Utilisateurs enregistrés (rempli dynamiquement)
+- **products**: Catalogue agricole complet
+- **regions**: 14 régions sénégalaises avec départements
+- **userTypes**: 7 types d'utilisateurs (agriculteurs, clients, etc.)
+- **orders**: Historique des commandes
+- **notifications**: Système de notifications
+
+### Migration des données
+Toutes les données statiques ont été migrées depuis les fichiers TypeScript vers JSON Server avec optimisation :
+- Structure RESTful cohérente
+- IDs automatiques générés
+- Timestamps pour le versioning
+- Collections séparées et normalisées
+
+## � Données Statiques
 
 Le projet utilise actuellement des données statiques pour la démonstration :
 

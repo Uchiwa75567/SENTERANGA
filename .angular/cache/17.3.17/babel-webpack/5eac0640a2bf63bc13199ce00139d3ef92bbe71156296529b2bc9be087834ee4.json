@@ -1,1 +1,0 @@
-{"ast":null,"code":"export const routes = [{\n  path: '',\n  loadComponent: () => import('./pages/landing/landing.component').then(m => m.LandingComponent)\n}, {\n  path: 'marche-agricole',\n  loadComponent: () => import('./pages/marketplace/marketplace.component').then(m => m.MarketplaceComponent)\n}];","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}

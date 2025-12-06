@@ -34,17 +34,30 @@ export class LoginComponent {
       this.dataService.authenticateUser(telephone, password).subscribe(user => {
         if (user) {
           console.log('Login successful:', user);
-          
+
+          // If user is an agricultor, require admin validation before granting access
+          const requiresValidation = user.userType === 'agriculteur';
+          const isApproved = user.validationStatus === 'approved' || user.isValidated === true;
+
+          if (requiresValidation && !isApproved) {
+            // Notify the user that their account is pending approval or rejected
+            if (user.validationStatus === 'rejected') {
+              alert('Votre inscription a été rejetée. Contactez le support pour plus d\'informations.');
+            } else {
+              alert('Votre compte est en attente de validation par l\'administration. Vous recevrez une notification une fois traité.');
+            }
+            this.isLoading = false;
+            return;
+          }
+
           // Store user info in localStorage for session management
           localStorage.setItem('currentUser', JSON.stringify(user));
 
-          // Navigate based on user type
-          // Pour l'instant, tous les utilisateurs vont au dashboard institutionnel
-          // TODO: Créer des dashboards spécifiques pour chaque type d'utilisateur
+          // Navigate based on user type (use specific dashboards where available)
           const userTypeRoutes: { [key: string]: string } = {
-            'agriculteur': '/dashboard-institutionnel',
+            'agriculteur': '/dashboard-agriculteur',
             'client': '/dashboard-institutionnel',
-            'admin': '/dashboard-institutionnel',
+            'admin': '/dashboard-admin',
             'investisseur': '/dashboard-institutionnel',
             'agronome': '/dashboard-institutionnel',
             'agent-terrain': '/dashboard-institutionnel',

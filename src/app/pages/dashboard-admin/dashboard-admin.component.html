@@ -1,0 +1,107 @@
+<app-header></app-header>
+
+<section class="pt-20 max-w-7xl mx-auto px-6 py-8">
+  <!-- Toast notification -->
+  <div *ngIf="showToast" [ngClass]="{'bg-green-100 text-green-800 border-green-400': toastType === 'success', 'bg-red-100 text-red-800 border-red-400': toastType === 'error'}" class="fixed top-4 right-4 px-4 py-2 border rounded shadow-lg z-50">
+    {{ toastMessage }}
+  </div>
+
+  <h1 class="text-3xl font-bold mb-6">👨‍💼 Admin — Validation des Inscriptions</h1>
+
+  <div *ngIf="errorMessage" class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="loading" class="flex items-center justify-center py-12">
+    <div class="text-gray-600">Chargement des utilisateurs...</div>
+  </div>
+
+  <div *ngIf="!loading && users.length === 0" class="p-6 bg-blue-50 border border-blue-200 rounded text-center">
+    <p class="text-blue-700">✓ Tous les utilisateurs ont été validés! Il n'y a aucune inscription en attente.</p>
+  </div>
+
+  <div *ngIf="!loading && users.length > 0" class="bg-white rounded-lg shadow overflow-hidden">
+    <table class="w-full">
+      <thead class="bg-gray-100 border-b">
+        <tr>
+          <th class="p-4 text-left font-semibold">Nom Complet</th>
+          <th class="p-4 text-left font-semibold">Téléphone</th>
+          <th class="p-4 text-left font-semibold">Type d'Utilisateur</th>
+          <th class="p-4 text-left font-semibold">Statut</th>
+          <th class="p-4 text-left font-semibold">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let u of users" class="border-t hover:bg-gray-50 transition">
+          <td class="p-4 font-medium">{{ u.firstName }} {{ u.lastName }}</td>
+          <td class="p-4">
+            <a [href]="'tel:' + u.phone" class="text-blue-600 hover:underline">{{ u.phone }}</a>
+          </td>
+          <td class="p-4">
+            <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
+              {{ u.userType === 'agriculteur' ? '🌾 Agriculteur' : '👤 ' + u.userType }}
+            </span>
+          </td>
+          <td class="p-4">
+            <span *ngIf="u.validationStatus === 'pending'" class="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm font-medium">
+              ⏳ En attente
+            </span>
+            <span *ngIf="u.validationStatus === 'approved'" class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">
+              ✓ Approuvé
+            </span>
+            <span *ngIf="u.validationStatus === 'rejected'" class="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm font-medium">
+              ✗ Rejeté
+            </span>
+            <span *ngIf="!u.validationStatus" class="px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-sm font-medium">
+              ⏳ Non défini
+            </span>
+          </td>
+          <td class="p-4">
+            <div class="flex gap-2">
+              <button 
+                (click)="approve(u)" 
+                [disabled]="u.validationStatus === 'approved'"
+                class="px-4 py-2 bg-green-500 text-white rounded font-medium hover:bg-green-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition">
+                ✓ Approuver
+              </button>
+              <button 
+                (click)="reject(u)" 
+                [disabled]="u.validationStatus === 'rejected'"
+                class="px-4 py-2 bg-red-500 text-white rounded font-medium hover:bg-red-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition">
+                ✗ Rejeter
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Products validation section -->
+  <section class="mt-8">
+    <h2 class="text-2xl font-semibold mb-4">Validation des produits en attente</h2>
+    <div *ngIf="pendingProducts.length === 0" class="p-4 bg-green-50 border border-green-200 rounded">Aucun produit en attente.</div>
+
+    <div *ngFor="let p of pendingProducts" class="bg-white rounded-lg shadow p-4 mb-4">
+      <div class="flex justify-between items-start">
+        <div>
+          <div class="font-medium text-lg">{{ p.titre }}</div>
+          <div class="text-sm text-gray-600">Agriculteur: <strong>{{ userMap[p.agriculteurId] || p.agriculteurId }}</strong></div>
+          <div class="text-sm text-gray-600">Catégorie: {{ p.categorie }} — {{ p.quantite }} {{ p.unite }} — Prix/unité: {{ p.prixParUnite || '-' }} FCFA</div>
+          <div class="text-xs text-gray-500 mt-2">Localisation: {{ p.localisation }}</div>
+        </div>
+        <div class="text-right">
+          <button (click)="approveProduct(p)" class="px-3 py-1 bg-green-600 text-white rounded mr-2">Valider</button>
+          <button (click)="rejectProduct(p)" class="px-3 py-1 bg-red-600 text-white rounded">Refuser</button>
+        </div>
+      </div>
+
+      <div class="mt-3">
+        <label class="block text-sm font-medium">Motif de refus (si applicable)</label>
+        <textarea [(ngModel)]="selectedReason[p.id]" class="w-full border rounded px-3 py-2 mt-1" rows="2" placeholder="Raison du rejet pour l'utilisateur"></textarea>
+      </div>
+    </div>
+  </section>
+</section>
+
+<app-footer></app-footer>

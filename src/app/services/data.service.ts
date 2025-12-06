@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+// Use environment file to switch API URL between dev/prod
+import { environment } from '../../environments/environment';
 import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, catchError } from 'rxjs/operators';
 
 export interface Region {
   id: string;
@@ -35,6 +37,25 @@ export interface Ministry {
   name: string;
 }
 
+export interface Product {
+  id: string;
+  agriculteurId: string;
+  titre: string;
+  description: string;
+  categorie: string;
+  quantite: number;
+  quantiteMinimale?: number; // quantité minimale à partir de laquelle le produit est vendu
+  prix: number;
+  prixParUnite?: number; // prix par unité (FCFA par kg/tonne/etc.)
+  unite: string; // kg, tonne, etc.
+  localisation: string;
+  images?: string[]; // base64 or URLs
+  statutValidation: 'en_attente' | 'validé' | 'rejeté';
+  statutDisponibilite: 'disponible' | 'reservé' | 'vendu';
+  datePublication: string;
+  dateMaj: string;
+}
+
 export interface TestUser {
   id: string;
   email: string;
@@ -56,151 +77,152 @@ export interface TestUser {
   ministry?: string;
   agentCode?: string;
   adminCode?: string;
+  // Validation + banking
+  isValidated?: boolean;
+  validationStatus?: 'pending' | 'approved' | 'rejected';
+  bankAccount?: { bankName?: string; accountNumber?: string };
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
-  private data: any = null;
+  // Base URL for the backend API. Uses `environment.apiUrl` so you can
+  // switch between local and production backends by replacing
+  // `src/environments/environment.ts` and `environment.prod.ts`.
+  private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
-  loadData(): Observable<any> {
-    if (this.data) {
-      return of(this.data);
-    }
-    return this.http.get('/assets/data/senteranga-data.json').pipe(
-      map(data => {
-        this.data = data;
-        return data;
-      })
-    );
+  getRegions(): Observable<Region[]> {
+    return this.http.get<Region[]>(`${this.apiUrl}/regions`);
   }
 
-  getRegions(): Observable<Region[]> {
-    return this.loadData().pipe(
-      map(data => data.regions || [])
-    );
+  updateUser(user: TestUser): Observable<TestUser> {
+    // Update user record on json-server
+    return this.http.put<TestUser>(`${this.apiUrl}/users/${user.id}`, user);
+  }
+
+  createNotification(notification: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/notifications`, notification);
   }
 
   getUserTypes(): Observable<UserType[]> {
-    return this.loadData().pipe(
-      map(data => data.userTypes || [])
-    );
+    return this.http.get<UserType[]>(`${this.apiUrl}/userTypes`);
   }
 
   getClientTypes(): Observable<ClientType[]> {
-    return this.loadData().pipe(
-      map(data => data.clientTypes || [])
-    );
+    return this.http.get<ClientType[]>(`${this.apiUrl}/clientTypes`);
   }
 
   getInvestorTypes(): Observable<InvestorType[]> {
-    return this.loadData().pipe(
-      map(data => data.investorTypes || [])
-    );
+    return this.http.get<InvestorType[]>(`${this.apiUrl}/investorTypes`);
   }
 
   getMinistries(): Observable<Ministry[]> {
-    return this.loadData().pipe(
-      map(data => data.ministries || [])
-    );
+    return this.http.get<Ministry[]>(`${this.apiUrl}/ministries`);
   }
 
-  getStructures(): Observable<string[]> {
-    return this.loadData().pipe(
-      map(data => data.structures || [])
-    );
+  getStructures(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/structures`);
   }
 
   getCertifications(): Observable<any[]> {
-    return this.loadData().pipe(
-      map(data => data.certifications || [])
-    );
+    return this.http.get<any[]>(`${this.apiUrl}/certifications`);
   }
 
   getTestUsers(): Observable<TestUser[]> {
-    return this.loadData().pipe(
-      map(data => data.testUsers || [])
-    );
+    return this.http.get<TestUser[]>(`${this.apiUrl}/users`);
   }
 
   authenticateUser(telephone: string, password: string): Observable<TestUser | null> {
-    // First check localStorage for registered users
-    const registeredUsers = this.getRegisteredUsersFromStorage();
+    // Normalize the phone once
     const normalizedPhone = telephone.replace(/^(\+221|221)/, '');
-    
-    // Check in registered users first
-    const registeredUser = registeredUsers.find(u => {
-      const userPhone = u.phone.replace(/^(\+221|221)/, '');
-      return userPhone === normalizedPhone && u.password === password;
-    });
-    
-    if (registeredUser) {
-      return of(registeredUser);
-    }
-    
-    // If not found, check test users from JSON
+
+    // Prefer authoritative source (JSON Server) first to avoid stale local copies
+    const registeredUsers = this.getRegisteredUsersFromStorage();
+
     return this.getTestUsers().pipe(
       map(users => {
-        const user = users.find(u => {
-          const userPhone = u.phone.replace(/^(\+221|221)/, '');
+        // Try to find user on server
+        const userFromServer = users.find(u => {
+          const userPhone = (u.phone || '').toString().replace(/^(\+221|221)/, '');
           return userPhone === normalizedPhone && u.password === password;
         });
-        return user || null;
+
+        if (userFromServer) {
+          return userFromServer;
+        }
+
+        // Fallback: check locally registered users (client-side registrations)
+        const localUser = registeredUsers.find(u => {
+          const userPhone = (u.phone || '').toString().replace(/^(\+221|221)/, '');
+          return userPhone === normalizedPhone && u.password === password;
+        });
+
+        return localUser || null;
       })
     );
   }
 
   registerUser(userData: any): Observable<{ success: boolean, user?: TestUser, error?: string }> {
-    // Get existing registered users
-    const registeredUsers = this.getRegisteredUsersFromStorage();
-    
     // Normalize phone number
     const normalizedPhone = userData.telephone.replace(/^(\+221|221)/, '');
-    
+
     // Check if user already exists
-    const existingUser = registeredUsers.find(u => {
-      const userPhone = u.phone.replace(/^(\+221|221)/, '');
-      return userPhone === normalizedPhone;
-    });
-    
-    if (existingUser) {
-      return of({ success: false, error: 'Un compte avec ce numéro de téléphone existe déjà' });
-    }
-    
-    // Create new user
-    const newUser: TestUser = {
-      id: `user-${Date.now()}`,
-      email: userData.email || '',
-      password: userData.password,
-      userType: userData.userType.id,
-      firstName: userData.prenom,
-      lastName: userData.nom,
-      phone: userData.telephone,
-      region: userData.region || undefined,
-      department: userData.departement || userData.department || undefined,
-      village: userData.village || undefined,
-      clientType: userData.clientType || undefined,
-      investorType: userData.investorType || undefined,
-      investmentAmount: userData.montantInvestissement || undefined,
-      professionalEmail: userData.emailPro || undefined,
-      structure: userData.structure || undefined,
-      interventionRegions: userData.regionsIntervention || undefined,
-      governmentId: userData.governmentId || undefined,
-      ministry: userData.ministry || undefined,
-      agentCode: userData.agentCode || undefined,
-      adminCode: userData.adminCode || undefined
-    };
-    
-    // Add to registered users
-    registeredUsers.push(newUser);
-    
-    // Save to localStorage
-    localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
-    
-    return of({ success: true, user: newUser });
+    return this.getTestUsers().pipe(
+      map(existingUsers => {
+        const existingUser = existingUsers.find(u => {
+          const userPhone = u.phone.replace(/^(\+221|221)/, '');
+          return userPhone === normalizedPhone;
+        });
+
+        if (existingUser) {
+          return { success: false, error: 'Un compte avec ce numéro de téléphone existe déjà' };
+        }
+
+        // Create new user
+        const newUser: TestUser = {
+          id: `user-${Date.now()}`,
+          email: userData.email || '',
+          password: userData.password,
+          userType: userData.userType.id,
+          firstName: userData.prenom,
+          lastName: userData.nom,
+          phone: userData.telephone,
+          region: userData.region || undefined,
+          department: userData.departement || userData.department || undefined,
+          village: userData.village || undefined,
+          clientType: userData.clientType || undefined,
+          investorType: userData.investorType || undefined,
+          investmentAmount: userData.montantInvestissement || undefined,
+          professionalEmail: userData.emailPro || undefined,
+          structure: userData.structure || undefined,
+          interventionRegions: userData.regionsIntervention || undefined,
+          governmentId: userData.governmentId || undefined,
+          ministry: userData.ministry || undefined,
+          agentCode: userData.agentCode || undefined,
+          adminCode: userData.adminCode || undefined
+          ,
+          // New accounts start as pending validation by admin
+          isValidated: false,
+          validationStatus: 'pending',
+          bankAccount: undefined
+        };
+
+        // Save to json-server
+        this.http.post<TestUser>(`${this.apiUrl}/users`, newUser).subscribe({
+          next: (savedUser: TestUser) => {
+            console.log('User registered successfully:', savedUser);
+          },
+          error: (error: any) => {
+            console.error('Error saving user:', error);
+          }
+        });
+
+        return { success: true, user: newUser };
+      })
+    );
   }
   
   private getRegisteredUsersFromStorage(): TestUser[] {
@@ -215,6 +237,84 @@ export class DataService {
         return region ? region.departements : [];
       })
     );
+  }
+
+  // Announcements (publication)
+  createAnnouncement(announcement: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/announcements`, announcement);
+  }
+
+  getAnnouncementsByUser(userId: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/announcements?userId=${userId}`);
+  }
+
+  // Notifications
+  getNotificationsForUser(userId: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/notifications?userId=${userId}&_sort=createdAt&_order=desc`);
+  }
+
+  markNotificationRead(notificationId: string): Observable<any> {
+    return this.http.patch<any>(`${this.apiUrl}/notifications/${notificationId}`, { read: true });
+  }
+
+  // Banking (simple simulation saved on user record)
+  updateUserBankAccount(userId: string, bankAccount: { bankName: string; accountNumber: string }): Observable<TestUser> {
+    return this.http.patch<TestUser>(`${this.apiUrl}/users/${userId}`, { bankAccount });
+  }
+
+  // Seeds catalog and orders (simulation)
+  getSeedsCatalog(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/seeds`).pipe(
+      // If /seeds is missing on the JSON server, return empty array instead of erroring
+      catchError(err => {
+        console.warn('seeds endpoint missing or error', err);
+        return of([]);
+      })
+    );
+  }
+
+  createSeedOrder(order: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/seedOrders`, order);
+  }
+
+  // Agronomist alerts
+  getAlertsByRegion(regionId: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/agronomeAlerts?region=${regionId}`);
+  }
+
+  // Products (marketplace)
+  createProduct(product: Product): Observable<Product> {
+    return this.http.post<Product>(`${this.apiUrl}/products`, product);
+  }
+
+  getProductsByUser(userId: string): Observable<Product[]> {
+    return this.http.get<Product[]>(`${this.apiUrl}/products?agriculteurId=${userId}`);
+  }
+
+  getProductsByCategory(category: string): Observable<Product[]> {
+    return this.http.get<Product[]>(`${this.apiUrl}/products?categorie=${category}`);
+  }
+
+  getProductById(productId: string): Observable<Product> {
+    return this.http.get<Product>(`${this.apiUrl}/products/${productId}`);
+  }
+
+  updateProduct(product: Product): Observable<Product> {
+    return this.http.put<Product>(`${this.apiUrl}/products/${product.id}`, product);
+  }
+
+  updateProductStatus(productId: string, status: 'en_attente' | 'validé' | 'rejeté', disponibilite?: string): Observable<Product> {
+    const patch: any = { statutValidation: status, dateMaj: new Date().toISOString() };
+    if (disponibilite) patch.statutDisponibilite = disponibilite;
+    return this.http.patch<Product>(`${this.apiUrl}/products/${productId}`, patch);
+  }
+
+  deleteProduct(productId: string): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/products/${productId}`);
+  }
+
+  getAllProducts(): Observable<Product[]> {
+    return this.http.get<Product[]>(`${this.apiUrl}/products`);
   }
 
   validateUserRegistration(userType: string, formData: any): Observable<{valid: boolean, errors: string[]}> {

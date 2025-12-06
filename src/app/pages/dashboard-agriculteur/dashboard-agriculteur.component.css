@@ -1,0 +1,165 @@
+/* Mobile-first responsive styles for Agricultural Dashboard */
+
+/* Input and textarea focus states */
+input:focus,
+textarea:focus,
+select:focus {
+  box-shadow: 0 0 0 3px rgba(0, 132, 61, 0.1);
+}
+
+/* Smooth transitions */
+button,
+input,
+textarea,
+select {
+  transition: all 0.3s ease;
+}
+
+/* Mobile optimizations */
+@media (max-width: 640px) {
+  /* Increase touch targets for mobile */
+  button,
+  input[type="submit"],
+  input[type="button"] {
+    min-height: 44px;
+  }
+
+  input,
+  textarea,
+  select {
+    font-size: 16px; /* Prevents auto-zoom on iOS */
+  }
+
+  /* Video container mobile optimization */
+  video {
+    width: 100%;
+    object-fit: cover;
+  }
+
+  /* Grid optimizations */
+  .grid-cols-2 {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  /* Button groups stack on mobile */
+  .flex-col.sm\:flex-row {
+    gap: 0.5rem;
+  }
+
+  /* Sidebar appears after main content on mobile */
+  aside {
+    order: 2;
+  }
+}
+
+/* Tablet optimizations (640px - 1024px) */
+@media (min-width: 640px) and (max-width: 1024px) {
+  .grid-cols-1.sm\:grid-cols-2 {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .grid-cols-2.sm\:grid-cols-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Desktop optimizations (> 1024px) */
+@media (min-width: 1024px) {
+  .grid-cols-2.sm\:grid-cols-4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  /* Sidebar fixed positioning on desktop */
+  aside {
+    position: sticky;
+    top: 120px;
+  }
+}
+
+/* Responsive typography */
+@media (max-width: 640px) {
+  h1 {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+
+  h2 {
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+  }
+
+  h3 {
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+}
+
+/* Status badge mobile optimization */
+.bg-yellow-100,
+.bg-green-100,
+.bg-red-100 {
+  white-space: nowrap;
+}
+
+/* Image upload area enhancement */
+.border-gray-300 {
+  border-width: 1px;
+}
+
+.focus\:ring-2 {
+  transition: box-shadow 0.2s ease;
+}
+
+/* Smooth scrolling for mobile */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Camera video container */
+#cameraVideo {
+  background: #000;
+  border-radius: 0.5rem;
+  display: block;
+  width: 100%;
+}
+
+/* Product card hover effect */
+.border-gray-300:hover {
+  transition: all 0.2s ease;
+}
+
+/* Form field spacing optimization */
+form > div {
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 640px) {
+  form > div {
+    margin-bottom: 0.75rem;
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Dark mode support (optional) */
+@media (prefers-color-scheme: dark) {
+  input,
+  textarea,
+  select {
+    background-color: #1f2937;
+    color: #f3f4f6;
+    border-color: #4b5563;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: #9ca3af;
+  }
+}

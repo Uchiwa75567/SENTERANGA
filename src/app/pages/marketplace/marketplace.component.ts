@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from '../../components/header/header.component';
@@ -6,7 +6,8 @@ import { FooterComponent } from '../../components/footer/footer.component';
 import { ProductCardComponent } from '../../components/product-card/product-card.component';
 import { CategoryCardComponent } from '../../components/category-card/category-card.component';
 import { OrderCardComponent } from '../../components/order-card/order-card.component';
-import { categoryCards, products, recentOrders } from '../../data/marketplace.data';
+import { categoryCards, recentOrders } from '../../data/marketplace.data';
+import { DataService } from '../../services/data.service';
 
 @Component({
   selector: 'app-marketplace',
@@ -22,12 +23,35 @@ import { categoryCards, products, recentOrders } from '../../data/marketplace.da
   ],
   templateUrl: './marketplace.component.html'
 })
-export class MarketplaceComponent {
+export class MarketplaceComponent implements OnInit, OnDestroy {
   categoryCards = categoryCards;
-  allProducts = products;
+  allProducts: any[] = [];
   recentOrders = recentOrders;
   searchQuery = '';
   selectedFilter = 'Tous les types';
+  private autoRefreshInterval: any;
+
+  constructor(private dataService: DataService) {}
+
+  ngOnInit(): void {
+    this.loadProducts();
+    // Auto-refresh products every 5 seconds to show newly validated products
+    this.autoRefreshInterval = setInterval(() => this.loadProducts(), 5000);
+  }
+
+  ngOnDestroy(): void {
+    if (this.autoRefreshInterval) {
+      clearInterval(this.autoRefreshInterval);
+    }
+  }
+
+  loadProducts(): void {
+    this.dataService.getAllProducts().subscribe(list => {
+      this.allProducts = (list || []).filter(p => p.statutValidation === 'validé');
+    }, err => {
+      console.error('Failed to load products from API', err);
+    });
+  }
 
   // Carousel indices for each category
   vegetablesIndex = 0;
@@ -39,15 +63,15 @@ export class MarketplaceComponent {
 
   // Get products by category
   get vegetablesProducts() {
-    return this.allProducts.filter(p => p.category === 'Légumes');
+    return this.allProducts.filter(p => p.categorie === 'Légumes');
   }
 
   get fruitsProducts() {
-    return this.allProducts.filter(p => p.category === 'Fruits');
+    return this.allProducts.filter(p => p.categorie === 'Fruits');
   }
 
   get cerealsProducts() {
-    return this.allProducts.filter(p => p.category === 'Céréales');
+    return this.allProducts.filter(p => p.categorie === 'Céréales');
   }
 
   // Get visible products for each category

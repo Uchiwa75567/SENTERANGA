@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { CartPopupComponent } from '../cart-popup/cart-popup.component';
 import { CartItem } from '../../models/cart.schema';
 import { mockCartItems } from '../../data/cart.data';
+import { DataService } from '../../services/data.service';
 
 @Component({
   selector: 'app-header',
@@ -20,8 +21,99 @@ export class HeaderComponent {
     return this.cartItems.length;
   }
 
+  // Current user info read from localStorage
+  currentUser: any = null;
+  // Notifications
+  notifications: any[] = [];
+  showNotifications = false;
+
+  get unreadCount(): number {
+    return this.notifications ? this.notifications.filter(n => !n.read).length : 0;
+  }
+
+  constructor(private router: Router, private dataService: DataService) {}
+
+  ngOnInit(): void {
+    this.loadCurrentUser();
+    // Listen to storage events to update header across tabs
+    window.addEventListener('storage', (ev) => {
+      if (ev.key === 'currentUser') this.loadCurrentUser();
+    });
+    // load notifications if user present
+    this.loadNotifications();
+  }
+
+  private loadCurrentUser() {
+    try {
+      const raw = localStorage.getItem('currentUser');
+      this.currentUser = raw ? JSON.parse(raw) : null;
+    } catch (e) {
+      this.currentUser = null;
+    }
+    // reload notifications when user changes
+    this.loadNotifications();
+  }
+
+  loadNotifications() {
+    if (!this.currentUser || !this.currentUser.id) {
+      this.notifications = [];
+      return;
+    }
+
+    this.dataService.getNotificationsForUser(this.currentUser.id).subscribe({
+      next: (list) => {
+        this.notifications = list || [];
+      },
+      error: (err) => {
+        console.error('Error loading notifications', err);
+        this.notifications = [];
+      }
+    });
+  }
+
+  isLoggedIn(): boolean {
+    return !!this.currentUser;
+  }
+
+  get userDisplayName(): string {
+    if (!this.currentUser) return '';
+    return `${this.currentUser.firstName || ''} ${this.currentUser.lastName || ''}`.trim();
+  }
+
+  goToDashboard(): void {
+    if (!this.currentUser) { this.router.navigate(['/connexion']); return; }
+    const map: { [key: string]: string } = {
+      'agriculteur': '/dashboard-agriculteur',
+      'client': '/dashboard-institutionnel',
+      'admin': '/dashboard-admin',
+      'investisseur': '/dashboard-institutionnel',
+      'agronome': '/dashboard-institutionnel',
+      'agent-terrain': '/dashboard-institutionnel',
+      'etat': '/dashboard-institutionnel'
+    };
+    const route = map[this.currentUser.userType] || '/';
+    this.router.navigate([route]);
+  }
+
+  logout(): void {
+    localStorage.removeItem('currentUser');
+    this.currentUser = null;
+    this.router.navigate(['/']);
+  }
+
   toggleCart(): void {
     this.isCartOpen = !this.isCartOpen;
+  }
+
+  toggleNotifications(): void {
+    this.showNotifications = !this.showNotifications;
+    if (this.showNotifications && this.notifications.length) {
+      // mark first page of notifications as read (simulate)
+      const unread = this.notifications.filter(n => !n.read).slice(0, 10);
+      unread.forEach(n => this.dataService.markNotificationRead(n.id).subscribe());
+      // reload after marking
+      setTimeout(() => this.loadNotifications(), 300);
+    }
   }
 
   closeCart(): void {

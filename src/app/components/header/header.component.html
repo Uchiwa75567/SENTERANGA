@@ -24,12 +24,46 @@
         <span class="absolute -top-1 -right-1 bg-senteranga-green text-white text-xs font-medium rounded-full w-4 h-4 flex items-center justify-center">{{ cartItemCount }}</span>
       </div>
 
-      <a routerLink="/connexion" class="px-4 py-2 text-senteranga-green text-sm font-medium hover:bg-gray-50 rounded transition-colors inline-block text-center">
-        Connexion
-      </a>
-      <a routerLink="/inscription" class="px-4 py-2 bg-senteranga-green text-white text-sm font-medium rounded hover:bg-senteranga-green-dark transition-colors inline-block text-center">
-        S'inscrire
-      </a>
+      <!-- Notifications wrapper (icon + dropdown aligned) -->
+      <div class="relative">
+        <div class="relative cursor-pointer" (click)="toggleNotifications()">
+          <svg class="w-6 h-6 text-senteranga-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+          </svg>
+          <span *ngIf="notifications?.length" class="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-medium rounded-full w-4 h-4 flex items-center justify-center">{{ unreadCount }}</span>
+        </div>
+
+        <!-- Notifications dropdown aligned under the icon -->
+        <div *ngIf="showNotifications" class="absolute right-0 mt-2 bg-white border rounded shadow-lg w-80 z-50 p-3">
+          <h4 class="font-semibold mb-2">Notifications</h4>
+          <div *ngIf="notifications.length === 0" class="text-sm text-gray-600">Aucune notification</div>
+          <ul>
+            <li *ngFor="let n of notifications" class="py-2 border-b last:border-b-0">
+              <div class="text-sm font-medium">{{ n.title }}</div>
+              <div class="text-xs text-gray-600">{{ n.message }}</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- If not logged in show auth links -->
+      <ng-container *ngIf="!isLoggedIn(); else userMenu">
+        <a routerLink="/connexion" class="px-4 py-2 text-senteranga-green text-sm font-medium hover:bg-gray-50 rounded transition-colors inline-block text-center">
+          Connexion
+        </a>
+        <a routerLink="/inscription" class="px-4 py-2 bg-senteranga-green text-white text-sm font-medium rounded hover:bg-senteranga-green-dark transition-colors inline-block text-center">
+          S'inscrire
+        </a>
+      </ng-container>
+
+      <!-- User menu when logged in -->
+      <ng-template #userMenu>
+        <div class="flex items-center gap-3">
+          <div class="text-sm text-gray-700">Bonjour, <span class="font-semibold">{{ userDisplayName }}</span></div>
+          <button (click)="goToDashboard()" class="px-3 py-2 bg-white border border-gray-200 rounded text-sm hover:bg-gray-50">Mon espace</button>
+          <button (click)="logout()" class="px-3 py-2 bg-red-500 text-white rounded text-sm hover:bg-red-600">Déconnexion</button>
+        </div>
+      </ng-template>
     </div>
 
     <!-- Mobile Menu Button - Right Side (Visible only on mobile) -->
@@ -81,12 +115,19 @@
 
       <!-- Mobile Auth Buttons -->
       <div class="border-t border-gray-200 pt-4 space-y-3">
-        <a routerLink="/connexion" (click)="closeMobileMenu()" class="block w-full px-4 py-3 text-center text-senteranga-green text-base font-medium border border-senteranga-green rounded-md hover:bg-senteranga-green hover:text-white transition-colors">
-          Connexion
-        </a>
-        <a routerLink="/inscription" (click)="closeMobileMenu()" class="block w-full px-4 py-3 text-center bg-senteranga-green text-white text-base font-medium rounded-md hover:bg-senteranga-green-dark transition-colors">
-          S'inscrire
-        </a>
+        <ng-container *ngIf="!isLoggedIn(); else mobileUserMenu">
+          <a routerLink="/connexion" (click)="closeMobileMenu()" class="block w-full px-4 py-3 text-center text-senteranga-green text-base font-medium border border-senteranga-green rounded-md hover:bg-senteranga-green hover:text-white transition-colors">
+            Connexion
+          </a>
+          <a routerLink="/inscription" (click)="closeMobileMenu()" class="block w-full px-4 py-3 text-center bg-senteranga-green text-white text-base font-medium rounded-md hover:bg-senteranga-green-dark transition-colors">
+            S'inscrire
+          </a>
+        </ng-container>
+
+        <ng-template #mobileUserMenu>
+          <button (click)="goToDashboard(); closeMobileMenu()" class="block w-full px-4 py-3 text-center bg-white border rounded-md">Mon espace</button>
+          <button (click)="logout(); closeMobileMenu()" class="block w-full px-4 py-3 text-center bg-red-500 text-white rounded-md">Déconnexion</button>
+        </ng-template>
       </div>
     </div>
   </div>

@@ -42,6 +42,14 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/dashboard-institutionnel/dashboard-institutionnel.component').then(m => m.DashboardInstitutionnelComponent)
   },
   {
+    path: 'dashboard-agriculteur',
+    loadComponent: () => import('./pages/dashboard-agriculteur/dashboard-agriculteur.component').then(m => m.DashboardAgriculteurComponent)
+  },
+  {
+    path: 'dashboard-admin',
+    loadComponent: () => import('./pages/dashboard-admin/dashboard-admin.component').then(m => m.DashboardAdminComponent)
+  },
+  {
     path: 'rapports-gouvernementaux',
     loadComponent: () => import('./pages/rapports-gouvernementaux/rapports-gouvernementaux.component').then(m => m.RapportsGouvernementauxComponent)
   },
