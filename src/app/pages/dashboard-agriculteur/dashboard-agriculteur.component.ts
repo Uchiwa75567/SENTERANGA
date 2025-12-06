@@ -152,27 +152,34 @@ export class DashboardAgriculteurComponent {
       return;
     }
 
-    // Upload images via backend upload endpoint
+    // Upload images directly to Cloudinary (with unsigned preset)
     try {
       let uploadedUrls: string[] = [];
       if (this.selectedImages.length) {
-        // Convert images to base64 for upload via backend
-        const base64Images = await this.convertImagesToBase64(this.selectedImages);
+        const cloudName = 'djha1kqvu';
+        const uploadPreset = 'senteranga_products'; // You'll need to create this preset in Cloudinary
 
-        const response = await fetch('https://json-server-senteranga.onrender.com/upload-images', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ images: base64Images })
-        });
+        const uploadUrls = await Promise.all(
+          this.selectedImages.map(async (file, index) => {
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('upload_preset', uploadPreset);
+            formData.append('folder', 'senteranga_products');
 
-        if (!response.ok) {
-          throw new Error(`Upload failed: ${response.statusText}`);
-        }
+            const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+              method: 'POST',
+              body: formData
+            });
 
-        const result = await response.json();
-        uploadedUrls = result.uploaded.map((item: any) => item.url);
+            if (!response.ok) {
+              throw new Error(`Cloudinary upload failed: ${response.statusText}`);
+            }
+
+            const result = await response.json();
+            return result.secure_url;
+          })
+        );
+        uploadedUrls = uploadUrls;
       }
 
       // compute total price from quantity and price per unit
