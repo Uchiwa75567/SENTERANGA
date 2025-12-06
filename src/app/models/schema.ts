@@ -96,3 +96,18 @@ export interface User {
   verified: boolean;
   dateInscription: Date;
 }
+
+export interface Reservation {
+  id: string;
+  productId: string;
+  productTitle: string;
+  clientId: string;
+  clientName: string;
+  clientEmail: string;
+  clientPhone: string;
+  agriculteurId: string;
+  quantity: number;
+  reservationDate: Date;
+  status: 'active' | 'cancelled' | 'fulfilled';
+  notes?: string;
+}

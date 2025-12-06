@@ -74,12 +74,46 @@ export class ProductCardComponent implements OnInit {
     return this.product?.statutDisponibilite === 'vendu' || this.product?.statutValidation !== 'validé';
   }
 
-  // Add product to cart
+  // Add product to cart or create reservation
   addToCart(): void {
     if (this.product && !this.isButtonDisabled()) {
-      this.cartService.addToCart(this.product, 1);
-      // You could add a toast notification here
-      console.log('Produit ajouté au panier:', this.product.titre || this.product.name);
+      if (this.isAnnouncement() && !this.isAnnouncementAvailable()) {
+        // Create reservation for announcement
+        this.createReservation();
+      } else {
+        // Add to cart for regular product
+        this.cartService.addToCart(this.product, 1);
+        console.log('Produit ajouté au panier:', this.product.titre || this.product.name);
+      }
+    }
+  }
+
+  private createReservation(): void {
+    // Get current user info from localStorage
+    const currentUser = this.getCurrentUser();
+    if (!currentUser) {
+      alert('Vous devez être connecté pour faire une réservation.');
+      return;
+    }
+
+    this.cartService.createReservation(this.product, currentUser, 1).subscribe({
+      next: (reservation) => {
+        console.log('Réservation créée:', reservation);
+        alert(`Réservation créée avec succès pour "${this.product.titre || this.product.name}"`);
+      },
+      error: (error) => {
+        console.error('Erreur lors de la création de la réservation:', error);
+        alert('Erreur lors de la création de la réservation. Veuillez réessayer.');
+      }
+    });
+  }
+
+  private getCurrentUser(): any {
+    try {
+      const user = localStorage.getItem('currentUser');
+      return user ? JSON.parse(user) : null;
+    } catch (error) {
+      return null;
     }
   }
 }

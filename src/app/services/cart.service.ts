@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { CartItem, CartState } from '../models/cart.schema';
+import { Reservation } from '../models/schema';
 
 @Injectable({
   providedIn: 'root'
@@ -129,5 +130,88 @@ export class CartService {
       return product.images[0];
     }
     return product.imageUrl || product.image || '/images/placeholder.png';
+  }
+
+  // Reservation methods
+  createReservation(product: any, clientInfo: any, quantity: number = 1): Observable<Reservation> {
+    const reservation: Reservation = {
+      id: `reservation-${Date.now()}`,
+      productId: product.id,
+      productTitle: product.titre || product.name,
+      clientId: clientInfo.id,
+      clientName: `${clientInfo.firstName} ${clientInfo.lastName}`,
+      clientEmail: clientInfo.email,
+      clientPhone: clientInfo.phone,
+      agriculteurId: product.agriculteurId,
+      quantity: quantity,
+      reservationDate: new Date(),
+      status: 'active'
+    };
+
+    // In a real app, this would be an HTTP call to save to backend
+    // For now, we'll simulate it by storing in localStorage
+    const reservations = this.getStoredReservations();
+    reservations.push(reservation);
+    localStorage.setItem('reservations', JSON.stringify(reservations));
+
+    // Create notification for the farmer
+    this.createReservationNotification(reservation);
+
+    return new Observable(observer => {
+      observer.next(reservation);
+      observer.complete();
+    });
+  }
+
+  getReservationsForFarmer(farmerId: string): Observable<Reservation[]> {
+    // In a real app, this would be an HTTP call
+    const reservations = this.getStoredReservations()
+      .filter(r => r.agriculteurId === farmerId)
+      .sort((a, b) => new Date(a.reservationDate).getTime() - new Date(b.reservationDate).getTime()); // Oldest first
+
+    return new Observable(observer => {
+      observer.next(reservations);
+      observer.complete();
+    });
+  }
+
+  getReservationsForClient(clientId: string): Observable<Reservation[]> {
+    const reservations = this.getStoredReservations()
+      .filter(r => r.clientId === clientId)
+      .sort((a, b) => new Date(b.reservationDate).getTime() - new Date(a.reservationDate).getTime()); // Newest first
+
+    return new Observable(observer => {
+      observer.next(reservations);
+      observer.complete();
+    });
+  }
+
+  private getStoredReservations(): Reservation[] {
+    try {
+      const stored = localStorage.getItem('reservations');
+      return stored ? JSON.parse(stored) : [];
+    } catch (error) {
+      console.error('Error loading reservations:', error);
+      return [];
+    }
+  }
+
+  private createReservationNotification(reservation: Reservation): void {
+    // Create a notification for the farmer
+    const notification = {
+      id: `notification-${Date.now()}`,
+      userId: reservation.agriculteurId,
+      title: 'Nouvelle réservation',
+      message: `${reservation.clientName} a réservé ${reservation.quantity} ${reservation.productTitle}`,
+      type: 'reservation',
+      read: false,
+      createdAt: new Date().toISOString(),
+      reservationId: reservation.id
+    };
+
+    // Store notification (in a real app, this would be sent to backend)
+    const notifications = JSON.parse(localStorage.getItem('notifications') || '[]');
+    notifications.push(notification);
+    localStorage.setItem('notifications', JSON.stringify(notifications));
   }
 }

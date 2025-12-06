@@ -4,6 +4,8 @@ import { RouterModule } from '@angular/router';
 import { HeaderComponent } from '../../components/header/header.component';
 import { FooterComponent } from '../../components/footer/footer.component';
 import { DataService, TestUser, Product } from '../../services/data.service';
+import { CartService } from '../../services/cart.service';
+import { Reservation } from '../../models/schema';
 import { FormBuilder, ReactiveFormsModule, FormGroup, FormsModule, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
 
@@ -17,6 +19,7 @@ import Swal from 'sweetalert2';
 export class DashboardAgriculteurComponent {
   // Data
   products: Product[] = [];
+  reservations: Reservation[] = [];
   seeds: any[] = [];
   seedOrderQty: { [key: string]: number } = {};
   alerts: any[] = [];
@@ -33,7 +36,7 @@ export class DashboardAgriculteurComponent {
   // Publishing state
   isPublishing = false;
 
-  constructor(private dataService: DataService, private fb: FormBuilder) {}
+  constructor(private dataService: DataService, private cartService: CartService, private fb: FormBuilder) {}
 
   ngOnInit() {
     const raw = localStorage.getItem('currentUser');
@@ -68,6 +71,9 @@ export class DashboardAgriculteurComponent {
 
     // Load user's products
     this.dataService.getProductsByUser(this.currentUser.id).subscribe(list => this.products = list || []);
+
+    // Load user's reservations
+    this.cartService.getReservationsForFarmer(this.currentUser.id).subscribe(list => this.reservations = list || []);
 
     // Load seeds catalog
     this.dataService.getSeedsCatalog().subscribe(list => {
