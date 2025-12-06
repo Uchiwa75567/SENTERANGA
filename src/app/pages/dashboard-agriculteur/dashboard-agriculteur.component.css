@@ -148,18 +148,4 @@ form > div {
   }
 }
 
-/* Dark mode support (optional) */
-@media (prefers-color-scheme: dark) {
-  input,
-  textarea,
-  select {
-    background-color: #1f2937;
-    color: #f3f4f6;
-    border-color: #4b5563;
-  }
-
-  input::placeholder,
-  textarea::placeholder {
-    color: #9ca3af;
-  }
-}
+/* Dark mode support disabled - keeping white backgrounds for form inputs */
