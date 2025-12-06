@@ -4,6 +4,7 @@ import { HeaderComponent } from '../../components/header/header.component';
 import { FooterComponent } from '../../components/footer/footer.component';
 import { DataService, TestUser, Product } from '../../services/data.service';
 import { FormsModule } from '@angular/forms';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-dashboard-admin',
@@ -88,11 +89,35 @@ export class DashboardAdminComponent {
           read: false,
           createdAt: new Date().toISOString()
         }).subscribe({
-          next: () => { alert(`✓ ${updated.firstName} ${updated.lastName} a été approuvé(e)`); this.loadUsers(); },
-          error: () => { alert(`Utilisateur approuvé, mais erreur lors de la notification`); this.loadUsers(); }
+          next: () => {
+            Swal.fire({
+              icon: 'success',
+              title: 'Utilisateur approuvé',
+              text: `${updated.firstName} ${updated.lastName} a été approuvé(e)`,
+              confirmButtonColor: '#22c55e'
+            });
+            this.loadUsers();
+          },
+          error: () => {
+            Swal.fire({
+              icon: 'warning',
+              title: 'Utilisateur approuvé',
+              text: 'Utilisateur approuvé, mais erreur lors de la notification',
+              confirmButtonColor: '#22c55e'
+            });
+            this.loadUsers();
+          }
         });
       },
-      error: (err) => { console.error('Error updating user:', err); alert('Erreur lors de l\'approbation'); }
+      error: (err) => {
+        console.error('Error updating user:', err);
+        Swal.fire({
+          icon: 'error',
+          title: 'Erreur d\'approbation',
+          text: 'Une erreur s\'est produite lors de l\'approbation',
+          confirmButtonColor: '#22c55e'
+        });
+      }
     });
   }
 
@@ -110,11 +135,35 @@ export class DashboardAdminComponent {
           read: false,
           createdAt: new Date().toISOString()
         }).subscribe({
-          next: () => { alert(`✗ ${updated.firstName} ${updated.lastName} a été rejeté(e)`); this.loadUsers(); },
-          error: () => { alert(`Utilisateur rejeté, mais erreur lors de la notification`); this.loadUsers(); }
+          next: () => {
+            Swal.fire({
+              icon: 'success',
+              title: 'Utilisateur rejeté',
+              text: `${updated.firstName} ${updated.lastName} a été rejeté(e)`,
+              confirmButtonColor: '#22c55e'
+            });
+            this.loadUsers();
+          },
+          error: () => {
+            Swal.fire({
+              icon: 'warning',
+              title: 'Utilisateur rejeté',
+              text: 'Utilisateur rejeté, mais erreur lors de la notification',
+              confirmButtonColor: '#22c55e'
+            });
+            this.loadUsers();
+          }
         });
       },
-      error: (err) => { console.error('Error updating user:', err); alert('Erreur lors du rejet'); }
+      error: (err) => {
+        console.error('Error updating user:', err);
+        Swal.fire({
+          icon: 'error',
+          title: 'Erreur de rejet',
+          text: 'Une erreur s\'est produite lors du rejet',
+          confirmButtonColor: '#22c55e'
+        });
+      }
     });
   }
 
@@ -141,7 +190,12 @@ export class DashboardAdminComponent {
   rejectProduct(product: Product) {
     const reason = this.selectedReason[product.id] || '';
     if (!reason.trim()) {
-      alert('Veuillez saisir un motif de refus.');
+      Swal.fire({
+        icon: 'warning',
+        title: 'Motif requis',
+        text: 'Veuillez saisir un motif de refus.',
+        confirmButtonColor: '#22c55e'
+      });
       return;
     }
 

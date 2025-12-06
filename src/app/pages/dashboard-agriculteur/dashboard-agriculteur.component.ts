@@ -5,6 +5,7 @@ import { HeaderComponent } from '../../components/header/header.component';
 import { FooterComponent } from '../../components/footer/footer.component';
 import { DataService, TestUser, Product } from '../../services/data.service';
 import { FormBuilder, ReactiveFormsModule, FormGroup, FormsModule, Validators } from '@angular/forms';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-dashboard-agriculteur',
@@ -98,7 +99,12 @@ export class DashboardAgriculteurComponent {
       })
       .catch(err => {
         console.error('Camera error:', err);
-        alert('Erreur d\'accès à la caméra');
+        Swal.fire({
+          icon: 'error',
+          title: 'Erreur d\'accès à la caméra',
+          text: 'Vérifiez les permissions de votre navigateur',
+          confirmButtonColor: '#22c55e'
+        });
         this.cameraActive = false;
       });
   }
@@ -141,13 +147,23 @@ export class DashboardAgriculteurComponent {
       const invalid = Object.keys(this.productForm.controls).filter(k => this.productForm.get(k)?.invalid);
       console.warn('Product form invalid controls:', invalid);
       const names = invalid.length ? invalid.join(', ') : 'inconnus';
-      alert('Veuillez remplir tous les champs obligatoires. Champs invalides: ' + names);
+      Swal.fire({
+        icon: 'warning',
+        title: 'Champs obligatoires manquants',
+        text: 'Veuillez remplir tous les champs obligatoires. Champs invalides: ' + names,
+        confirmButtonColor: '#22c55e'
+      });
       return;
     }
 
     // ⚠️ Check that at least 1 image is selected (MANDATORY)
     if (this.selectedImages.length === 0) {
-      alert('⚠️ Une image est obligatoire !\n\nVeuillez importer une photo ou en photographier une avant de publier le produit.');
+      Swal.fire({
+        icon: 'warning',
+        title: 'Image obligatoire',
+        text: 'Veuillez importer une photo ou en photographier une avant de publier le produit.',
+        confirmButtonColor: '#22c55e'
+      });
       console.warn('Image upload required but none selected');
       return;
     }
@@ -209,17 +225,32 @@ export class DashboardAgriculteurComponent {
       this.dataService.createProduct(product).subscribe({
         next: (created) => {
           this.products.unshift(created);
-          alert('Produit publié — en attente de validation');
+          Swal.fire({
+            icon: 'success',
+            title: 'Produit publié !',
+            text: 'Votre produit est en attente de validation par l\'administration.',
+            confirmButtonColor: '#22c55e'
+          });
           this.resetProductForm();
         },
         error: (err) => {
           console.error('Error publishing product', err);
-          alert('Erreur lors de la publication du produit');
+          Swal.fire({
+            icon: 'error',
+            title: 'Erreur de publication',
+            text: 'Une erreur s\'est produite lors de la publication du produit.',
+            confirmButtonColor: '#22c55e'
+          });
         }
       });
     } catch (err) {
       console.error('Image upload failed', err);
-      alert('Échec lors de l\'upload des images');
+      Swal.fire({
+        icon: 'error',
+        title: 'Échec de l\'upload',
+        text: 'Une erreur s\'est produite lors de l\'upload des images.',
+        confirmButtonColor: '#22c55e'
+      });
     }
   }
 
@@ -255,9 +286,22 @@ export class DashboardAgriculteurComponent {
       next: (u) => {
         this.currentUser = u;
         localStorage.setItem('currentUser', JSON.stringify(u));
-        alert('Compte bancaire enregistré');
+        Swal.fire({
+          icon: 'success',
+          title: 'Succès',
+          text: 'Compte bancaire enregistré avec succès',
+          confirmButtonColor: '#22c55e'
+        });
       },
-      error: (err) => { console.error(err); alert('Erreur lors de l\'enregistrement'); }
+      error: (err) => {
+        console.error(err);
+        Swal.fire({
+          icon: 'error',
+          title: 'Erreur',
+          text: 'Erreur lors de l\'enregistrement du compte bancaire',
+          confirmButtonColor: '#22c55e'
+        });
+      }
     });
   }
 
@@ -278,9 +322,22 @@ export class DashboardAgriculteurComponent {
 
     this.dataService.createSeedOrder(order).subscribe({
       next: (res) => {
-        alert(`Commande passée: ${order.seedName} x${qty}`);
+        Swal.fire({
+          icon: 'success',
+          title: 'Commande passée',
+          text: `Commande passée: ${order.seedName} x${qty}`,
+          confirmButtonColor: '#22c55e'
+        });
       },
-      error: (err) => { console.error(err); alert('Erreur lors de la commande'); }
+      error: (err) => {
+        console.error(err);
+        Swal.fire({
+          icon: 'error',
+          title: 'Erreur de commande',
+          text: 'Une erreur s\'est produite lors de la commande',
+          confirmButtonColor: '#22c55e'
+        });
+      }
     });
   }
 }

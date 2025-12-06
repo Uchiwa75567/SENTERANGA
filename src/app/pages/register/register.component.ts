@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { DataService, UserType, Region, ClientType, InvestorType, Ministry } from '../../services/data.service';
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-register',
   standalone: true,
@@ -282,11 +283,22 @@ export class RegisterComponent implements OnInit {
       this.dataService.registerUser(formValue).subscribe(result => {
         if (result.success) {
           console.log('Registration successful:', result.user);
-          alert('Inscription réussie ! Vous pouvez maintenant vous connecter.');
-          this.router.navigate(['/connexion']);
+          Swal.fire({
+            icon: 'success',
+            title: 'Inscription réussie !',
+            text: 'Vous pouvez maintenant vous connecter.',
+            confirmButtonColor: '#22c55e'
+          }).then(() => {
+            this.router.navigate(['/connexion']);
+          });
         } else {
           console.log('Registration failed:', result.error);
-          alert(result.error || 'Erreur lors de l\'inscription');
+          Swal.fire({
+            icon: 'error',
+            title: 'Erreur d\'inscription',
+            text: result.error || 'Une erreur s\'est produite lors de l\'inscription',
+            confirmButtonColor: '#22c55e'
+          });
         }
         this.isLoading = false;
       });
@@ -312,7 +324,12 @@ export class RegisterComponent implements OnInit {
       // Validate file type (images only)
       const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
       if (!allowedTypes.includes(file.type)) {
-        alert('Veuillez sélectionner un fichier image valide (JPEG, PNG, GIF)');
+        Swal.fire({
+          icon: 'warning',
+          title: 'Type de fichier invalide',
+          text: 'Veuillez sélectionner un fichier image valide (JPEG, PNG, GIF)',
+          confirmButtonColor: '#22c55e'
+        });
         target.value = '';
         return;
       }
@@ -320,7 +337,12 @@ export class RegisterComponent implements OnInit {
       // Validate file size (max 5MB)
       const maxSize = 5 * 1024 * 1024; // 5MB
       if (file.size > maxSize) {
-        alert('La taille du fichier ne doit pas dépasser 5MB');
+        Swal.fire({
+          icon: 'warning',
+          title: 'Fichier trop volumineux',
+          text: 'La taille du fichier ne doit pas dépasser 5MB',
+          confirmButtonColor: '#22c55e'
+        });
         target.value = '';
         return;
       }
