@@ -9,7 +9,12 @@
       <div class="lg:col-span-2 space-y-4 sm:space-y-6">
         <!-- Publish Product Form -->
         <div class="bg-white rounded-lg shadow p-4 sm:p-6">
-          <h2 class="text-lg sm:text-xl font-bold mb-4 sm:mb-5 text-gray-900">📦 Publier un produit</h2>
+          <h2 class="text-lg sm:text-xl font-bold mb-4 sm:mb-5 text-gray-900">
+            <svg class="w-6 h-6 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+            </svg>
+            Publier un produit
+          </h2>
           <form [formGroup]="productForm" (ngSubmit)="publishProduct()" class="space-y-3 sm:space-y-4" [class.opacity-50]="isPublishing" [class.pointer-events-none]="isPublishing">
             <!-- Titre & Description -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
@@ -83,7 +88,12 @@
 
             <!-- Dates de disponibilité (uniquement pour les annonces) -->
             <div *ngIf="productForm.get('publicationType')?.value === 'announcement'" class="border-t pt-4">
-              <label class="block text-sm font-bold mb-3 text-gray-900">📅 Période de disponibilité</label>
+              <label class="block text-sm font-bold mb-3 text-gray-900">
+                <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+                Période de disponibilité
+              </label>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div>
                   <label class="block text-sm font-semibold mb-2 text-gray-700">Début de période *</label>
@@ -96,7 +106,12 @@
               </div>
               <div class="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
                 <p class="text-sm text-blue-700">
-                  <strong>ℹ️ Note :</strong> Cette annonce sera indisponible jusqu'à validation par l'administration, puis disponible uniquement pendant la période définie.
+                  <strong>
+                    <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    Note :
+                  </strong> Cette annonce sera indisponible jusqu'à validation par l'administration, puis disponible uniquement pendant la période définie.
                 </p>
               </div>
             </div>
@@ -121,11 +136,17 @@
               </div>
               <!-- Success message -->
               <div *ngIf="uploadedImageCount > 0" class="text-sm font-medium text-green-600 mt-2 p-3 bg-green-50 rounded-lg">
-                ✓ {{ uploadedImageCount }} image(s) sélectionnée(s)
+                <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                {{ uploadedImageCount }} image(s) sélectionnée(s)
               </div>
               <!-- Error message when no image -->
               <div *ngIf="uploadedImageCount === 0" class="text-sm font-medium text-red-600 mt-2 p-3 bg-red-50 rounded-lg border border-red-200">
-                ⚠️ Aucune image sélectionnée. L'image est obligatoire pour publier un produit.
+                <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                </svg>
+                Aucune image sélectionnée. L'image est obligatoire pour publier un produit.
               </div>
             </div>
 
@@ -138,7 +159,7 @@
                 <svg *ngIf="isPublishing" class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
                 </svg>
-                <span>{{ isPublishing ? 'Publication en cours...' : '✓ Publier le produit' }}</span>
+                <span>{{ isPublishing ? 'Publication en cours...' : 'Publier le produit' }}</span>
               </button>
               <button type="button" class="px-6 py-2 sm:py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 font-medium text-sm sm:text-base" (click)="resetProductForm()">
                 Annuler
@@ -148,7 +169,12 @@
 
           <!-- Published products list -->
           <div *ngIf="products.length > 0" class="mt-6 sm:mt-8 pt-6 sm:pt-8 border-t">
-            <h4 class="text-lg font-bold mb-6 text-gray-900">📊 Mes produits ({{ products.length }})</h4>
+            <h4 class="text-lg font-bold mb-6 text-gray-900">
+              <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+              </svg>
+              Mes produits ({{ products.length }})
+            </h4>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <div *ngFor="let p of products" class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow">
                 <!-- Product Image -->
@@ -172,11 +198,31 @@
                       'bg-green-500 text-white': p.statutValidation === 'validé',
                       'bg-red-500 text-white': p.statutValidation === 'rejeté'
                     }">
-                    {{ p.statutValidation === 'en_attente' ? '⏳ En attente' : p.statutValidation === 'validé' ? '✓ Validé' : '✗ Rejeté' }}
+                    <span *ngIf="p.statutValidation === 'en_attente'">
+                      <svg class="w-3 h-3 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                      </svg>
+                      En attente
+                    </span>
+                    <span *ngIf="p.statutValidation === 'validé'">
+                      <svg class="w-3 h-3 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      Validé
+                    </span>
+                    <span *ngIf="p.statutValidation === 'rejeté'">
+                      <svg class="w-3 h-3 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                      </svg>
+                      Rejeté
+                    </span>
                   </div>
                   <!-- Announcement Badge -->
                   <div *ngIf="isAnnouncement(p)" class="absolute top-3 left-3 px-2 py-1 rounded-full text-xs font-semibold bg-purple-500 text-white">
-                    📢 Annonce
+                    <svg class="w-3 h-3 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path>
+                    </svg>
+                    Annonce
                   </div>
                 </div>
 
@@ -191,15 +237,39 @@
 
                   <!-- Quantity and Price -->
                   <div class="space-y-1 text-xs font-medium text-gray-900">
-                    <div>📦 Quantité: {{ p.quantite }} {{ p.unite }}</div>
-                    <div>📊 Minimum: {{ p.quantiteMinimale || '-' }} {{ p.unite }}</div>
-                    <div>💰 Prix/unité: {{ p.prixParUnite || '-' }} FCFA</div>
-                    <div>💵 Total: {{ p.prix }} FCFA</div>
+                    <div>
+                      <svg class="w-3 h-3 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                      </svg>
+                      Quantité: {{ p.quantite }} {{ p.unite }}
+                    </div>
+                    <div>
+                      <svg class="w-3 h-3 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                      </svg>
+                      Minimum: {{ p.quantiteMinimale || '-' }} {{ p.unite }}
+                    </div>
+                    <div>
+                      <svg class="w-3 h-3 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                      </svg>
+                      Prix/unité: {{ p.prixParUnite || '-' }} FCFA
+                    </div>
+                    <div>
+                      <svg class="w-3 h-3 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                      </svg>
+                      Total: {{ p.prix }} FCFA
+                    </div>
                   </div>
 
                   <!-- Location -->
                   <div class="text-xs text-gray-600 pt-2 border-t">
-                    📍 {{ p.localisation }}
+                    <svg class="w-3 h-3 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                    {{ p.localisation }}
                   </div>
 
                   <!-- Announcement Periods (only for announcements) -->
@@ -225,7 +295,12 @@
 
         <!-- Subvention Section -->
         <div class="bg-white rounded-lg shadow p-4 sm:p-6">
-          <h2 class="text-lg sm:text-xl font-bold mb-3 text-gray-900">💰 Demande de subvention / investissement</h2>
+          <h2 class="text-lg sm:text-xl font-bold mb-3 text-gray-900">
+            <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+            </svg>
+            Demande de subvention / investissement
+          </h2>
           <p class="text-sm text-gray-600 mb-4">Formulaires de demande (subvention / investissement) — visibilité pour les institutions et investisseurs.</p>
           <button class="w-full px-6 py-2 sm:py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium text-sm sm:text-base">
             Faire une demande
@@ -234,7 +309,12 @@
 
         <!-- Semences Section -->
         <div class="bg-white rounded-lg shadow p-4 sm:p-6">
-          <h2 class="text-lg sm:text-xl font-bold mb-3 text-gray-900">🌱 Catalogue de semences</h2>
+          <h2 class="text-lg sm:text-xl font-bold mb-3 text-gray-900">
+            <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"></path>
+            </svg>
+            Catalogue de semences
+          </h2>
           <p class="text-sm text-gray-600 mb-4">Consultez le catalogue, commandez et payez pour améliorer votre production.</p>
           <div *ngIf="seeds.length === 0" class="text-sm text-gray-600 py-6 text-center bg-gray-50 rounded-lg">Aucun produit trouvé.</div>
           <div *ngIf="seeds.length > 0" class="space-y-3 sm:space-y-4">
@@ -242,7 +322,12 @@
               <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                 <div class="flex-1">
                   <div class="font-semibold text-gray-900">{{ s.name }}</div>
-                  <div class="text-sm text-gray-600 mt-1">💵 {{ s.price }} FCFA / {{ s.unit || 'unité' }}</div>
+                  <div class="text-sm text-gray-600 mt-1">
+                    <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                    {{ s.price }} FCFA / {{ s.unit || 'unité' }}
+                  </div>
                 </div>
                 <div class="flex items-center gap-2 w-full sm:w-auto">
                   <input type="number" min="1" class="w-16 bg-white border border-gray-300 rounded-lg px-2 py-2 text-sm focus:ring-2 focus:ring-senteranga-green outline-none" [(ngModel)]="seedOrderQty[s.id]">
@@ -260,7 +345,12 @@
       <aside class="space-y-4 sm:space-y-6">
         <!-- Bank Account Section -->
         <div class="bg-white rounded-lg shadow p-4 sm:p-6">
-          <h3 class="text-lg sm:text-xl font-bold mb-4 text-gray-900">🏦 Compte bancaire</h3>
+          <h3 class="text-lg sm:text-xl font-bold mb-4 text-gray-900">
+            <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+            </svg>
+            Compte bancaire
+          </h3>
           <p class="text-sm text-gray-600 mb-4">Ajouter un compte pour recevoir paiements et subventions.</p>
           <form [formGroup]="bankForm" class="space-y-3 sm:space-y-4" (ngSubmit)="saveBankAccount()">
             <div>
@@ -284,7 +374,12 @@
 
         <!-- Alerts Section -->
         <div class="bg-white rounded-lg shadow p-4 sm:p-6">
-          <h3 class="text-lg sm:text-xl font-bold mb-4 text-gray-900">⚠️ Alertes / Conseils</h3>
+          <h3 class="text-lg sm:text-xl font-bold mb-4 text-gray-900">
+            <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+            </svg>
+            Alertes / Conseils
+          </h3>
           <p class="text-sm text-gray-600 mb-4">Recevez des alertes filtrées par région.</p>
           <div *ngIf="alerts.length === 0" class="text-sm text-gray-600 py-6 text-center bg-gray-50 rounded-lg">Aucune alerte pour votre région pour le moment.</div>
           <ul *ngIf="alerts.length > 0" class="space-y-3">
