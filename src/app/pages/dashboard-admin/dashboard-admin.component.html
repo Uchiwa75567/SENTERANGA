@@ -77,6 +77,81 @@
     </table>
   </div>
 
+  <!-- Announcements validation section -->
+  <section class="mt-8">
+    <h2 class="text-2xl font-semibold mb-6">📢 Validation des annonces</h2>
+    <div *ngIf="pendingAnnouncements.length === 0" class="p-6 bg-purple-50 border border-purple-200 rounded-lg text-center">
+      <div class="text-purple-600 text-lg font-medium">📢 Aucune annonce en attente</div>
+      <p class="text-purple-700 mt-1">Toutes les annonces ont été traitées !</p>
+    </div>
+
+    <div *ngIf="pendingAnnouncements.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div *ngFor="let announcement of pendingAnnouncements" class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow border-2 border-purple-200">
+        <!-- Announcement Image -->
+        <div class="relative h-48 rounded-t-xl overflow-hidden bg-gray-200"
+          [style.backgroundImage]="announcement.images && announcement.images.length > 0 ? 'url(' + announcement.images[0] + ')' : 'none'"
+          [style.backgroundSize]="'cover'"
+          [style.backgroundPosition]="'center'">
+          <div *ngIf="!announcement.images || announcement.images.length === 0" class="w-full h-full flex items-center justify-center bg-gray-100">
+            <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            </svg>
+          </div>
+          <!-- Announcement Badge -->
+          <div class="absolute top-3 left-3 bg-purple-500 text-white px-2 py-1 rounded-full text-xs font-semibold">
+            📢 Annonce
+          </div>
+          <!-- Product Name Badge -->
+          <div class="absolute bottom-3 left-3 bg-white/95 px-3 py-1 rounded-md shadow-sm">
+            <span class="text-sm font-bold text-gray-900">{{ announcement.titre }}</span>
+          </div>
+        </div>
+
+        <!-- Announcement Info -->
+        <div class="p-4 space-y-3">
+          <!-- Producer Info -->
+          <div class="text-xs text-gray-600">
+            <p class="font-semibold">👨‍🌾 Agriculteur: {{ userMap[announcement.agriculteurId] || announcement.agriculteurId }}</p>
+            <p>📍 {{ announcement.localisation }}</p>
+          </div>
+
+          <!-- Category Badge -->
+          <div class="flex items-center gap-2">
+            <span class="px-2 py-1 rounded text-xs font-semibold bg-blue-50 text-blue-600">
+              {{ announcement.categorie }}
+            </span>
+          </div>
+
+          <!-- Availability Period -->
+          <div class="bg-purple-50 p-2 rounded-lg text-xs text-purple-700">
+            <div class="font-semibold mb-1">📅 Période approximative:</div>
+            <div>De {{ getAnnouncementStartDate(announcement) | date:'dd/MM/yyyy' }}</div>
+            <div>À {{ getAnnouncementEndDate(announcement) | date:'dd/MM/yyyy' }}</div>
+          </div>
+
+          <!-- Quantity and Price -->
+          <div class="space-y-1 text-xs font-medium text-gray-900">
+            <div>📦 Quantité: {{ announcement.quantite }} {{ announcement.unite }}</div>
+            <div>💰 Prix/unité: {{ announcement.prixParUnite || '-' }} FCFA</div>
+            <div>📊 Minimum: {{ announcement.quantiteMinimale || '-' }} {{ announcement.unite }}</div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex gap-2 pt-2">
+            <button (click)="approveAnnouncement(announcement)"
+                    class="flex-1 bg-green-600 text-white text-sm font-semibold py-2.5 rounded-lg hover:bg-green-700 transition-colors">
+              ✅ Approuver
+            </button>
+            <button (click)="rejectAnnouncement(announcement)"
+                    class="flex-1 bg-red-600 text-white text-sm font-semibold py-2.5 rounded-lg hover:bg-red-700 transition-colors">
+              ❌ Rejeter
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Products validation section -->
   <section class="mt-8">
     <h2 class="text-2xl font-semibold mb-6">🛍️ Validation des produits en attente</h2>

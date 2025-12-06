@@ -59,6 +59,11 @@ export interface Product {
   };
   certification?: CertificationType[];
   imageUrl: string;
+  // Announcement functionality
+  isAnnonce?: boolean; // true if this is an announcement, false or undefined if regular product
+  periodeApproximativeDebut?: string; // ISO date string - approximate period when product will be available
+  periodeApproximativeFin?: string; // ISO date string - approximate end period when product will be available
+  statutAnnonce?: 'en_attente' | 'validee' | 'rejetee'; // Announcement validation status
 }
 
 export interface Discussion {

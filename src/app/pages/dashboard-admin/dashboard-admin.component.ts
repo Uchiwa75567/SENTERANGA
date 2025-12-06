@@ -21,6 +21,9 @@ export class DashboardAdminComponent {
   // Products validation
   pendingProducts: Product[] = [];
   selectedReason: { [id: string]: string } = {};
+
+  // Announcements validation
+  pendingAnnouncements: Product[] = [];
   toastMessage = '';
   toastType: 'success' | 'error' = 'success';
   showToast = false;
@@ -30,6 +33,7 @@ export class DashboardAdminComponent {
   ngOnInit() {
     this.loadUsers();
     this.loadPendingProducts();
+    this.loadPendingAnnouncements();
   }
 
   showToastMessage(message: string, type: 'success' | 'error' = 'success') {
@@ -66,12 +70,96 @@ export class DashboardAdminComponent {
   loadPendingProducts() {
     this.dataService.getAllProducts().subscribe({
       next: (list) => {
-        this.pendingProducts = (list || []).filter(p => p.statutValidation === 'en_attente');
+        this.pendingProducts = (list || []).filter(p => p.statutValidation === 'en_attente' && !(p as any).isAnnonce);
       },
       error: (err) => {
         console.error('Error loading products', err);
       }
     });
+  }
+
+  // --- Announcements ---
+  loadPendingAnnouncements() {
+    this.dataService.getAllProducts().subscribe({
+      next: (list) => {
+        this.pendingAnnouncements = (list || []).filter(p => (p as any).isAnnonce && (p as any).statutAnnonce === 'en_attente');
+      },
+      error: (err) => {
+        console.error('Error loading announcements', err);
+      }
+    });
+  }
+
+  approveAnnouncement(announcement: Product) {
+    const updatedAnnouncement = {
+      ...announcement,
+      statutAnnonce: 'validee' as const,
+      statutValidation: 'validé' as const,
+      statutDisponibilite: 'disponible' as const
+    };
+
+    this.dataService.updateProduct(updatedAnnouncement as any).subscribe({
+      next: (result) => {
+        // Create notification for the farmer
+        this.dataService.createNotification({
+          id: `notif-${Date.now()}`,
+          userId: announcement.agriculteurId,
+          type: 'announcement',
+          title: 'Annonce approuvée',
+          message: `Votre annonce « ${announcement.titre} » a été approuvée et sera disponible approximativement de ${(announcement as any).periodeApproximativeDebut} à ${(announcement as any).periodeApproximativeFin}.`,
+          date: new Date().toISOString(),
+          read: false,
+          createdAt: new Date().toISOString()
+        }).subscribe(() => {
+          this.showToastMessage(`Annonce « ${announcement.titre} » approuvée ✓`);
+          this.loadPendingAnnouncements();
+        });
+      },
+      error: (err) => {
+        console.error('Approve announcement failed', err);
+        this.showToastMessage('Erreur lors de l\'approbation de l\'annonce', 'error');
+      }
+    });
+  }
+
+  rejectAnnouncement(announcement: Product) {
+    const updatedAnnouncement = {
+      ...announcement,
+      statutAnnonce: 'rejetee' as const,
+      statutValidation: 'rejeté' as const
+    };
+
+    this.dataService.updateProduct(updatedAnnouncement as any).subscribe({
+      next: (result) => {
+        // Create notification for the farmer
+        this.dataService.createNotification({
+          id: `notif-${Date.now()}`,
+          userId: announcement.agriculteurId,
+          type: 'announcement',
+          title: 'Annonce rejetée',
+          message: `Votre annonce « ${announcement.titre} » a été rejetée par l'administration.`,
+          date: new Date().toISOString(),
+          read: false,
+          createdAt: new Date().toISOString()
+        }).subscribe(() => {
+          this.showToastMessage(`Annonce « ${announcement.titre} » rejetée ✗`);
+          this.loadPendingAnnouncements();
+        });
+      },
+      error: (err) => {
+        console.error('Reject announcement failed', err);
+        this.showToastMessage('Erreur lors du rejet de l\'annonce', 'error');
+      }
+    });
+  }
+
+  // Helper methods for announcement properties
+  getAnnouncementStartDate(announcement: any): string {
+    return announcement.periodeApproximativeDebut || '';
+  }
+
+  getAnnouncementEndDate(announcement: any): string {
+    return announcement.periodeApproximativeFin || '';
   }
 
   approve(user: TestUser) {

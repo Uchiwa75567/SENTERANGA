@@ -30,6 +30,9 @@ export class DashboardAgriculteurComponent {
   productForm!: FormGroup;
   bankForm!: FormGroup;
 
+  // Publishing state
+  isPublishing = false;
+
   constructor(private dataService: DataService, private fb: FormBuilder) {}
 
   ngOnInit() {
@@ -46,7 +49,10 @@ export class DashboardAgriculteurComponent {
       // 'prix' removed from form: we compute total price from quantite * prixParUnite
       prixParUnite: ['', [Validators.required, Validators.min(0)]],
       unite: ['', Validators.required],
-      localisation: ['', Validators.required]
+      localisation: ['', Validators.required],
+      publicationType: ['product', Validators.required], // 'product' or 'announcement'
+      periodeApproximativeDebut: [''],
+      periodeApproximativeFin: ['']
     });
 
     this.bankForm = this.fb.group({
@@ -168,6 +174,9 @@ export class DashboardAgriculteurComponent {
       return;
     }
 
+    // Set publishing state
+    this.isPublishing = true;
+
     // Upload images directly to Cloudinary (with unsigned preset)
     try {
       let uploadedUrls: string[] = [];
@@ -203,7 +212,33 @@ export class DashboardAgriculteurComponent {
       const ppu = parseFloat(this.productForm.value.prixParUnite) || 0;
       const totalPrice = q * ppu;
 
-      const product: Product = {
+      const isAnnouncement = this.productForm.value.publicationType === 'announcement';
+
+      // Validate announcement dates if it's an announcement
+      if (isAnnouncement) {
+        const startDate = this.productForm.value.periodeApproximativeDebut;
+        const endDate = this.productForm.value.periodeApproximativeFin;
+        if (!startDate || !endDate) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Périodes requises',
+            text: 'Veuillez définir la période approximative de disponibilité pour l\'annonce.',
+            confirmButtonColor: '#22c55e'
+          });
+          return;
+        }
+        if (new Date(startDate) >= new Date(endDate)) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Périodes invalides',
+            text: 'La période de fin doit être postérieure à la période de début.',
+            confirmButtonColor: '#22c55e'
+          });
+          return;
+        }
+      }
+
+      const product = {
         id: `prod-${Date.now()}`,
         agriculteurId: this.currentUser!.id,
         titre: this.productForm.value.titre,
@@ -217,21 +252,30 @@ export class DashboardAgriculteurComponent {
         localisation: this.productForm.value.localisation,
         images: uploadedUrls,
         statutValidation: 'en_attente',
-        statutDisponibilite: 'disponible',
+        statutDisponibilite: isAnnouncement ? 'reservé' : 'disponible', // Announcements start as reserved until validated
         datePublication: new Date().toISOString(),
-        dateMaj: new Date().toISOString()
+        dateMaj: new Date().toISOString(),
+        // Announcement fields
+        isAnnonce: isAnnouncement,
+        periodeApproximativeDebut: isAnnouncement ? this.productForm.value.periodeApproximativeDebut : undefined,
+        periodeApproximativeFin: isAnnouncement ? this.productForm.value.periodeApproximativeFin : undefined,
+        statutAnnonce: isAnnouncement ? 'en_attente' : undefined
       };
 
-      this.dataService.createProduct(product).subscribe({
+      this.dataService.createProduct(product as any).subscribe({
         next: (created) => {
           this.products.unshift(created);
+          const message = isAnnouncement
+            ? 'Votre annonce est en attente de validation par l\'administration. Elle sera disponible selon les dates définies une fois validée.'
+            : 'Votre produit est en attente de validation par l\'administration.';
           Swal.fire({
             icon: 'success',
-            title: 'Produit publié !',
-            text: 'Votre produit est en attente de validation par l\'administration.',
+            title: isAnnouncement ? 'Annonce publiée !' : 'Produit publié !',
+            text: message,
             confirmButtonColor: '#22c55e'
           });
           this.resetProductForm();
+          this.isPublishing = false;
         },
         error: (err) => {
           console.error('Error publishing product', err);
@@ -241,6 +285,7 @@ export class DashboardAgriculteurComponent {
             text: 'Une erreur s\'est produite lors de la publication du produit.',
             confirmButtonColor: '#22c55e'
           });
+          this.isPublishing = false;
         }
       });
     } catch (err) {
@@ -251,6 +296,7 @@ export class DashboardAgriculteurComponent {
         text: 'Une erreur s\'est produite lors de l\'upload des images.',
         confirmButtonColor: '#22c55e'
       });
+      this.isPublishing = false;
     }
   }
 
@@ -303,6 +349,23 @@ export class DashboardAgriculteurComponent {
         });
       }
     });
+  }
+
+  // Helper methods for announcement properties
+  isAnnouncement(product: any): boolean {
+    return product.isAnnonce === true;
+  }
+
+  getAnnouncementStartDate(product: any): string {
+    return product.periodeApproximativeDebut || '';
+  }
+
+  getAnnouncementEndDate(product: any): string {
+    return product.periodeApproximativeFin || '';
+  }
+
+  getAnnouncementStatus(product: any): string {
+    return product.statutAnnonce || '';
   }
 
   // Order seed
