@@ -32,7 +32,7 @@ export class ProductCardComponent implements OnInit {
     if (!this.product) return '';
     if (Array.isArray(this.product.images) && this.product.images.length > 0) return this.product.images[0];
     // fallback: maybe product.image or product.photo
-    return this.product.image || this.product.photo || '';
+    return this.product.image || this.product.photo || this.product.imageUrl || '';
   }
 
   // Check if product is an announcement
@@ -107,7 +107,7 @@ export class ProductCardComponent implements OnInit {
       // If product is available, add to cart
       else if (this.product.statutValidation === 'validé' && this.product.statutDisponibilite === 'disponible') {
         this.cartService.addToCart(this.product, 1);
-        console.log('Produit ajouté au panier:', this.product.titre || this.product.name);
+        console.log('Produit ajouté au panier:', this.product.titre || this.product.nom || this.product.name);
       }
     }
   }
@@ -123,7 +123,7 @@ export class ProductCardComponent implements OnInit {
     this.cartService.createReservation(this.product, currentUser, 1).subscribe({
       next: (reservation) => {
         console.log('Réservation créée:', reservation);
-        alert(`Réservation créée avec succès pour "${this.product.titre || this.product.name}"`);
+        alert(`Réservation créée avec succès pour "${this.product.titre || this.product.nom || this.product.name}"`);
       },
       error: (error) => {
         console.error('Erreur lors de la création de la réservation:', error);

@@ -6,7 +6,7 @@
     [style.backgroundPosition]="'center'">
     <!-- Product Name Badge -->
     <div class="absolute bottom-3 left-3 bg-white/95 px-3 py-1 rounded-md shadow-sm">
-      <span class="text-sm font-bold text-gray-900">{{ product.titre || product.name }}</span>
+      <span class="text-sm font-bold text-gray-900">{{ product.titre || product.nom || product.name }}</span>
     </div>
     <!-- Favorite Button -->
     <button class="absolute top-3 right-3 w-7 h-7 bg-white rounded-full flex items-center justify-center shadow-sm hover:bg-gray-50 transition-colors">
@@ -21,7 +21,7 @@
     <!-- Producer Info -->
     <div class="text-xs text-gray-600">
       <p class="font-semibold">Producteur: {{ producerName || product.agriculteurId }}</p>
-      <p>{{ product.localisation }}</p>
+      <p>{{ product.localisation || product.location }}</p>
     </div>
     
     <!-- Status Badges -->
@@ -67,7 +67,7 @@
     <!-- Quantity and Price -->
     <div class="flex items-center justify-between text-xs font-bold text-gray-900">
       <span>Quantité min : {{ product.quantiteMinimale || product.quantite || '-' }} {{ product.unite || '' }}</span>
-      <span>{{ product.prixParUnite || product.prix }} FCFA/{{ (product.unite === 'kg' ? 'Kg' : (product.unite || 'unité')) }}</span>
+      <span>{{ product.prixParUnite || product.prix || '-' }} FCFA/{{ (product.unite === 'kg' ? 'Kg' : (product.unite || 'unité')) }}</span>
     </div>
 
     
