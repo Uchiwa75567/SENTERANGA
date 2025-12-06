@@ -33,4 +33,43 @@ export class ProductCardComponent implements OnInit {
     // fallback: maybe product.image or product.photo
     return this.product.image || this.product.photo || '';
   }
+
+  // Check if product is an announcement
+  isAnnouncement(): boolean {
+    return this.product?.isAnnonce === true;
+  }
+
+  // Check if announcement is available (validated and within date range)
+  isAnnouncementAvailable(): boolean {
+    if (!this.isAnnouncement()) return false;
+
+    // Must be validated by admin
+    if (this.product?.statutAnnonce !== 'validee') return false;
+
+    // Check if current date is within the availability period
+    const now = new Date();
+    const startDate = this.product?.periodeApproximativeDebut ? new Date(this.product.periodeApproximativeDebut) : null;
+    const endDate = this.product?.periodeApproximativeFin ? new Date(this.product.periodeApproximativeFin) : null;
+
+    if (!startDate || !endDate) return false;
+
+    return now >= startDate && now <= endDate;
+  }
+
+  // Get the appropriate button text
+  getButtonText(): string {
+    if (this.isAnnouncement() && !this.isAnnouncementAvailable()) {
+      return 'Réservation';
+    }
+    return 'Ajouter au panier';
+  }
+
+  // Check if button should be disabled
+  isButtonDisabled(): boolean {
+    if (this.isAnnouncement() && !this.isAnnouncementAvailable()) {
+      return false; // Reservation button is always enabled
+    }
+    // For regular products, check availability
+    return this.product?.statutDisponibilite === 'vendu' || this.product?.statutValidation !== 'validé';
+  }
 }

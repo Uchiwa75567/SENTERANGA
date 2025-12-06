@@ -25,11 +25,20 @@
     </div>
     
     <!-- Status Badges -->
-    <div class="flex items-center gap-2">
-      <span *ngIf="product.statutDisponibilite === 'disponible'" class="px-2 py-0.5 rounded text-xs font-semibold bg-green-50 text-green-600">Stock disponible</span>
-      <span *ngIf="product.statutDisponibilite === 'reservé'" class="px-2 py-0.5 rounded text-xs font-semibold bg-yellow-50 text-yellow-700">Réservé</span>
+    <div class="flex items-center gap-2 flex-wrap">
+      <!-- Announcement Badge -->
+      <span *ngIf="isAnnouncement()" class="px-2 py-0.5 rounded text-xs font-semibold bg-purple-50 text-purple-600">📢 Annonce</span>
+
+      <!-- Availability Status -->
+      <span *ngIf="product.statutDisponibilite === 'disponible' && !isAnnouncement()" class="px-2 py-0.5 rounded text-xs font-semibold bg-green-50 text-green-600">Stock disponible</span>
+      <span *ngIf="product.statutDisponibilite === 'reservé' && !isAnnouncement()" class="px-2 py-0.5 rounded text-xs font-semibold bg-yellow-50 text-yellow-700">Réservé</span>
       <span *ngIf="product.statutDisponibilite === 'vendu'" class="px-2 py-0.5 rounded text-xs font-semibold bg-red-50 text-red-700">Vendu</span>
       <span *ngIf="product.statutValidation === 'en_attente'" class="px-2 py-0.5 rounded text-xs font-semibold bg-yellow-100 text-yellow-800">En attente</span>
+
+      <!-- Announcement Status -->
+      <span *ngIf="isAnnouncement() && product.statutAnnonce === 'en_attente'" class="px-2 py-0.5 rounded text-xs font-semibold bg-orange-50 text-orange-600">⏳ Validation admin</span>
+      <span *ngIf="isAnnouncement() && product.statutAnnonce === 'validee' && !isAnnouncementAvailable()" class="px-2 py-0.5 rounded text-xs font-semibold bg-blue-50 text-blue-600">📅 Bientôt disponible</span>
+      <span *ngIf="isAnnouncement() && product.statutAnnonce === 'validee' && isAnnouncementAvailable()" class="px-2 py-0.5 rounded text-xs font-semibold bg-green-50 text-green-600">✅ Disponible</span>
     </div>
     
     <!-- Quantity and Price -->
@@ -37,14 +46,23 @@
       <span>Quantité min : {{ product.quantiteMinimale || product.quantite || '-' }} {{ product.unite || '' }}</span>
       <span>{{ product.prixParUnite || product.prix }} FCFA/{{ (product.unite === 'kg' ? 'Kg' : (product.unite || 'unité')) }}</span>
     </div>
+
+    <!-- Announcement Availability Dates -->
+    <div *ngIf="isAnnouncement() && product.periodeApproximativeDebut && product.periodeApproximativeFin"
+         class="text-xs text-purple-600 bg-purple-50 p-2 rounded">
+      <div class="font-semibold">📅 Disponibilité:</div>
+      <div>Du {{ product.periodeApproximativeDebut | date:'dd/MM/yyyy' }}</div>
+      <div>Au {{ product.periodeApproximativeFin | date:'dd/MM/yyyy' }}</div>
+    </div>
     
-    <!-- Action Buttons -->
-    <div class="flex gap-2 pt-1">
-      <button class="flex-1 bg-senteranga-green text-white text-xs font-semibold py-2 rounded hover:bg-senteranga-green-dark transition-colors">
-        Ajouter au Panier
-      </button>
-      <button class="flex-1 text-senteranga-green text-xs font-semibold py-2 border border-senteranga-green rounded hover:bg-green-50 transition-colors">
-        Discuter en ligne
+    <!-- Action Button -->
+    <div class="pt-1">
+      <button
+        [disabled]="isButtonDisabled()"
+        [class]="isAnnouncement() && !isAnnouncementAvailable()
+          ? 'w-full bg-blue-600 text-white text-xs font-semibold py-2 rounded hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors'
+          : 'w-full bg-senteranga-green text-white text-xs font-semibold py-2 rounded hover:bg-senteranga-green-dark disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors'">
+        {{ getButtonText() }}
       </button>
     </div>
   </div>
