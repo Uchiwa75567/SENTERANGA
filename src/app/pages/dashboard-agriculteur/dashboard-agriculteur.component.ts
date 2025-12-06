@@ -20,6 +20,7 @@ export class DashboardAgriculteurComponent {
   // Data
   products: Product[] = [];
   reservations: Reservation[] = [];
+  announcements: any[] = [];
   seeds: any[] = [];
   seedOrderQty: { [key: string]: number } = {};
   alerts: any[] = [];
@@ -70,7 +71,11 @@ export class DashboardAgriculteurComponent {
     if (!this.currentUser) return;
 
     // Load user's products
-    this.dataService.getProductsByUser(this.currentUser.id).subscribe(list => this.products = list || []);
+    this.dataService.getProductsByUser(this.currentUser.id).subscribe(list => {
+      this.products = list || [];
+      // Filter announcements from products
+      this.announcements = this.products.filter(p => this.isAnnouncement(p));
+    });
 
     // Load user's reservations
     this.cartService.getReservationsForFarmer(this.currentUser.id).subscribe(list => this.reservations = list || []);
@@ -405,6 +410,121 @@ export class DashboardAgriculteurComponent {
           title: 'Erreur de commande',
           text: 'Une erreur s\'est produite lors de la commande',
           confirmButtonColor: '#22c55e'
+        });
+      }
+    });
+  }
+
+  // Validate reservation (accept or reject)
+  validateReservation(reservation: Reservation, status: 'fulfilled' | 'cancelled') {
+    const actionText = status === 'fulfilled' ? 'accepter' : 'refuser';
+    const confirmText = `Êtes-vous sûr de vouloir ${actionText} cette réservation de ${reservation.quantity} ${reservation.productTitle} ?`;
+
+    Swal.fire({
+      title: 'Confirmation',
+      text: confirmText,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: status === 'fulfilled' ? '#22c55e' : '#ef4444',
+      cancelButtonColor: '#6b7280',
+      confirmButtonText: status === 'fulfilled' ? 'Accepter' : 'Refuser',
+      cancelButtonText: 'Annuler'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.cartService.updateReservationStatus(reservation.id, status).subscribe({
+          next: (updatedReservation) => {
+            // Update local reservations list
+            const index = this.reservations.findIndex(r => r.id === reservation.id);
+            if (index > -1) {
+              this.reservations[index] = updatedReservation;
+            }
+
+            // Create notification for the client
+            const notificationMessage = status === 'fulfilled'
+              ? `Votre réservation pour ${reservation.productTitle} a été acceptée !`
+              : `Votre réservation pour ${reservation.productTitle} a été refusée.`;
+
+            const notification = {
+              id: `notification-${Date.now()}`,
+              userId: reservation.clientId,
+              title: status === 'fulfilled' ? 'Réservation acceptée' : 'Réservation refusée',
+              message: notificationMessage,
+              type: 'reservation',
+              read: false,
+              createdAt: new Date().toISOString(),
+              reservationId: reservation.id
+            };
+
+            // Save notification (this would normally be done via API)
+            const notifications = JSON.parse(localStorage.getItem('notifications') || '[]');
+            notifications.push(notification);
+            localStorage.setItem('notifications', JSON.stringify(notifications));
+
+            Swal.fire({
+              icon: 'success',
+              title: status === 'fulfilled' ? 'Réservation acceptée' : 'Réservation refusée',
+              text: `La réservation a été ${status === 'fulfilled' ? 'acceptée' : 'refusée'} avec succès.`,
+              confirmButtonColor: '#22c55e'
+            });
+          },
+          error: (err) => {
+            console.error('Error updating reservation:', err);
+            Swal.fire({
+              icon: 'error',
+              title: 'Erreur',
+              text: 'Une erreur s\'est produite lors de la validation de la réservation.',
+              confirmButtonColor: '#22c55e'
+            });
+          }
+        });
+      }
+    });
+  }
+
+  // Make announcement available (change from reserved to available)
+  makeAnnouncementAvailable(announcement: any) {
+    Swal.fire({
+      title: 'Confirmer la disponibilité',
+      text: `Êtes-vous sûr de vouloir rendre "${announcement.titre || announcement.name}" disponible maintenant ? Les clients pourront l'ajouter à leur panier.`,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#22c55e',
+      cancelButtonColor: '#6b7280',
+      confirmButtonText: 'Rendre disponible',
+      cancelButtonText: 'Annuler'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Update product status
+        this.dataService.updateProductStatus(announcement.id, 'validé', 'disponible').subscribe({
+          next: (updatedProduct) => {
+            // Update local announcements list
+            const index = this.announcements.findIndex(a => a.id === announcement.id);
+            if (index > -1) {
+              this.announcements[index] = updatedProduct;
+            }
+
+            // Also update in products list
+            const productIndex = this.products.findIndex(p => p.id === announcement.id);
+            if (productIndex > -1) {
+              this.products[productIndex] = updatedProduct;
+            }
+
+            Swal.fire({
+              icon: 'success',
+              title: 'Annonce disponible',
+              text: 'Le produit est maintenant disponible pour achat immédiat.',
+              confirmButtonColor: '#22c55e'
+            });
+          },
+          error: (err) => {
+            console.error('Error updating announcement:', err);
+            Swal.fire({
+              icon: 'error',
+              title: 'Erreur',
+              text: 'Une erreur s\'est produite lors de la mise à jour de l\'annonce.',
+              confirmButtonColor: '#22c55e'
+            });
+          }
         });
       }
     });

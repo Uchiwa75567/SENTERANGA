@@ -56,5 +56,9 @@ export const routes: Routes = [
   {
     path: 'politiques-agricoles',
     loadComponent: () => import('./pages/politiques-agricoles/politiques-agricoles.component').then(m => m.PolitiquesAgricolesComponent)
+  },
+  {
+    path: 'dashboard-reservations',
+    loadComponent: () => import('./pages/dashboard-reservations/dashboard-reservations.component').then(m => m.DashboardReservationsComponent)
   }
 ];

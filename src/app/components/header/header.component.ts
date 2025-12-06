@@ -93,6 +93,27 @@ export class HeaderComponent implements OnInit, OnDestroy {
     return `${this.currentUser.firstName || ''} ${this.currentUser.lastName || ''}`.trim();
   }
 
+  get userInitials(): string {
+    if (!this.currentUser) return '';
+    const firstName = this.currentUser.firstName || '';
+    const lastName = this.currentUser.lastName || '';
+    return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
+  }
+
+  get userRoleLabel(): string {
+    if (!this.currentUser) return '';
+    const roleMap: { [key: string]: string } = {
+      'agriculteur': 'Agriculteur',
+      'client': 'Client',
+      'admin': 'Administrateur',
+      'investisseur': 'Investisseur',
+      'agronome': 'Agronome',
+      'agent-terrain': 'Agent Terrain',
+      'etat': 'Institution'
+    };
+    return roleMap[this.currentUser.userType] || this.currentUser.userType;
+  }
+
   goToDashboard(): void {
     if (!this.currentUser) { this.router.navigate(['/connexion']); return; }
     const map: { [key: string]: string } = {
