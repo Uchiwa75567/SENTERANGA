@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { CartPopupComponent } from '../cart-popup/cart-popup.component';
 import { CartItem } from '../../models/cart.schema';
-import { mockCartItems } from '../../data/cart.data';
+import { CartService } from '../../services/cart.service';
 import { DataService } from '../../services/data.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -12,13 +13,14 @@ import { DataService } from '../../services/data.service';
   imports: [CommonModule, RouterModule, CartPopupComponent],
   templateUrl: './header.component.html'
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit, OnDestroy {
   isCartOpen = false;
   isMobileMenuOpen = false;
-  cartItems: CartItem[] = mockCartItems;
+  cartItems: CartItem[] = [];
+  private cartSubscription: Subscription = new Subscription();
 
   get cartItemCount(): number {
-    return this.cartItems.length;
+    return this.cartService.getCartItemCount();
   }
 
   // Current user info read from localStorage
@@ -31,7 +33,7 @@ export class HeaderComponent {
     return this.notifications ? this.notifications.filter(n => !n.read).length : 0;
   }
 
-  constructor(private router: Router, private dataService: DataService) {}
+  constructor(private router: Router, private dataService: DataService, private cartService: CartService) {}
 
   ngOnInit(): void {
     this.loadCurrentUser();
@@ -41,6 +43,17 @@ export class HeaderComponent {
     });
     // load notifications if user present
     this.loadNotifications();
+
+    // Subscribe to cart changes
+    this.cartSubscription = this.cartService.getCart().subscribe(items => {
+      this.cartItems = items;
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.cartSubscription) {
+      this.cartSubscription.unsubscribe();
+    }
   }
 
   private loadCurrentUser() {
@@ -139,13 +152,10 @@ export class HeaderComponent {
   }
 
   onUpdateQuantity(event: { itemId: string; quantity: number }): void {
-    const item = this.cartItems.find(i => i.id === event.itemId);
-    if (item) {
-      item.quantity = event.quantity;
-    }
+    this.cartService.updateQuantity(event.itemId, event.quantity);
   }
 
   onRemoveItem(itemId: string): void {
-    this.cartItems = this.cartItems.filter(item => item.id !== itemId);
+    this.cartService.removeFromCart(itemId);
   }
 }

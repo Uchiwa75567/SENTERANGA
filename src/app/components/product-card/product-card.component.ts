@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DataService, TestUser } from '../../services/data.service';
+import { CartService } from '../../services/cart.service';
 
 // Product coming from API has fields like titre, images[], agriculteurId, quantiteMinimale, prixParUnite, unite, localisation
 @Component({
@@ -13,7 +14,7 @@ export class ProductCardComponent implements OnInit {
   @Input() product: any;
   producerName: string | null = null;
 
-  constructor(private dataService: DataService) {}
+  constructor(private dataService: DataService, private cartService: CartService) {}
 
   ngOnInit(): void {
     if (this.product && this.product.agriculteurId) {
@@ -71,5 +72,14 @@ export class ProductCardComponent implements OnInit {
     }
     // For regular products, check availability
     return this.product?.statutDisponibilite === 'vendu' || this.product?.statutValidation !== 'validé';
+  }
+
+  // Add product to cart
+  addToCart(): void {
+    if (this.product && !this.isButtonDisabled()) {
+      this.cartService.addToCart(this.product, 1);
+      // You could add a toast notification here
+      console.log('Produit ajouté au panier:', this.product.titre || this.product.name);
+    }
   }
 }

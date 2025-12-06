@@ -1,0 +1,515 @@
+{
+  "regions": [
+    {
+      "id": "dakar",
+      "name": "Dakar",
+      "departements": ["Dakar", "Guédiawaye", "Keur Massar", "Pikine", "Rufisque"]
+    },
+    {
+      "id": "thies",
+      "name": "Thiès",
+      "departements": ["Thiès", "Mbour", "Kébémer", "Tivaouane"]
+    },
+    {
+      "id": "saint-louis",
+      "name": "Saint-Louis",
+      "departements": ["Saint-Louis", "Dagana", "Podor"]
+    },
+    {
+      "id": "kaolack",
+      "name": "Kaolack",
+      "departements": ["Kaolack", "Guinguinéo", "Nioro du Rip"]
+    },
+    {
+      "id": "ziguinchor",
+      "name": "Ziguinchor",
+      "departements": ["Ziguinchor", "Bignona", "Oussouye"]
+    },
+    {
+      "id": "louga",
+      "name": "Louga",
+      "departements": ["Louga", "Kébémer", "Linguère"]
+    },
+    {
+      "id": "matam",
+      "name": "Matam",
+      "departements": ["Matam", "Kanel", "Ranérou"]
+    },
+    {
+      "id": "kolda",
+      "name": "Kolda",
+      "departements": ["Kolda", "Médina Yoro Foulah", "Vélingara"]
+    },
+    {
+      "id": "tambacounda",
+      "name": "Tambacounda",
+      "departements": ["Tambacounda", "Bakel", "Goudiry", "Koumpentoum"]
+    },
+    {
+      "id": "fatick",
+      "name": "Fatick",
+      "departements": ["Fatick", "Foundiougne", "Gossas"]
+    },
+    {
+      "id": "kaffrine",
+      "name": "Kaffrine",
+      "departements": ["Kaffrine", "Birkelane", "Koungheul", "Malem Hodar"]
+    },
+    {
+      "id": "kedougou",
+      "name": "Kédougou",
+      "departements": ["Kédougou", "Salemata", "Saraya"]
+    },
+    {
+      "id": "sedhiou",
+      "name": "Sédhiou",
+      "departements": ["Sédhiou", "Bounkiling", "Goudomp"]
+    },
+    {
+      "id": "diourbel",
+      "name": "Diourbel",
+      "departements": ["Diourbel", "Bambey", "Mbacké"]
+    }
+  ],
+  "userTypes": [
+    {
+      "id": "agriculteur",
+      "name": "Agriculteur/Producteur",
+      "description": "Producteurs agricoles, éleveurs, pêcheurs",
+      "icon": "🌾",
+      "requiredFields": ["region", "departement", "village", "idCard"],
+      "dashboard": "/dashboard-agriculteur"
+    },
+    {
+      "id": "client",
+      "name": "Client Acheteur",
+      "description": "Particuliers, commerçants, grossistes",
+      "icon": "🛒",
+      "requiredFields": ["clientType", "idCard"],
+      "dashboard": "/dashboard-client"
+    },
+    {
+      "id": "admin",
+      "name": "Administrateur",
+      "description": "Gestionnaire de la plateforme",
+      "icon": "👑",
+      "requiredFields": ["adminCode", "department"],
+      "dashboard": "/dashboard-admin"
+    },
+    {
+      "id": "investisseur",
+      "name": "Investisseur Agricole",
+      "description": "Investisseurs particuliers ou entreprises",
+      "icon": "💰",
+      "requiredFields": ["email", "investorType", "montantInvestissement"],
+      "dashboard": "/dashboard-investisseur"
+    },
+    {
+      "id": "agronome",
+      "name": "Agronome/Conseiller",
+      "description": "Conseillers agricoles, techniciens, ONG",
+      "icon": "👨‍🔬",
+      "requiredFields": ["emailPro", "structure", "regionsIntervention", "idCard"],
+      "dashboard": "/dashboard-agronome"
+    },
+    {
+      "id": "agent-terrain",
+      "name": "Agent Terrain",
+      "description": "Agents de vérification sur le terrain",
+      "icon": "🔍",
+      "requiredFields": ["agentCode", "region", "department", "idCard"],
+      "dashboard": "/dashboard-agent-terrain"
+    },
+    {
+      "id": "etat",
+      "name": "État (Gouvernement)",
+      "description": "Représentants gouvernementaux",
+      "icon": "🏛️",
+      "requiredFields": ["governmentId", "ministry", "department"],
+      "dashboard": "/dashboard-etat"
+    }
+  ],
+  "clientTypes": [
+    { "id": "famille", "name": "Moi / ma famille", "description": "Achat pour usage personnel" },
+    { "id": "boutique", "name": "Ma boutique / restaurant", "description": "Commerce de détail" },
+    { "id": "commerce", "name": "Mon commerce en gros", "description": "Commerce de gros" }
+  ],
+  "investorTypes": [
+    { "id": "particulier", "name": "Particulier", "description": "Investisseur individuel" },
+    { "id": "entreprise", "name": "Entreprise / Fonds", "description": "Société ou fonds d'investissement" }
+  ],
+  "ministries": [
+    { "id": "agriculture", "name": "Ministère de l'Agriculture" },
+    { "id": "economie", "name": "Ministère de l'Économie" },
+    { "id": "finances", "name": "Ministère des Finances" },
+    { "id": "commerce", "name": "Ministère du Commerce" }
+  ],
+  "structures": [
+    "ANCAR (Agence Nationale de Conseil Agricole et Rural)",
+    "SAED (Société Africaine d'Expansion Agricole)",
+    "ONG Internationale",
+    "Projet gouvernemental",
+    "Université/Institut de recherche",
+    "Autre"
+  ],
+  "certifications": [
+    { "id": "bio", "name": "Agriculture Biologique", "icon": "🌱" },
+    { "id": "rouge", "name": "Label Rouge", "icon": "🏷️" },
+    { "id": "aoc", "name": "Appellation d'Origine Contrôlée", "icon": "⭐" },
+    { "id": "igp", "name": "Indication Géographique Protégée", "icon": "🗺️" }
+  ],
+  "products": [
+    {
+      "id": "1",
+      "name": "Tomates Précoces",
+      "category": "Légumes",
+      "type": "agricol",
+      "price": 300,
+      "unit": "kg",
+      "quantity": 500,
+      "producer": {
+        "id": "prod-1",
+        "name": "Modou Fall",
+        "region": "Fatick",
+        "rating": 4.5
+      },
+      "certifications": ["bio"],
+      "images": ["/images/products/tomatoes-fresh.jpg"],
+      "description": "Tomates fraîches de saison, cultivées sans pesticides",
+      "harvestDate": "2024-12-15",
+      "location": "Fatick, Sénégal"
+    },
+    {
+      "id": "2",
+      "name": "Mil Traditionnel",
+      "category": "Céréales",
+      "type": "agricol",
+      "price": 320,
+      "unit": "kg",
+      "quantity": 1000,
+      "producer": {
+        "id": "prod-2",
+        "name": "Fatou Sall",
+        "region": "Matam",
+        "rating": 4.8
+      },
+      "certifications": ["bio", "igp"],
+      "images": ["/images/products/millet-traditional.jpg"],
+      "description": "Mil de qualité supérieure, récolté manuellement",
+      "harvestDate": "2024-11-20",
+      "location": "Matam, Sénégal"
+    }
+  ],
+  "officialPrices": [
+    {
+      "product": "Mil",
+      "unit": "kg",
+      "price": 350,
+      "date": "2024-12-01",
+      "region": "National"
+    },
+    {
+      "product": "Arachide",
+      "unit": "kg",
+      "price": 1200,
+      "date": "2024-12-01",
+      "region": "National"
+    },
+    {
+      "product": "Tomates",
+      "unit": "kg",
+      "price": 250,
+      "date": "2024-12-01",
+      "region": "National"
+    }
+  ],
+  "subventions": [
+    {
+      "id": "sub-1",
+      "name": "Subvention Semences 2024",
+      "description": "Aide pour l'achat de semences améliorées",
+      "amount": 50000,
+      "eligibility": "Agriculteurs avec moins de 5 hectares",
+      "deadline": "2024-12-31",
+      "status": "active"
+    },
+    {
+      "id": "sub-2",
+      "name": "Subvention Matériel Agricole",
+      "description": "Aide pour l'achat d'équipements agricoles",
+      "amount": 200000,
+      "eligibility": "Tous les agriculteurs",
+      "deadline": "2025-01-15",
+      "status": "active"
+    }
+  ],
+  "investmentOpportunities": [
+    {
+      "id": "inv-1",
+      "farmer": {
+        "id": "prod-1",
+        "name": "Modou Fall",
+        "region": "Fatick"
+      },
+      "project": "Extension de production maraîchère",
+      "description": "Besoin de 2 millions pour étendre la production de légumes",
+      "amountNeeded": 2000000,
+      "amountRaised": 500000,
+      "roi": "25%",
+      "duration": "3 ans",
+      "status": "active"
+    }
+  ],
+  "agronomeAlerts": [
+    {
+      "id": "alert-1",
+      "title": "Alerte Sècheresse",
+      "message": "Risque de sècheresse dans les régions de l'Est. Préparez vos cultures.",
+      "regions": ["Tambacounda", "Kédougou", "Matam"],
+      "severity": "high",
+      "date": "2024-12-04"
+    },
+    {
+      "id": "alert-2",
+      "title": "Conseil Fertilisation",
+      "message": "Période idéale pour la fertilisation des cultures de mil.",
+      "regions": ["National"],
+      "severity": "medium",
+      "date": "2024-12-03"
+    }
+  ],
+  "policies": [
+    {
+      "id": "pol-1",
+      "title": "Politique Agricole 2025",
+      "content": "La politique agricole 2025 vise à moderniser l'agriculture sénégalaise...",
+      "category": "Politique générale",
+      "date": "2024-11-15",
+      "author": "Ministère de l'Agriculture"
+    }
+  ],
+  "sampleUsers": {
+    "agriculteurs": [
+      {
+        "id": "user-agr-1",
+        "prenom": "Modou",
+        "nom": "Fall",
+        "telephone": "+221771234567",
+        "region": "Fatick",
+        "departement": "Fatick",
+        "village": "Keur Massar",
+        "certifications": ["bio"],
+        "specialties": ["Légumes", "Céréales"],
+        "experience": 15,
+        "landSize": 5
+      }
+    ],
+    "clients": [
+      {
+        "id": "user-cli-1",
+        "prenom": "Aminata",
+        "nom": "Diop",
+        "telephone": "+221781234567",
+        "clientType": "boutique",
+        "businessName": "Boutique Aminata",
+        "location": "Dakar"
+      }
+    ],
+    "admins": [
+      {
+        "id": "user-adm-1",
+        "prenom": "Mamadou",
+        "nom": "Sarr",
+        "telephone": "+221701234567",
+        "adminCode": "ADM001",
+        "department": "Validation",
+        "permissions": ["user_validation", "content_moderation", "reports"]
+      }
+    ],
+    "investisseurs": [
+      {
+        "id": "user-inv-1",
+        "prenom": "Cheikh",
+        "nom": "Ndiaye",
+        "telephone": "+221761234567",
+        "email": "cheikh.ndiaye@email.com",
+        "investorType": "particulier",
+        "montantInvestissement": 5000000,
+        "interests": ["Agriculture", "Élevage"]
+      }
+    ],
+    "agronomes": [
+      {
+        "id": "user-ago-1",
+        "prenom": "Fatou",
+        "nom": "Sy",
+        "telephone": "+221751234567",
+        "emailPro": "fatou.sy@ancar.sn",
+        "structure": "ANCAR (Agence Nationale de Conseil Agricole et Rural)",
+        "regionsIntervention": ["Dakar", "Thiès", "Fatick"],
+        "specialties": ["Protection des cultures", "Fertilisation"]
+      }
+    ],
+    "agentsTerrain": [
+      {
+        "id": "user-agt-1",
+        "prenom": "Ibrahima",
+        "nom": "Ba",
+        "telephone": "+221731234567",
+        "agentCode": "AGT001",
+        "region": "Kaolack",
+        "department": "Kaolack",
+        "specialties": ["Vérification terrain", "Contrôle qualité"]
+      }
+    ],
+    "etat": [
+      {
+        "id": "user-eta-1",
+        "prenom": "Marie",
+        "nom": "Koulibaly",
+        "telephone": "+221791234567",
+        "governmentId": "GOV001",
+        "ministry": "Ministère de l'Agriculture",
+        "department": "Direction des Politiques Agricoles",
+        "position": "Directrice"
+      }
+    ]
+  },
+  "notifications": [
+    {
+      "id": "notif-1",
+      "userId": "user-agr-1",
+      "type": "order",
+      "title": "Nouvelle commande",
+      "message": "Vous avez reçu une commande de 50kg de tomates",
+      "date": "2024-12-04T10:30:00Z",
+      "read": false
+    },
+    {
+      "id": "notif-2",
+      "userId": "user-agr-1",
+      "type": "validation",
+      "title": "Annonce validée",
+      "message": "Votre annonce de mil a été validée et publiée",
+      "date": "2024-12-03T14:20:00Z",
+      "read": true
+    }
+  ],
+  "orders": [
+    {
+      "id": "order-1",
+      "buyerId": "user-cli-1",
+      "sellerId": "user-agr-1",
+      "products": [
+        {
+          "productId": "1",
+          "quantity": 50,
+          "unitPrice": 300,
+          "total": 15000
+        }
+      ],
+      "totalAmount": 15000,
+      "shippingCost": 2000,
+      "status": "confirmed",
+      "orderDate": "2024-12-04T10:30:00Z",
+      "deliveryDate": "2024-12-06"
+    }
+  ],
+  "testUsers": [
+    {
+      "id": "test-agriculteur-1",
+      "email": "agriculteur@senteranga.sn",
+      "password": "123456",
+      "userType": "agriculteur",
+      "firstName": "Modou",
+      "lastName": "Fall",
+      "phone": "771234567",
+      "region": "Fatick",
+      "department": "Fatick",
+      "village": "Keur Massar"
+    },
+    {
+      "id": "test-client-1",
+      "email": "client@senteranga.sn",
+      "password": "123456",
+      "userType": "client",
+      "firstName": "Aminata",
+      "lastName": "Diop",
+      "phone": "781234567",
+      "clientType": "boutique"
+    },
+    {
+      "id": "test-admin-1",
+      "email": "admin@senteranga.sn",
+      "password": "111111",
+      "userType": "admin",
+      "firstName": "Mamadou",
+      "lastName": "Sarr",
+      "phone": "701234567",
+      "adminCode": "ADM001",
+      "department": "Validation"
+    },
+    {
+      "id": "test-investisseur-1",
+      "email": "investisseur@senteranga.sn",
+      "password": "123456",
+      "userType": "investisseur",
+      "firstName": "Cheikh",
+      "lastName": "Ndiaye",
+      "phone": "761234567",
+      "investorType": "particulier",
+      "investmentAmount": 5000000
+    },
+    {
+      "id": "test-agronome-1",
+      "email": "agronome@senteranga.sn",
+      "password": "123456",
+      "userType": "agronome",
+      "firstName": "Fatou",
+      "lastName": "Sy",
+      "phone": "751234567",
+      "professionalEmail": "fatou.sy@ancar.sn",
+      "structure": "ANCAR (Agence Nationale de Conseil Agricole et Rural)",
+      "interventionRegions": ["Dakar", "Thiès", "Fatick"]
+    },
+    {
+      "id": "test-agent-terrain-1",
+      "email": "agent@senteranga.sn",
+      "password": "123456",
+      "userType": "agent-terrain",
+      "firstName": "Ibrahima",
+      "lastName": "Ba",
+      "phone": "701234568",
+      "agentCode": "AGT001",
+      "region": "Kaolack",
+      "department": "Kaolack"
+    },
+    {
+      "id": "test-etat-1",
+      "email": "etat@senteranga.sn",
+      "password": "999999",
+      "userType": "etat",
+      "firstName": "Marie",
+      "lastName": "Koulibaly",
+      "phone": "701234569",
+      "governmentId": "GOV001",
+      "ministry": "Ministère de l'Agriculture",
+      "department": "Direction des Politiques Agricoles"
+    }
+  ],
+  "reports": {
+    "agriculturalStats": {
+      "totalFarmers": 500,
+      "totalProduction": 1000,
+      "regions": 14,
+      "activeProducts": 1250,
+      "monthlyGrowth": 8.5
+    },
+    "marketStats": {
+      "totalTransactions": 2500,
+      "totalValue": 150000000,
+      "averageOrderValue": 60000,
+      "topProducts": ["Mil", "Arachide", "Tomates"]
+    }
+  }
+}
