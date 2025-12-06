@@ -1,0 +1,1 @@
+{"ast":null,"code":"// Development environment settings\nexport const environment = {\n  production: false,\n  // backend JSON Server base URL\n  apiUrl: 'http://localhost:3004'\n};","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}

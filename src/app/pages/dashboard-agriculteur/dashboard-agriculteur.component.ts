@@ -152,25 +152,34 @@ export class DashboardAgriculteurComponent {
       return;
     }
 
-    // Convert images to base64 then upload them to Cloudinary via the upload server
+    // Upload images directly to Cloudinary from frontend
     this.convertImagesToBase64(this.selectedImages).then(async (base64Images) => {
-      // upload to our small upload server
       try {
         let uploadedUrls: string[] = [];
         if (base64Images.length) {
-          const resp = await fetch('http://localhost:4201/upload-images', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ images: base64Images })
-          });
-          if (!resp.ok) {
-            const txt = await resp.text();
-            console.error('Upload server error:', resp.status, txt);
-            alert('Erreur lors de l\'upload des images');
-            return;
-          }
-          const json = await resp.json();
-          uploadedUrls = (json.uploaded || []).map((u: any) => u.url);
+          // Upload directly to Cloudinary
+          const cloudName = 'djha1kqvu';
+          const uploadUrls = await Promise.all(
+            base64Images.map(async (base64Image, index) => {
+              const formData = new FormData();
+              formData.append('file', base64Image);
+              formData.append('upload_preset', 'senteranga_products'); // We'll create this preset
+              formData.append('folder', 'senteranga_products');
+              
+              const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+                method: 'POST',
+                body: formData
+              });
+              
+              if (!response.ok) {
+                throw new Error(`Cloudinary upload failed: ${response.statusText}`);
+              }
+              
+              const result = await response.json();
+              return result.secure_url;
+            })
+          );
+          uploadedUrls = uploadUrls;
         }
 
         // compute total price from quantity and price per unit
