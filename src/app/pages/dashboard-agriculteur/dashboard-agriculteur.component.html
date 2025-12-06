@@ -15,11 +15,11 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               <div>
                 <label class="block text-sm font-semibold mb-2 text-gray-700">Titre *</label>
-                <input formControlName="titre" class="w-full border border-gray-300 rounded-lg px-3 sm:px-4 py-2 sm:py-3 text-base focus:ring-2 focus:ring-senteranga-green focus:border-transparent outline-none" placeholder="Ex: Tomates rouges" required>
+                <input formControlName="titre" class="w-full bg-white border border-gray-300 rounded-lg px-3 sm:px-4 py-2 sm:py-3 text-base focus:ring-2 focus:ring-senteranga-green focus:border-transparent outline-none" placeholder="Ex: Tomates rouges" required>
               </div>
               <div>
                 <label class="block text-sm font-semibold mb-2 text-gray-700">Catégorie *</label>
-                <select formControlName="categorie" class="w-full border border-gray-300 rounded-lg px-3 sm:px-4 py-2 sm:py-3 text-base focus:ring-2 focus:ring-senteranga-green focus:border-transparent outline-none" required>
+                <select formControlName="categorie" class="w-full bg-white border border-gray-300 rounded-lg px-3 sm:px-4 py-2 sm:py-3 text-base focus:ring-2 focus:ring-senteranga-green focus:border-transparent outline-none" required>
                   <option value="">Sélectionner une catégorie</option>
                   <option value="Légumes">Légumes</option>
                   <option value="Fruits">Fruits</option>
@@ -31,22 +31,22 @@
             <!-- Description -->
             <div>
               <label class="block text-sm font-semibold mb-2 text-gray-700">Description *</label>
-              <textarea formControlName="description" class="w-full border border-gray-300 rounded-lg px-3 sm:px-4 py-2 sm:py-3 text-base focus:ring-2 focus:ring-senteranga-green focus:border-transparent outline-none" rows="4" placeholder="Décrivez votre produit..." required></textarea>
+              <textarea formControlName="description" class="w-full bg-white border border-gray-300 rounded-lg px-3 sm:px-4 py-2 sm:py-3 text-base focus:ring-2 focus:ring-senteranga-green focus:border-transparent outline-none" rows="4" placeholder="Décrivez votre produit..." required></textarea>
             </div>
 
             <!-- Quantité, Quantité minimale, Unité, Prix par unité -->
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
               <div>
                 <label class="block text-sm font-semibold mb-2 text-gray-700">Quantité *</label>
-                <input type="number" formControlName="quantite" class="w-full border border-gray-300 rounded-lg px-3 sm:px-4 py-2 sm:py-3 text-base focus:ring-2 focus:ring-senteranga-green focus:border-transparent outline-none" placeholder="Quantité" min="0" required>
+                <input type="number" formControlName="quantite" class="w-full bg-white border border-gray-300 rounded-lg px-3 sm:px-4 py-2 sm:py-3 text-base focus:ring-2 focus:ring-senteranga-green focus:border-transparent outline-none" placeholder="Quantité" min="0" required>
               </div>
               <div>
                 <label class="block text-sm font-semibold mb-2 text-gray-700">Min. *</label>
-                <input type="number" formControlName="quantiteMinimale" class="w-full border border-gray-300 rounded-lg px-3 sm:px-4 py-2 sm:py-3 text-base focus:ring-2 focus:ring-senteranga-green focus:border-transparent outline-none" placeholder="Min" min="0" required>
+                <input type="number" formControlName="quantiteMinimale" class="w-full bg-white border border-gray-300 rounded-lg px-3 sm:px-4 py-2 sm:py-3 text-base focus:ring-2 focus:ring-senteranga-green focus:border-transparent outline-none" placeholder="Min" min="0" required>
               </div>
               <div>
                 <label class="block text-sm font-semibold mb-2 text-gray-700">Unité *</label>
-                <select formControlName="unite" class="w-full border border-gray-300 rounded-lg px-3 sm:px-4 py-2 sm:py-3 text-base focus:ring-2 focus:ring-senteranga-green focus:border-transparent outline-none" required>
+                <select formControlName="unite" class="w-full bg-white border border-gray-300 rounded-lg px-3 sm:px-4 py-2 sm:py-3 text-base focus:ring-2 focus:ring-senteranga-green focus:border-transparent outline-none" required>
                   <option value="">Unité</option>
                   <option value="kg">kg</option>
                   <option value="tonne">Tonne</option>
@@ -56,14 +56,14 @@
               </div>
               <div>
                 <label class="block text-sm font-semibold mb-2 text-gray-700">Prix/unité *</label>
-                <input type="number" formControlName="prixParUnite" class="w-full border border-gray-300 rounded-lg px-3 sm:px-4 py-2 sm:py-3 text-base focus:ring-2 focus:ring-senteranga-green focus:border-transparent outline-none" placeholder="Prix" min="0" required>
+                <input type="number" formControlName="prixParUnite" class="w-full bg-white border border-gray-300 rounded-lg px-3 sm:px-4 py-2 sm:py-3 text-base focus:ring-2 focus:ring-senteranga-green focus:border-transparent outline-none" placeholder="Prix" min="0" required>
               </div>
             </div>
 
             <!-- Localisation -->
             <div>
               <label class="block text-sm font-semibold mb-2 text-gray-700">Localisation *</label>
-              <input formControlName="localisation" class="w-full border border-gray-300 rounded-lg px-3 sm:px-4 py-2 sm:py-3 text-base focus:ring-2 focus:ring-senteranga-green focus:border-transparent outline-none" placeholder="Ville, Village, etc." required>
+              <input formControlName="localisation" class="w-full bg-white border border-gray-300 rounded-lg px-3 sm:px-4 py-2 sm:py-3 text-base focus:ring-2 focus:ring-senteranga-green focus:border-transparent outline-none" placeholder="Ville, Village, etc." required>
             </div>
 
             <!-- Images upload - MANDATORY -->
@@ -156,7 +156,7 @@
                   <div class="text-sm text-gray-600 mt-1">💵 {{ s.price }} FCFA / {{ s.unit || 'unité' }}</div>
                 </div>
                 <div class="flex items-center gap-2 w-full sm:w-auto">
-                  <input type="number" min="1" class="w-16 border border-gray-300 rounded-lg px-2 py-2 text-sm focus:ring-2 focus:ring-senteranga-green outline-none" [(ngModel)]="seedOrderQty[s.id]">
+                  <input type="number" min="1" class="w-16 bg-white border border-gray-300 rounded-lg px-2 py-2 text-sm focus:ring-2 focus:ring-senteranga-green outline-none" [(ngModel)]="seedOrderQty[s.id]">
                   <button class="flex-1 sm:flex-none px-4 py-2 bg-senteranga-green text-white rounded-lg hover:bg-green-700 font-medium text-sm" (click)="orderSeed(s)">
                     Commander
                   </button>
@@ -176,11 +176,11 @@
           <form [formGroup]="bankForm" class="space-y-3 sm:space-y-4" (ngSubmit)="saveBankAccount()">
             <div>
               <label class="block text-sm font-semibold mb-2 text-gray-700">Banque</label>
-              <input formControlName="bankName" class="w-full border border-gray-300 rounded-lg px-3 sm:px-4 py-2 sm:py-3 text-base focus:ring-2 focus:ring-senteranga-green focus:border-transparent outline-none" placeholder="Nom de la banque">
+              <input formControlName="bankName" class="w-full bg-white border border-gray-300 rounded-lg px-3 sm:px-4 py-2 sm:py-3 text-base focus:ring-2 focus:ring-senteranga-green focus:border-transparent outline-none" placeholder="Nom de la banque">
             </div>
             <div>
               <label class="block text-sm font-semibold mb-2 text-gray-700">Numéro de compte</label>
-              <input formControlName="accountNumber" class="w-full border border-gray-300 rounded-lg px-3 sm:px-4 py-2 sm:py-3 text-base focus:ring-2 focus:ring-senteranga-green focus:border-transparent outline-none" placeholder="IBAN ou numéro de compte">
+              <input formControlName="accountNumber" class="w-full bg-white border border-gray-300 rounded-lg px-3 sm:px-4 py-2 sm:py-3 text-base focus:ring-2 focus:ring-senteranga-green focus:border-transparent outline-none" placeholder="IBAN ou numéro de compte">
             </div>
             <div class="flex flex-col sm:flex-row gap-2 sm:gap-3">
               <button type="submit" class="flex-1 px-4 py-2 sm:py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium text-sm sm:text-base">
