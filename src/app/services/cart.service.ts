@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { CartItem, CartState } from '../models/cart.schema';
 import { Reservation } from '../models/schema';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -10,8 +12,9 @@ export class CartService {
   private readonly CART_STORAGE_KEY = 'senteranga_cart';
   private cartSubject = new BehaviorSubject<CartItem[]>([]);
   public cart$ = this.cartSubject.asObservable();
+  private apiUrl = environment.apiUrl;
 
-  constructor() {
+  constructor(private http: HttpClient) {
     this.loadCartFromStorage();
   }
 
@@ -137,81 +140,34 @@ export class CartService {
     const reservation: Reservation = {
       id: `reservation-${Date.now()}`,
       productId: product.id,
-      productTitle: product.titre || product.name,
+      productTitle: product.name || product.titre,
       clientId: clientInfo.id,
       clientName: `${clientInfo.firstName} ${clientInfo.lastName}`,
       clientEmail: clientInfo.email,
       clientPhone: clientInfo.phone,
-      agriculteurId: product.agriculteurId,
+      agriculteurId: product.producer?.id || product.agriculteurId,
       quantity: quantity,
       reservationDate: new Date(),
       status: 'active'
     };
 
-    // In a real app, this would be an HTTP call to save to backend
-    // For now, we'll simulate it by storing in localStorage
-    const reservations = this.getStoredReservations();
-    reservations.push(reservation);
-    localStorage.setItem('reservations', JSON.stringify(reservations));
-
-    // Create notification for the farmer
-    this.createReservationNotification(reservation);
-
-    return new Observable(observer => {
-      observer.next(reservation);
-      observer.complete();
-    });
+    // Create reservation via API
+    return this.http.post<Reservation>(`${this.apiUrl}/reservations`, reservation);
   }
 
   getReservationsForFarmer(farmerId: string): Observable<Reservation[]> {
-    // In a real app, this would be an HTTP call
-    const reservations = this.getStoredReservations()
-      .filter(r => r.agriculteurId === farmerId)
-      .sort((a, b) => new Date(a.reservationDate).getTime() - new Date(b.reservationDate).getTime()); // Oldest first
-
-    return new Observable(observer => {
-      observer.next(reservations);
-      observer.complete();
-    });
+    return this.http.get<Reservation[]>(`${this.apiUrl}/reservations?agriculteurId=${farmerId}&_sort=reservationDate&_order=asc`);
   }
 
   getReservationsForClient(clientId: string): Observable<Reservation[]> {
-    const reservations = this.getStoredReservations()
-      .filter(r => r.clientId === clientId)
-      .sort((a, b) => new Date(b.reservationDate).getTime() - new Date(a.reservationDate).getTime()); // Newest first
-
-    return new Observable(observer => {
-      observer.next(reservations);
-      observer.complete();
-    });
+    return this.http.get<Reservation[]>(`${this.apiUrl}/reservations?clientId=${clientId}&_sort=reservationDate&_order=desc`);
   }
 
-  private getStoredReservations(): Reservation[] {
-    try {
-      const stored = localStorage.getItem('reservations');
-      return stored ? JSON.parse(stored) : [];
-    } catch (error) {
-      console.error('Error loading reservations:', error);
-      return [];
-    }
+  updateReservationStatus(reservationId: string, status: 'active' | 'cancelled' | 'fulfilled'): Observable<Reservation> {
+    return this.http.patch<Reservation>(`${this.apiUrl}/reservations/${reservationId}`, { status });
   }
 
-  private createReservationNotification(reservation: Reservation): void {
-    // Create a notification for the farmer
-    const notification = {
-      id: `notification-${Date.now()}`,
-      userId: reservation.agriculteurId,
-      title: 'Nouvelle réservation',
-      message: `${reservation.clientName} a réservé ${reservation.quantity} ${reservation.productTitle}`,
-      type: 'reservation',
-      read: false,
-      createdAt: new Date().toISOString(),
-      reservationId: reservation.id
-    };
-
-    // Store notification (in a real app, this would be sent to backend)
-    const notifications = JSON.parse(localStorage.getItem('notifications') || '[]');
-    notifications.push(notification);
-    localStorage.setItem('notifications', JSON.stringify(notifications));
+  deleteReservation(reservationId: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/reservations/${reservationId}`);
   }
 }

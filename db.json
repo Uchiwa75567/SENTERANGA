@@ -1,0 +1,340 @@
+{
+  "regions": [
+    {
+      "id": "dakar",
+      "name": "Dakar",
+      "departements": ["Dakar", "Guédiawaye", "Keur Massar", "Pikine", "Rufisque"]
+    },
+    {
+      "id": "thies",
+      "name": "Thiès",
+      "departements": ["Thiès", "Kébémer", "Mbour"]
+    },
+    {
+      "id": "saint-louis",
+      "name": "Saint-Louis",
+      "departements": ["Saint-Louis", "Dagana", "Podor"]
+    },
+    {
+      "id": "kaolack",
+      "name": "Kaolack",
+      "departements": ["Kaolack", "Guinguinéo", "Nioro du Rip"]
+    },
+    {
+      "id": "ziguinchor",
+      "name": "Ziguinchor",
+      "departements": ["Ziguinchor", "Bignona", "Oussouye"]
+    },
+    {
+      "id": "louga",
+      "name": "Louga",
+      "departements": ["Louga", "Kébémer", "Linguère"]
+    },
+    {
+      "id": "matam",
+      "name": "Matam",
+      "departements": ["Matam", "Kanel", "Ranérou"]
+    },
+    {
+      "id": "kolda",
+      "name": "Kolda",
+      "departements": ["Kolda", "Médina Yoro Foulah", "Vélingara"]
+    },
+    {
+      "id": "tambacounda",
+      "name": "Tambacounda",
+      "departements": ["Tambacounda", "Bakel", "Goudiry", "Koumpentoum"]
+    },
+    {
+      "id": "fatick",
+      "name": "Fatick",
+      "departements": ["Fatick", "Foundiougne", "Gossas"]
+    },
+    {
+      "id": "kaffrine",
+      "name": "Kaffrine",
+      "departements": ["Kaffrine", "Birkelane", "Koungheul", "Malème Hodar"]
+    },
+    {
+      "id": "kedougou",
+      "name": "Kédougou",
+      "departements": ["Kédougou", "Salémata", "Saraya"]
+    },
+    {
+      "id": "sedhiou",
+      "name": "Sédhiou",
+      "departements": ["Sédhiou", "Bounkiling", "Goudomp"]
+    },
+    {
+      "id": "diourbel",
+      "name": "Diourbel",
+      "departements": ["Diourbel", "Bambey", "Mbacké"]
+    }
+  ],
+  "userTypes": [
+    {
+      "id": "agriculteur",
+      "name": "Agriculteur",
+      "description": "Producteur agricole",
+      "icon": "👨‍🌾",
+      "requiredFields": ["nom", "prenom", "telephone", "email", "region", "departement", "village"]
+    },
+    {
+      "id": "client",
+      "name": "Client",
+      "description": "Acheteur de produits agricoles",
+      "icon": "👤",
+      "requiredFields": ["nom", "prenom", "telephone", "email", "clientType"]
+    },
+    {
+      "id": "investisseur",
+      "name": "Investisseur",
+      "description": "Investisseur dans l'agriculture",
+      "icon": "💰",
+      "requiredFields": ["nom", "prenom", "telephone", "email", "investorType", "montantInvestissement"]
+    },
+    {
+      "id": "agronome",
+      "name": "Agronome",
+      "description": "Expert agricole",
+      "icon": "👨‍🔬",
+      "requiredFields": ["nom", "prenom", "telephone", "emailPro", "structure", "regionsIntervention"]
+    },
+    {
+      "id": "agent-terrain",
+      "name": "Agent de terrain",
+      "description": "Agent de développement",
+      "icon": "👨‍💼",
+      "requiredFields": ["nom", "prenom", "telephone", "email", "governmentId", "regionsIntervention"]
+    },
+    {
+      "id": "etat",
+      "name": "Institution étatique",
+      "description": "Représentant gouvernemental",
+      "icon": "🏛️",
+      "requiredFields": ["nom", "prenom", "telephone", "email", "governmentId", "ministry"]
+    },
+    {
+      "id": "admin",
+      "name": "Administrateur",
+      "description": "Administrateur système",
+      "icon": "👑",
+      "requiredFields": ["nom", "prenom", "telephone", "email", "adminCode"]
+    }
+  ],
+  "clientTypes": [
+    {
+      "id": "particulier",
+      "name": "Particulier",
+      "description": "Client individuel"
+    },
+    {
+      "id": "restaurant",
+      "name": "Restaurant",
+      "description": "Établissement de restauration"
+    },
+    {
+      "id": "commerce",
+      "name": "Commerce",
+      "description": "Commerce de détail"
+    },
+    {
+      "id": "grossiste",
+      "name": "Grossiste",
+      "description": "Acheteur en gros"
+    },
+    {
+      "id": "industriel",
+      "name": "Industriel",
+      "description": "Industrie de transformation"
+    }
+  ],
+  "investorTypes": [
+    {
+      "id": "agricole",
+      "name": "Investisseur Agricole",
+      "description": "Investissement direct dans l'agriculture"
+    },
+    {
+      "id": "technologique",
+      "name": "Investisseur Technologique",
+      "description": "Investissement dans les technologies agricoles"
+    },
+    {
+      "id": "institutionnel",
+      "name": "Investisseur Institutionnel",
+      "description": "Fonds d'investissement institutionnel"
+    }
+  ],
+  "ministries": [
+    {
+      "id": "agriculture",
+      "name": "Ministère de l'Agriculture"
+    },
+    {
+      "id": "economie",
+      "name": "Ministère de l'Économie"
+    },
+    {
+      "id": "commerce",
+      "name": "Ministère du Commerce"
+    }
+  ],
+  "structures": [
+    {
+      "id": "ong",
+      "name": "ONG"
+    },
+    {
+      "id": "cooperative",
+      "name": "Coopérative"
+    },
+    {
+      "id": "association",
+      "name": "Association"
+    },
+    {
+      "id": "entreprise",
+      "name": "Entreprise privée"
+    }
+  ],
+  "certifications": [
+    {
+      "id": "bio",
+      "name": "Agriculture Biologique",
+      "description": "Certification bio"
+    },
+    {
+      "id": "label-rouge",
+      "name": "Label Rouge",
+      "description": "Label de qualité supérieure"
+    },
+    {
+      "id": "aoc",
+      "name": "AOC",
+      "description": "Appellation d'Origine Contrôlée"
+    },
+    {
+      "id": "igp",
+      "name": "IGP",
+      "description": "Indication Géographique Protégée"
+    }
+  ],
+  "users": [
+    {
+      "id": "user-1",
+      "email": "admin@senteranga.com",
+      "password": "admin123",
+      "userType": "admin",
+      "firstName": "Admin",
+      "lastName": "Senteranga",
+      "phone": "221771234567",
+      "region": "Dakar",
+      "department": "Dakar",
+      "village": "Dakar",
+      "isValidated": true,
+      "validationStatus": "approved",
+      "adminCode": "ADMIN2024"
+    },
+    {
+      "id": "user-2",
+      "email": "farmer1@example.com",
+      "password": "farmer123",
+      "userType": "agriculteur",
+      "firstName": "Mamadou",
+      "lastName": "Diallo",
+      "phone": "221771234568",
+      "region": "Kaolack",
+      "department": "Kaolack",
+      "village": "Kaolack",
+      "isValidated": true,
+      "validationStatus": "approved"
+    },
+    {
+      "id": "user-3",
+      "email": "client1@example.com",
+      "password": "client123",
+      "userType": "client",
+      "firstName": "Fatou",
+      "lastName": "Sow",
+      "phone": "221771234569",
+      "region": "Dakar",
+      "clientType": "commerce",
+      "isValidated": true,
+      "validationStatus": "approved"
+    }
+  ],
+  "products": [
+    {
+      "id": "prod-1",
+      "agriculteurId": "user-2",
+      "titre": "Tomates Bio Certifiées",
+      "description": "Tomates biologiques de qualité supérieure, cultivées sans pesticides.",
+      "categorie": "Légumes",
+      "quantite": 500,
+      "quantiteMinimale": 50,
+      "prix": 150000,
+      "prixParUnite": 300,
+      "unite": "kg",
+      "localisation": "Kaolack",
+      "images": ["/images/products/tomatoes-fresh.jpg"],
+      "statutValidation": "validé",
+      "statutDisponibilite": "disponible",
+      "datePublication": "2024-12-01T10:00:00.000Z",
+      "dateMaj": "2024-12-01T10:00:00.000Z"
+    },
+    {
+      "id": "prod-2",
+      "agriculteurId": "user-2",
+      "titre": "Annonce - Mangues de Casamance",
+      "description": "Mangues de Casamance de première qualité. Récolte prévue pour mars 2025.",
+      "categorie": "Fruits",
+      "quantite": 2000,
+      "quantiteMinimale": 100,
+      "prix": 400000,
+      "prixParUnite": 200,
+      "unite": "kg",
+      "localisation": "Ziguinchor",
+      "images": ["/images/products/mangues.jpg"],
+      "statutValidation": "validé",
+      "statutDisponibilite": "reservé",
+      "datePublication": "2024-12-01T11:00:00.000Z",
+      "dateMaj": "2024-12-01T11:00:00.000Z",
+      "isAnnonce": true,
+      "periodeApproximativeDebut": "2025-03-01",
+      "periodeApproximativeFin": "2025-03-31",
+      "statutAnnonce": "validee"
+    }
+  ],
+  "reservations": [
+    {
+      "id": "reservation-1",
+      "productId": "prod-2",
+      "productTitle": "Annonce - Mangues de Casamance",
+      "clientId": "user-3",
+      "clientName": "Fatou Sow",
+      "clientEmail": "client1@example.com",
+      "clientPhone": "221771234569",
+      "agriculteurId": "user-2",
+      "quantity": 200,
+      "reservationDate": "2024-12-06T08:30:00.000Z",
+      "status": "active"
+    }
+  ],
+  "notifications": [
+    {
+      "id": "notification-1",
+      "userId": "user-2",
+      "title": "Nouvelle réservation",
+      "message": "Fatou Sow a réservé 200 kg de votre produit 'Annonce - Mangues de Casamance'",
+      "type": "reservation",
+      "read": false,
+      "createdAt": "2024-12-06T08:30:00.000Z",
+      "reservationId": "reservation-1"
+    }
+  ],
+  "orders": [],
+  "announcements": [],
+  "seedOrders": [],
+  "agronomeAlerts": []
+}
