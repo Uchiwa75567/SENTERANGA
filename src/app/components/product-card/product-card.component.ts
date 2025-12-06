@@ -59,29 +59,53 @@ export class ProductCardComponent implements OnInit {
 
   // Get the appropriate button text
   getButtonText(): string {
-    if (this.isAnnouncement() && !this.isAnnouncementAvailable()) {
-      return 'Réservation';
+    // If product is validated but not available (can be reserved)
+    if (this.product?.statutValidation === 'validé' && this.product?.statutDisponibilite !== 'disponible') {
+      return 'Réserver';
     }
-    return 'Ajouter au panier';
+    // If product is available
+    if (this.product?.statutValidation === 'validé' && this.product?.statutDisponibilite === 'disponible') {
+      return 'Ajouter au panier';
+    }
+    return 'Indisponible';
+  }
+
+  // Get the appropriate button CSS classes
+  getButtonClass(): string {
+    // If product is validated but not available (reservation button)
+    if (this.product?.statutValidation === 'validé' && this.product?.statutDisponibilite !== 'disponible') {
+      return 'bg-blue-600 hover:bg-blue-700'; // Blue for reservation
+    }
+    // If product is available (add to cart button)
+    if (this.product?.statutValidation === 'validé' && this.product?.statutDisponibilite === 'disponible') {
+      return 'bg-senteranga-green hover:bg-senteranga-green-dark'; // Green for add to cart
+    }
+    return 'bg-gray-400 cursor-not-allowed'; // Gray for disabled
   }
 
   // Check if button should be disabled
   isButtonDisabled(): boolean {
-    if (this.isAnnouncement() && !this.isAnnouncementAvailable()) {
-      return false; // Reservation button is always enabled
+    // Can reserve if product is validated but not available
+    if (this.product?.statutValidation === 'validé' && this.product?.statutDisponibilite !== 'disponible') {
+      return false; // Reservation button is enabled
     }
-    // For regular products, check availability
-    return this.product?.statutDisponibilite === 'vendu' || this.product?.statutValidation !== 'validé';
+    // Can add to cart if product is validated and available
+    if (this.product?.statutValidation === 'validé' && this.product?.statutDisponibilite === 'disponible') {
+      return false; // Add to cart button is enabled
+    }
+    // Disabled for all other cases
+    return true;
   }
 
   // Add product to cart or create reservation
   addToCart(): void {
     if (this.product && !this.isButtonDisabled()) {
-      if (this.isAnnouncement() && !this.isAnnouncementAvailable()) {
-        // Create reservation for announcement
+      // If product is validated but not available, create reservation
+      if (this.product.statutValidation === 'validé' && this.product.statutDisponibilite !== 'disponible') {
         this.createReservation();
-      } else {
-        // Add to cart for regular product
+      }
+      // If product is available, add to cart
+      else if (this.product.statutValidation === 'validé' && this.product.statutDisponibilite === 'disponible') {
         this.cartService.addToCart(this.product, 1);
         console.log('Produit ajouté au panier:', this.product.titre || this.product.name);
       }

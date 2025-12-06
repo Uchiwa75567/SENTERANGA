@@ -26,38 +26,41 @@
     
     <!-- Status Badges -->
     <div class="flex items-center gap-2 flex-wrap">
-      <!-- Announcement Badge -->
-      <span *ngIf="isAnnouncement()" class="px-2 py-0.5 rounded text-xs font-semibold bg-purple-50 text-purple-600">
-        <svg class="w-3 h-3 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path>
-        </svg>
-        Annonce
-      </span>
-
-      <!-- Availability Status -->
-      <span *ngIf="product.statutDisponibilite === 'disponible' && !isAnnouncement()" class="px-2 py-0.5 rounded text-xs font-semibold bg-green-50 text-green-600">Stock disponible</span>
-      <span *ngIf="product.statutDisponibilite === 'reservé' && !isAnnouncement()" class="px-2 py-0.5 rounded text-xs font-semibold bg-yellow-50 text-yellow-700">Réservé</span>
-      <span *ngIf="product.statutDisponibilite === 'vendu'" class="px-2 py-0.5 rounded text-xs font-semibold bg-red-50 text-red-700">Vendu</span>
-      <span *ngIf="product.statutValidation === 'en_attente'" class="px-2 py-0.5 rounded text-xs font-semibold bg-yellow-100 text-yellow-800">En attente</span>
-
-      <!-- Announcement Status -->
-      <span *ngIf="isAnnouncement() && product.statutAnnonce === 'en_attente'" class="px-2 py-0.5 rounded text-xs font-semibold bg-orange-50 text-orange-600">
+      <!-- Validation Status -->
+      <span *ngIf="product.statutValidation === 'en_attente'" class="px-2 py-0.5 rounded text-xs font-semibold bg-yellow-100 text-yellow-800">
         <svg class="w-3 h-3 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
         </svg>
-        Validation admin
+        En attente validation
       </span>
-      <span *ngIf="isAnnouncement() && product.statutAnnonce === 'validee' && !isAnnouncementAvailable()" class="px-2 py-0.5 rounded text-xs font-semibold bg-blue-50 text-blue-600">
-        <svg class="w-3 h-3 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-        </svg>
-        Bientôt disponible
-      </span>
-      <span *ngIf="isAnnouncement() && product.statutAnnonce === 'validee' && isAnnouncementAvailable()" class="px-2 py-0.5 rounded text-xs font-semibold bg-green-50 text-green-600">
+
+      <!-- Availability Status -->
+      <span *ngIf="product.statutValidation === 'validé' && product.statutDisponibilite === 'disponible'" class="px-2 py-0.5 rounded text-xs font-semibold bg-green-50 text-green-600">
         <svg class="w-3 h-3 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
         </svg>
         Disponible
+      </span>
+
+      <span *ngIf="product.statutValidation === 'validé' && product.statutDisponibilite !== 'disponible' && product.statutDisponibilite !== 'vendu'" class="px-2 py-0.5 rounded text-xs font-semibold bg-blue-50 text-blue-600">
+        <svg class="w-3 h-3 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+        </svg>
+        Peut être réservé
+      </span>
+
+      <span *ngIf="product.statutDisponibilite === 'reservé'" class="px-2 py-0.5 rounded text-xs font-semibold bg-yellow-50 text-yellow-700">
+        <svg class="w-3 h-3 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+        </svg>
+        Réservé
+      </span>
+
+      <span *ngIf="product.statutDisponibilite === 'vendu'" class="px-2 py-0.5 rounded text-xs font-semibold bg-red-50 text-red-700">
+        <svg class="w-3 h-3 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+        Vendu
       </span>
     </div>
     
@@ -67,27 +70,14 @@
       <span>{{ product.prixParUnite || product.prix }} FCFA/{{ (product.unite === 'kg' ? 'Kg' : (product.unite || 'unité')) }}</span>
     </div>
 
-    <!-- Announcement Availability Dates -->
-    <div *ngIf="isAnnouncement() && product.periodeApproximativeDebut && product.periodeApproximativeFin"
-         class="text-xs text-purple-600 bg-purple-50 p-2 rounded">
-      <div class="font-semibold">
-        <svg class="w-3 h-3 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-        </svg>
-        Disponibilité:
-      </div>
-      <div>Du {{ product.periodeApproximativeDebut | date:'dd/MM/yyyy' }}</div>
-      <div>Au {{ product.periodeApproximativeFin | date:'dd/MM/yyyy' }}</div>
-    </div>
     
     <!-- Action Button -->
     <div class="pt-1">
       <button
         (click)="addToCart()"
         [disabled]="isButtonDisabled()"
-        [class]="isAnnouncement() && !isAnnouncementAvailable()
-          ? 'w-full bg-blue-600 text-white text-xs font-semibold py-2 rounded hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors'
-          : 'w-full bg-senteranga-green text-white text-xs font-semibold py-2 rounded hover:bg-senteranga-green-dark disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors'">
+        [class]="getButtonClass()"
+        class="w-full text-white text-xs font-semibold py-2 rounded disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors">
         {{ getButtonText() }}
       </button>
     </div>
