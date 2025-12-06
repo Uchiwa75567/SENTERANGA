@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { HeaderComponent } from '../../components/header/header.component';
 import {
   statCards,
   cropProductions,
@@ -15,7 +16,7 @@ import {
 @Component({
   selector: 'app-dashboard-institutionnel',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, HeaderComponent],
   templateUrl: './dashboard-institutionnel.component.html'
 })
 export class DashboardInstitutionnelComponent {
