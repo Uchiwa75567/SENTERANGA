@@ -152,29 +152,30 @@ export class DashboardAgriculteurComponent {
       return;
     }
 
-    // Upload images directly to Cloudinary from frontend
+    // Upload images directly to Cloudinary (unsigned upload)
     this.convertImagesToBase64(this.selectedImages).then(async (base64Images) => {
       try {
         let uploadedUrls: string[] = [];
         if (base64Images.length) {
-          // Upload directly to Cloudinary
+          // Upload directly to Cloudinary without preset (unsigned)
           const cloudName = 'djha1kqvu';
           const uploadUrls = await Promise.all(
             base64Images.map(async (base64Image, index) => {
               const formData = new FormData();
               formData.append('file', base64Image);
-              formData.append('upload_preset', 'senteranga_products'); // We'll create this preset
               formData.append('folder', 'senteranga_products');
-              
+              // Remove upload_preset for unsigned uploads
+              // formData.append('upload_preset', 'senteranga_products');
+
               const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
                 method: 'POST',
                 body: formData
               });
-              
+
               if (!response.ok) {
                 throw new Error(`Cloudinary upload failed: ${response.statusText}`);
               }
-              
+
               const result = await response.json();
               return result.secure_url;
             })
