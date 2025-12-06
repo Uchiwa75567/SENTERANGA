@@ -59,11 +59,11 @@ export class ProductCardComponent implements OnInit {
 
   // Get the appropriate button text
   getButtonText(): string {
-    // If product is validated but not available (can be reserved)
-    if (this.product?.statutValidation === 'validé' && this.product?.statutDisponibilite !== 'disponible') {
+    // If it's a validated announcement but not physically available (can be reserved)
+    if (this.isAnnouncement() && this.product?.statutAnnonce === 'validee' && this.product?.statutDisponibilite !== 'disponible') {
       return 'Réserver';
     }
-    // If product is available
+    // If product is validated and available (can be added to cart)
     if (this.product?.statutValidation === 'validé' && this.product?.statutDisponibilite === 'disponible') {
       return 'Ajouter au panier';
     }
@@ -72,11 +72,11 @@ export class ProductCardComponent implements OnInit {
 
   // Get the appropriate button CSS classes
   getButtonClass(): string {
-    // If product is validated but not available (reservation button)
-    if (this.product?.statutValidation === 'validé' && this.product?.statutDisponibilite !== 'disponible') {
+    // If it's a validated announcement but not physically available (reservation button)
+    if (this.isAnnouncement() && this.product?.statutAnnonce === 'validee' && this.product?.statutDisponibilite !== 'disponible') {
       return 'bg-blue-600 hover:bg-blue-700'; // Blue for reservation
     }
-    // If product is available (add to cart button)
+    // If product is validated and available (add to cart button)
     if (this.product?.statutValidation === 'validé' && this.product?.statutDisponibilite === 'disponible') {
       return 'bg-senteranga-green hover:bg-senteranga-green-dark'; // Green for add to cart
     }
@@ -85,8 +85,8 @@ export class ProductCardComponent implements OnInit {
 
   // Check if button should be disabled
   isButtonDisabled(): boolean {
-    // Can reserve if product is validated but not available
-    if (this.product?.statutValidation === 'validé' && this.product?.statutDisponibilite !== 'disponible') {
+    // Can reserve if it's a validated announcement but not physically available
+    if (this.isAnnouncement() && this.product?.statutAnnonce === 'validee' && this.product?.statutDisponibilite !== 'disponible') {
       return false; // Reservation button is enabled
     }
     // Can add to cart if product is validated and available
@@ -100,11 +100,11 @@ export class ProductCardComponent implements OnInit {
   // Add product to cart or create reservation
   addToCart(): void {
     if (this.product && !this.isButtonDisabled()) {
-      // If product is validated but not available, create reservation
-      if (this.product.statutValidation === 'validé' && this.product.statutDisponibilite !== 'disponible') {
+      // If it's a validated announcement but not physically available, create reservation
+      if (this.isAnnouncement() && this.product.statutAnnonce === 'validee' && this.product.statutDisponibilite !== 'disponible') {
         this.createReservation();
       }
-      // If product is available, add to cart
+      // If product is validated and available, add to cart
       else if (this.product.statutValidation === 'validé' && this.product.statutDisponibilite === 'disponible') {
         this.cartService.addToCart(this.product, 1);
         console.log('Produit ajouté au panier:', this.product.titre || this.product.nom || this.product.name);
